@@ -1,1 +1,1 @@
-INSERT into user (id, name, email) values (1, 'John Doe', ')
+INSERT into users (id, name, email) values (gen_random_uuid(), 'John Doe', '')
