@@ -1,0 +1,1 @@
+INSERT into user (id, name, email) values (1, 'John Doe', ')
