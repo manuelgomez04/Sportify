@@ -5,7 +5,7 @@ import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
 import com.salesianos.dam.sportify.user.model.Role;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
-import com.salesianos.dam.sportify.util.SendGridMailSender;
+import com.salesianos.dam.sportify.util.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final SendGridMailSender mailSender;
+    private final EmailService emailService;
 
 
     @Value("${activation.duration}")
@@ -40,9 +40,10 @@ public class UserService {
                 .build();
 
         try {
-            mailSender.sendMail(createUserRequest.email(), "Activación de cuenta", user.getActivationToken());
+            // Enviar el código de verificación por correo electrónico
+            emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Error al enviar el email de activación");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
         }
 
 
