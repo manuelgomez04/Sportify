@@ -50,6 +50,8 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

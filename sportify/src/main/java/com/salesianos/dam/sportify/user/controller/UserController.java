@@ -70,10 +70,8 @@ public class UserController {
     @PostMapping("/auth/refresh/token")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest req) {
         String token = req.refreshToken();
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(refreshTokenService.refreshToken(token));
-
     }
 
     @PostMapping("/activate/account/")

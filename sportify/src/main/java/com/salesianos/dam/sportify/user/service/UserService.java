@@ -46,9 +46,9 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
         }
 
-
         return userRepository.save(user);
     }
+
 
     public String generateRandomActivationCode() {
         return UUID.randomUUID().toString();
