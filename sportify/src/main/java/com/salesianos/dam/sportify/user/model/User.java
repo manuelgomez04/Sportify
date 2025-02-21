@@ -9,10 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -35,7 +32,15 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String verifyPassword;
+
+    private String nombre;
+
+    private Date fechaNacimiento;
+
     private String email;
+
+    private String phoneNumber;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -48,7 +53,7 @@ public class User implements UserDetails {
     @Builder.Default
     private Instant createdAt = Instant.now();
 
-    private String phoneNumber;
+
 
 
 
