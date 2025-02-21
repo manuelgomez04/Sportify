@@ -49,6 +49,43 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User createWriter(CreateUserRequest createUserRequest) {
+        User user = User.builder()
+                .username(createUserRequest.username())
+                .password(passwordEncoder.encode(createUserRequest.password()))
+                .email(createUserRequest.email())
+                .roles(Set.of(Role.WRITER, Role.USER))
+                .activationToken(generateRandomActivationCode())
+                .build();
+
+        try {
+            // Enviar el código de verificación por correo electrónico
+            emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
+        }
+
+        return userRepository.save(user);
+    }
+    public User createAdmin(CreateUserRequest createUserRequest) {
+        User user = User.builder()
+                .username(createUserRequest.username())
+                .password(passwordEncoder.encode(createUserRequest.password()))
+                .email(createUserRequest.email())
+                .roles(Set.of(Role.ADMIN, Role.USER, Role.WRITER))
+                .activationToken(generateRandomActivationCode())
+                .build();
+
+        try {
+            // Enviar el código de verificación por correo electrónico
+            emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
+        }
+
+        return userRepository.save(user);
+    }
+
 
     public String generateRandomActivationCode() {
         return UUID.randomUUID().toString();

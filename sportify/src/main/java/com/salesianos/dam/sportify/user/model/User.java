@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.user.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -8,7 +9,9 @@ import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,15 +35,14 @@ public class User implements UserDetails {
 
     private String password;
 
-    private String verifyPassword;
 
     private String nombre;
 
-    private Date fechaNacimiento;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaNacimiento;
 
     private String email;
 
-    private String phoneNumber;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -52,9 +54,6 @@ public class User implements UserDetails {
 
     @Builder.Default
     private Instant createdAt = Instant.now();
-
-
-
 
 
     @Override
