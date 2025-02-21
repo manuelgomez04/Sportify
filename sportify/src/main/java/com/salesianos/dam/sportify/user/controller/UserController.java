@@ -10,10 +10,10 @@ import com.salesianos.dam.sportify.user.dto.LoginRequest;
 import com.salesianos.dam.sportify.user.dto.UserResponse;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+
 public class UserController {
 
     private final UserService userService;
@@ -33,9 +34,23 @@ public class UserController {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<UserResponse> register(@RequestBody CreateUserRequest createUserRequest) {
+    @PostMapping("/user/auth/register")
+    public ResponseEntity<UserResponse> registerUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         User user = userService.createUser(createUserRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserResponse.of(user));
+    }
+    @PostMapping("/writer/auth/register")
+    public ResponseEntity<UserResponse> registerWriter(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        User user = userService.createWriter(createUserRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserResponse.of(user));
+    }
+    @PostMapping("/admin/auth/register")
+    public ResponseEntity<UserResponse> registerAdmin(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        User user = userService.createAdmin(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UserResponse.of(user));
