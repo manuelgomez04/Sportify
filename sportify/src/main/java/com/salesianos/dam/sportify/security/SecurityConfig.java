@@ -67,13 +67,15 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
         );
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.POST, "/writer/auth/register","/user/auth/register", "/auth/login","/auth/refresh/token" ,"/activate/account/", "/error").permitAll()
-                .requestMatchers(HttpMethod.GET,"/me/admin").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,"/admin/auth/register").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/me").hasRole("USER")
-                .requestMatchers(HttpMethod.GET,"/me/writer").hasRole("WRITER")
-                .requestMatchers(HttpMethod.PUT,"/me").hasRole("USER")
-                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register", "/auth/login", "/auth/refresh/token", "/activate/account/", "/error").permitAll()
+                .requestMatchers(HttpMethod.GET, "/me/admin").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/admin/auth/register").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/me").authenticated()
+                .requestMatchers(HttpMethod.GET, "/me/writer").hasRole("WRITER")
+                .requestMatchers(HttpMethod.PUT, "/edit/me").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/edit/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/delete/me").hasAnyRole("USER", "WRITER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
 
