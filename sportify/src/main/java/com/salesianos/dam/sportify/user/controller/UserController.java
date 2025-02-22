@@ -7,6 +7,8 @@ import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenService;
 import com.salesianos.dam.sportify.user.dto.*;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -93,16 +96,23 @@ public class UserController {
     }
 
 
-    @PutMapping("/me")
+    @PutMapping("/edit/me")
     public GetUsuarioDto updateMe(@AuthenticationPrincipal User user, @RequestBody @Valid EditUserDto createUserRequest) {
 
-        User updatedUser = userService.editUser(user, createUserRequest);
+        User updatedUser = userService.editMe(user, createUserRequest);
+        return GetUsuarioDto.of(updatedUser);
+    }
+
+    @PutMapping("/edit/{username}")
+    public GetUsuarioDto updateUser(@PathVariable String username, @RequestBody @Valid EditUserDto createUserRequest) {
+
+        User updatedUser = userService.editUser(username, createUserRequest);
         return GetUsuarioDto.of(updatedUser);
     }
 
     @GetMapping("/me")
-    public GetUsuarioDto me(@AuthenticationPrincipal User user) {
-        return GetUsuarioDto.of(user);
+    public UserResponse me(@AuthenticationPrincipal User user) {
+        return UserResponse.of(user);
     }
 
     @GetMapping("/me/admin")
@@ -110,4 +120,16 @@ public class UserController {
         return user;
     }
 
+
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete/me")
+    public ResponseEntity<?> deleteMe(@PathVariable String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
 }
