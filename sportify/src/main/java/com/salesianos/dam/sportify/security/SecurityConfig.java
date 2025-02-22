@@ -71,6 +71,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/me/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/admin/auth/register").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/me").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/me/writer").hasRole("WRITER")
+                .requestMatchers(HttpMethod.PUT,"/me").hasRole("USER")
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated());
 

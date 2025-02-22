@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.user.service;
 
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
+import com.salesianos.dam.sportify.user.dto.EditUserDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
 import com.salesianos.dam.sportify.user.model.Role;
 import com.salesianos.dam.sportify.user.model.User;
@@ -67,6 +68,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
     public User createAdmin(CreateUserRequest createUserRequest) {
         User user = User.builder()
                 .username(createUserRequest.username())
@@ -84,6 +86,25 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+
+    public User editUser(User username, EditUserDto updatedUser) {
+
+    return userRepository.findFirstByUsername(username.getUsername())
+            .map(user -> {
+                user.setPassword(passwordEncoder.encode(updatedUser.password()));
+                user.setEmail(updatedUser.email());
+                user.setNombre(updatedUser.nombre());
+                user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                return userRepository.save(user);
+            })
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+
+
+
+
     }
 
 
