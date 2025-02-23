@@ -70,6 +70,17 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude
     private List<Noticia> noticias = new ArrayList<>();
 
+
+    public void addNoticia(Noticia n) {
+        noticias.add(n);
+        n.setAutor(this);
+    }
+
+    public void removeNoticia(Noticia n) {
+        noticias.remove(n);
+        n.setAutor(null);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

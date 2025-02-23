@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.noticia.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.dam.sportify.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,8 @@ public class Noticia {
     private String titular;
     private String cuerpo;
     private List<String> multimedia;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fechaPublicacion;
 
     @ManyToOne
