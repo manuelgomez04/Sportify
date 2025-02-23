@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
         );
         http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/swagger-ui/**", "/v2/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register", "/auth/login", "/auth/refresh/token", "/activate/account/", "/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/me/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/admin/auth/register").hasRole("ADMIN")
@@ -79,7 +80,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/noticias").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().permitAll());
 
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
