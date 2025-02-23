@@ -1,0 +1,24 @@
+package com.salesianos.dam.sportify.noticia.dto;
+
+import com.salesianos.dam.sportify.noticia.model.Noticia;
+import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public record GetNoticiaNoAuthDto(
+        String titular,
+        String cuerpo,
+        List<String> multimedia,
+        LocalDate fechaCreacion
+) {
+
+    public static GetNoticiaNoAuthDto of(Noticia n) {
+        return new GetNoticiaNoAuthDto(
+                n.getTitular(),
+                n.getCuerpo(),
+                n.getMultimedia(),
+                n.getFechaPublicacion()
+        );
+    }
+}

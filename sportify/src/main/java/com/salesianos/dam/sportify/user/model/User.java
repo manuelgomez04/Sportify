@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.dam.sportify.noticia.model.Noticia;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.FilterDef;
@@ -62,6 +63,23 @@ public class User implements UserDetails {
     @Builder.Default
     private Instant createdAt = Instant.now();
 
+
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    private List<Noticia> noticias = new ArrayList<>();
+
+
+    public void addNoticia(Noticia n) {
+        noticias.add(n);
+        n.setAutor(this);
+    }
+
+    public void removeNoticia(Noticia n) {
+        noticias.remove(n);
+        n.setAutor(null);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
