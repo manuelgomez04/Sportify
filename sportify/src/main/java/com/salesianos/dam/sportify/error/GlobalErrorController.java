@@ -1,7 +1,6 @@
 package com.salesianos.dam.sportify.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.Builder;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,18 +23,6 @@ import java.util.Optional;
 @RestControllerAdvice
 public class GlobalErrorController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ProblemDetail handleProductNotFound(EntityNotFoundException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(HttpStatus.NOT_FOUND,
-                        ex.getMessage());
-        result.setTitle("Entidad no encontrada");
-        result.setType(URI.create("https://www.salesianos-triana.edu/errors/entity-not-found"));
-        result.setProperty("author", "Luismi");
-
-        return result;
-
-    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
@@ -80,7 +66,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
             String field,
             @JsonInclude(JsonInclude.Include.NON_NULL)
             Object rejectedValue
-    ){
+    ) {
 
         public ApiValidationSubError(String object, String message) {
             this(object, message, null, null);
@@ -97,7 +83,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
                         .field(fieldError.getField())
                         .rejectedValue(fieldError.getRejectedValue())
                         .build();
-            } else  {
+            } else {
                 result = ApiValidationSubError.builder()
                         .object(error.getObjectName())
                         .message(error.getDefaultMessage())
@@ -126,4 +112,27 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
 
 
     }
+
+
+    @ExceptionHandler(NoticiaNotFoundException.class)
+    public ProblemDetail handleNoticiaNotFoundException(EntidadNoEncontradaException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        result.setTitle("Noticia no encontrada");
+        result.setProperty("author", "Manuel");
+
+        return result;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUsuarioNotFoundException(EntidadNoEncontradaException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        result.setTitle("Usuario no encontrado");
+        result.setProperty("author", "Manuel");
+
+        return result;
+    }
+
+
 }

@@ -1,8 +1,12 @@
 package com.salesianos.dam.sportify.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.dam.sportify.noticia.model.Noticia;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.hibernate.annotations.NaturalId;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE usuario SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedUsuarioFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
 public class User implements UserDetails {
 
     @Id
@@ -49,12 +55,31 @@ public class User implements UserDetails {
 
     @Builder.Default
     private boolean enabled = false;
+    private Boolean deleted = Boolean.FALSE;
+
 
     private String activationToken;
 
     @Builder.Default
     private Instant createdAt = Instant.now();
 
+
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    private List<Noticia> noticias = new ArrayList<>();
+
+
+    public void addNoticia(Noticia n) {
+        noticias.add(n);
+        n.setAutor(this);
+    }
+
+    public void removeNoticia(Noticia n) {
+        noticias.remove(n);
+        n.setAutor(null);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

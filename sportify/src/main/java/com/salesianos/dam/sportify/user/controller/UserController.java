@@ -4,12 +4,11 @@ import com.salesianos.dam.sportify.security.jwt.access.JwtService;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshToken;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenService;
-import com.salesianos.dam.sportify.user.dto.ActivateAccountRequest;
-import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
-import com.salesianos.dam.sportify.user.dto.LoginRequest;
-import com.salesianos.dam.sportify.user.dto.UserResponse;
+import com.salesianos.dam.sportify.user.dto.*;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +38,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UserResponse.of(user));
     }
+
     @PostMapping("/writer/auth/register")
     public ResponseEntity<UserResponse> registerWriter(@RequestBody @Valid CreateUserRequest createUserRequest) {
         User user = userService.createWriter(createUserRequest);
@@ -48,6 +46,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UserResponse.of(user));
     }
+
     @PostMapping("/admin/auth/register")
     public ResponseEntity<UserResponse> registerAdmin(@RequestBody @Valid CreateUserRequest createUserRequest) {
         User user = userService.createAdmin(createUserRequest);
@@ -97,6 +96,19 @@ public class UserController {
     }
 
 
+    @PutMapping("/edit/me")
+    public GetUsuarioDto updateMe(@AuthenticationPrincipal User user, @RequestBody @Valid EditUserDto createUserRequest) {
+
+        User updatedUser = userService.editMe(user, createUserRequest);
+        return GetUsuarioDto.of(updatedUser);
+    }
+
+    @PutMapping("/edit/{username}")
+    public GetUsuarioDto updateUser(@PathVariable String username, @RequestBody @Valid EditUserDto createUserRequest) {
+
+        User updatedUser = userService.editUser(username, createUserRequest);
+        return GetUsuarioDto.of(updatedUser);
+    }
 
     @GetMapping("/me")
     public UserResponse me(@AuthenticationPrincipal User user) {
@@ -108,4 +120,16 @@ public class UserController {
         return user;
     }
 
+
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete/me")
+    public ResponseEntity<?> deleteMe(@PathVariable String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
 }

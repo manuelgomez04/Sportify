@@ -1,11 +1,13 @@
 package com.salesianos.dam.sportify.user.service;
 
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
+import com.salesianos.dam.sportify.user.dto.EditUserDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
 import com.salesianos.dam.sportify.user.model.Role;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import com.salesianos.dam.sportify.util.EmailService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,6 +70,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
     public User createAdmin(CreateUserRequest createUserRequest) {
         User user = User.builder()
                 .username(createUserRequest.username())
@@ -84,6 +88,47 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+
+    public User editMe(User username, EditUserDto updatedUser) {
+
+        return userRepository.findFirstByUsername(username.getUsername())
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(updatedUser.password()));
+                    user.setEmail(updatedUser.email());
+                    user.setNombre(updatedUser.nombre());
+                    user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    return userRepository.save(user);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+    }
+
+    public User editUser(String username, EditUserDto updatedUser) {
+
+        return userRepository.findFirstByUsername(username)
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(updatedUser.password()));
+                    user.setEmail(updatedUser.email());
+                    user.setNombre(updatedUser.nombre());
+                    user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    return userRepository.save(user);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+    }
+
+    @Transactional
+    public void deleteUser(String user) {
+
+
+        Optional<User> u = userRepository.findFirstByUsername(user);
+
+        if (u.isPresent()) {
+            u.get().setDeleted(true);
+            userRepository.save(u.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
     }
 
 
