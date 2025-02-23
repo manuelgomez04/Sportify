@@ -13,7 +13,8 @@ public record GetNoticiaDto(
         String cuerpo,
         List<String> multimedia,
         GetUsuarioDto usuario,
-        LocalDate fechaCreacion
+        LocalDate fechaCreacion,
+        String slug
 ) {
 
     public static GetNoticiaDto of(Noticia n) {
@@ -23,7 +24,8 @@ public record GetNoticiaDto(
                 n.getCuerpo(),
                 n.getMultimedia(),
                 GetUsuarioDto.of(n.getAutor()),
-                n.getFechaPublicacion()
+                n.getFechaPublicacion(),
+                n.getSlug()
         );
     }
 }
