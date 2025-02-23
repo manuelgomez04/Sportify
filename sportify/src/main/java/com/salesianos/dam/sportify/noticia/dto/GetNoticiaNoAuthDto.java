@@ -10,7 +10,8 @@ public record GetNoticiaNoAuthDto(
         String titular,
         String cuerpo,
         List<String> multimedia,
-        LocalDate fechaCreacion
+        LocalDate fechaCreacion,
+        String slug
 ) {
 
     public static GetNoticiaNoAuthDto of(Noticia n) {
@@ -18,7 +19,8 @@ public record GetNoticiaNoAuthDto(
                 n.getTitular(),
                 n.getCuerpo(),
                 n.getMultimedia(),
-                n.getFechaPublicacion()
+                n.getFechaPublicacion(),
+                n.getSlug()
         );
     }
 }
