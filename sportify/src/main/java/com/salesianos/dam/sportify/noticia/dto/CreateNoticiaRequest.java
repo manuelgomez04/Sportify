@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.noticia.dto;
 
 import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
+import com.salesianos.dam.sportify.validation.UniqueTitular;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public record CreateNoticiaRequest(
 
+        @UniqueTitular(message = "{createNoticiaRequest.titular.uniqueTitular}")
         @NotBlank(message = "{createNoticiaRequest.titular.notBlank}")
         String titular,
 
@@ -23,6 +25,9 @@ public record CreateNoticiaRequest(
 
         @NotNull(message = "{createNoticiaRequest.fechaPublicacion.notNull}")
         @PastOrPresent(message = "{createNoticiaRequest.fechaPublicacion.pastOrPresent}")
-        LocalDate fechaPublicacion
+        LocalDate fechaPublicacion,
+
+        String slug
+
 ) {
 }

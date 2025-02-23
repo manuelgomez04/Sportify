@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.noticia.controller;
 
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
+import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaNoAuthDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +40,9 @@ public class NoticiaController {
         return noticias;
     }
 
+    @PutMapping("/edit/{slug}")
+    public GetNoticiaDto editNoticia(@PathVariable String slug, @AuthenticationPrincipal User me, @RequestBody @Valid EditNoticiaDto createNoticiaRequest) {
+        return GetNoticiaDto.of(noticiaService.editNoticia(slug, createNoticiaRequest, me));
+    }
 
 }

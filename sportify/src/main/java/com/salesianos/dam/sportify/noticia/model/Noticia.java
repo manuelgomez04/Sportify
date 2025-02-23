@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.dam.sportify.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +25,11 @@ public class Noticia {
     private UUID ID;
 
     private String titular;
+
+    private String slug;
+
     private String cuerpo;
+
     private List<String> multimedia;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -32,4 +38,31 @@ public class Noticia {
     @ManyToOne
     @JoinColumn(name = "autor_id", foreignKey = @ForeignKey(name = "fk_noticia_autor"))
     private User autor;
+
+    public void generarSlug() {
+        this.slug = this.titular.toLowerCase()
+                .replace(" ", "-")
+                .replace("á", "a")
+                .replace("é", "e")
+                .replace("í", "i")
+                .replace("ó", "o")
+                .replace("ú", "u")
+                .replaceAll("[^a-z0-9-]", "");
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Noticia noticia = (Noticia) o;
+        return getID() != null && Objects.equals(getID(), noticia.getID());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }
