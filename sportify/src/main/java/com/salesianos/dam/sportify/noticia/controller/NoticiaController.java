@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,6 +133,22 @@ public class NoticiaController {
                                             }
                             """))) @RequestBody @Valid EditNoticiaDto createNoticiaRequest) {
         return GetNoticiaDto.of(noticiaService.editNoticia(slug, createNoticiaRequest, me));
+    }
+
+
+    @Operation(summary = "Borra una noticia buscada por su slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha eliminado el usuario",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Noticia.class))
+                    )}),
+    })
+    @PostAuthorize("hasAnyRole('ADMIN', 'WRITER')")
+    @DeleteMapping("/delete/{slug}")
+    public ResponseEntity<?> deleteNoticia(@PathVariable String slug, @AuthenticationPrincipal User me) {
+        noticiaService.deleteNoticia(slug, me);
+        return ResponseEntity.noContent().build();
     }
 
 }

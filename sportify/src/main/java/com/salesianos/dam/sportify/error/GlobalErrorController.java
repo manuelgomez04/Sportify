@@ -141,5 +141,12 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
         result.setTitle("Acceso denegado, no puedes editar esta noticia");
         return result;
     }
+    @ExceptionHandler(UnauthorizedDeleteException.class)
+    public ProblemDetail handleUnauthorizedDeleteException(UnauthorizedEditException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        result.setTitle("Acceso denegado, no puedes borrar esta noticia");
+        return result;
+    }
 
 }
