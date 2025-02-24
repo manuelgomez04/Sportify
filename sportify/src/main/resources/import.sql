@@ -20,3 +20,35 @@ INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id) VAL
 INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id) VALUES (gen_random_uuid(), 'Titular de la noticia 8', 'titular-de-la-noticia-8', 'Cuerpo de la noticia 8. Este es el contenido de la noticia.', NOW() - INTERVAL '8 days', (SELECT id FROM users WHERE username = 'admin_user'));
 INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id) VALUES (gen_random_uuid(), 'Titular de la noticia 9', 'titular-de-la-noticia-9', 'Cuerpo de la noticia 9. Este es el contenido de la noticia.', NOW() - INTERVAL '9 days', (SELECT id FROM users WHERE username = 'writer_user'));
 INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id) VALUES (gen_random_uuid(), 'Titular de la noticia 10', 'titular-de-la-noticia-10', 'Cuerpo de la noticia 10. Este es el contenido de la noticia.', NOW() - INTERVAL '10 days', (SELECT id FROM users WHERE username = 'writer_user'));
+
+INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Futbol', 'Deporte de equipo jugado entre dos equipos de once jugadores cada uno, con una pelota esférica.');
+INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Baloncesto', 'Deporte de equipo en el que dos equipos de cinco jugadores compiten por anotar puntos lanzando una pelota a través de un aro.');
+INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Tenis', 'Deporte de raqueta jugado entre dos jugadores (individuales) o dos parejas (dobles), en una cancha rectangular dividida por una red.');
+INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Atletismo', 'Conjunto de disciplinas deportivas que incluyen carreras, saltos, lanzamientos y pruebas combinadas.');
+INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Natacion', 'Deporte acuático que consiste en recorrer una distancia en el agua en el menor tiempo posible, utilizando diferentes estilos.');
+
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Futbol 1', 'Primera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Futbol 2', 'Segunda liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Futbol 3', 'Tercera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Futbol 4', 'Cuarta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Futbol 5', 'Quinta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Baloncesto 1', 'Primera liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Baloncesto 2', 'Segunda liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Baloncesto 3', 'Tercera liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Baloncesto 4', 'Cuarta liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Baloncesto 5', 'Quinta liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Tenis 1', 'Primera liga de Tenis.', (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Tenis 2', 'Segunda liga de Tenis.', (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Tenis 3', 'Tercera liga de Tenis.', (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Tenis 4', 'Cuarta liga de Tenis.', (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Tenis 5', 'Quinta liga de Tenis.', (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Atletismo 1', 'Primera liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Atletismo 2', 'Segunda liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Atletismo 3', 'Tercera liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Atletismo 4', 'Cuarta liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Atletismo 5', 'Quinta liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Natacion 1', 'Primera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Natacion 2', 'Segunda liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Natacion 3', 'Tercera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Natacion 4', 'Cuarta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+INSERT INTO liga (id, nombre, descripcion, deporte_id) VALUES (gen_random_uuid(), 'Liga Natacion 5', 'Quinta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'));
