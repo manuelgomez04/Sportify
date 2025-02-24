@@ -13,5 +13,5 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
     @Query("SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END FROM Liga l WHERE TRIM(LOWER(l.nombre)) = TRIM(LOWER(:nombre))")
     boolean existsByNombreEqualsIgnoreCaseAndIgnoreWhitespace(@Param("nombre") String nombre);
 
-    Optional<Liga> findBynombreNoEspacio(String nombre);
+    Optional<Liga> findByNombreNoEspacio(String nombre);
 }
