@@ -1,9 +1,6 @@
 package com.salesianos.dam.sportify.noticia.service;
 
-import com.salesianos.dam.sportify.error.EntidadNoEncontradaException;
-import com.salesianos.dam.sportify.error.NoticiaNotFoundException;
-import com.salesianos.dam.sportify.error.UnauthorizedEditException;
-import com.salesianos.dam.sportify.error.UserNotFoundException;
+import com.salesianos.dam.sportify.error.*;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
@@ -93,6 +90,19 @@ public class NoticiaService {
     private boolean esAdmin(User usuario) {
         return usuario.getRoles().stream()
                 .anyMatch(role -> role.name().equals("ADMIN"));
+    }
+
+    @Transactional
+    public void deleteNoticia(String slug, User usuarioAutenticado) {
+        Noticia noticia = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+
+        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
+            throw new UnauthorizedDeleteException("No tienes permiso para eliminar esta noticia", HttpStatus.FORBIDDEN);
+        }
+
+        noticia.getAutor().removeNoticia(noticia);
+        noticiaRepository.delete(noticia);
     }
 
 }
