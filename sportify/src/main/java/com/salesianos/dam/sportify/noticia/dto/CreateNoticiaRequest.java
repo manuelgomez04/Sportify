@@ -1,6 +1,5 @@
 package com.salesianos.dam.sportify.noticia.dto;
 
-import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
 import com.salesianos.dam.sportify.validation.UniqueTitular;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -65,7 +65,6 @@ public class NoticiaService {
         return noticiaRepository.findAll(pageable);
     }
 
-
     @Transactional
     public Noticia editNoticia(String slug, EditNoticiaDto createNoticiaRequest, User usuarioAutenticado) {
         Noticia noticia = noticiaRepository.findBySlug(slug)
@@ -75,14 +74,19 @@ public class NoticiaService {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
         }
 
-        noticia.setTitular(createNoticiaRequest.titular());
-        noticia.setCuerpo(createNoticiaRequest.cuerpo());
-        noticia.setMultimedia(createNoticiaRequest.multimedia());
+        if (createNoticiaRequest.titular() != null) {
+            noticia.setTitular(createNoticiaRequest.titular());
+        }
+        if (createNoticiaRequest.cuerpo() != null) {
+            noticia.setCuerpo(createNoticiaRequest.cuerpo());
+        }
+        if (createNoticiaRequest.multimedia() != null) {
+            noticia.setMultimedia(createNoticiaRequest.multimedia());
+        }
         noticia.generarSlug();
 
         return noticiaRepository.save(noticia);
     }
-
     private boolean esAutorDeNoticia(User usuario, Noticia noticia) {
         return noticia.getAutor().getId().equals(usuario.getId());
     }

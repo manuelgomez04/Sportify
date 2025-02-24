@@ -1,17 +1,17 @@
 package com.salesianos.dam.sportify.validation;
 
-import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
+import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-public class UniqueTitularValidator implements ConstraintValidator<UniqueTitular, String> {
+public class UniqueDeporteNameValidator implements ConstraintValidator<UniqueDeporteName, String> {
     @Autowired
-    private NoticiaRepository repo;
+    private DeporteRepository repo;
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return StringUtils.hasText(s) && !repo.existsByTitular(s);
+        return StringUtils.hasText(s) && !repo.existsByNombre(s);
     }
 }
