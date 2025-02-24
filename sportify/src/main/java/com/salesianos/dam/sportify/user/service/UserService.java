@@ -1,5 +1,11 @@
 package com.salesianos.dam.sportify.user.service;
 
+import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
+import com.salesianos.dam.sportify.equipo.model.Equipo;
+import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
+import com.salesianos.dam.sportify.equipo.service.EquipoService;
+import com.salesianos.dam.sportify.error.EquipoNotFoundException;
+import com.salesianos.dam.sportify.error.UserNotFoundException;
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
 import com.salesianos.dam.sportify.user.dto.EditUserDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
@@ -9,8 +15,10 @@ import com.salesianos.dam.sportify.user.repo.UserRepository;
 import com.salesianos.dam.sportify.util.EmailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,6 +36,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final EquipoRepository equipoRepository;
 
 
     @Value("${activation.duration}")
@@ -162,6 +171,29 @@ public class UserService {
                     return userRepository.save(user);
                 })
                 .orElseThrow(() -> new ActivationExpiredException("El código de activación no existe o ha caducado"));
+    }
+
+    @Transactional
+    public User seguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
+                .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
+
+        user.addEquipo(equipo);
+
+        return userRepository.save(user);
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public User getAuthenticatedUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        Hibernate.initialize(user.getEquiposSeguidos());
+
+        return user;
     }
 
 }

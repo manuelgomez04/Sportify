@@ -80,12 +80,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/noticias").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/noticias/delete/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/deporte").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/deporte/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/liga").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/liga/delete/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/equipo").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/equipo/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/seguirEquipo").hasAnyRole("USER", "WRITER", "ADMIN")
                 .anyRequest().authenticated());
 
 
