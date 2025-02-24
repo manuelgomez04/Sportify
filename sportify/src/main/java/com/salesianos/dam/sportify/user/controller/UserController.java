@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.user.controller;
 
+import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.security.jwt.access.JwtService;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshToken;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenRequest;
@@ -9,6 +10,7 @@ import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -324,8 +326,9 @@ public class UserController {
                     content = @Content),
     })
     @GetMapping("/me")
-    public UserResponse me(@AuthenticationPrincipal User user) {
-        return UserResponse.of(user);
+    public GetUsuarioDto me(@AuthenticationPrincipal User user) {
+        user = userService.getAuthenticatedUser(user.getId());
+        return GetUsuarioDto.of(user);
     }
 
 
@@ -380,5 +383,31 @@ public class UserController {
     public ResponseEntity<?> deleteMe(@PathVariable String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @Operation(summary = "Sigue a un equipo ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha seguido al equipo",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado al equipo",
+                    content = @Content),
+    })
+    @PutMapping("/seguirEquipo")
+    public GetUsuarioDto seguirEquipo(@AuthenticationPrincipal User user,@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowEquipoRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreEquipo":"real-madrid"
+                                 }
+                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo){
+       User u = userService.seguirEquipo(user.getUsername(), nombreEquipo);
+        return GetUsuarioDto.of(u);
     }
 }
