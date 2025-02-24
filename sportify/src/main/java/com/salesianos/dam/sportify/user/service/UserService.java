@@ -1,9 +1,13 @@
 package com.salesianos.dam.sportify.user.service;
 
+import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
+import com.salesianos.dam.sportify.deporte.model.Deporte;
+import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
 import com.salesianos.dam.sportify.equipo.service.EquipoService;
+import com.salesianos.dam.sportify.error.DeporteNotFoundException;
 import com.salesianos.dam.sportify.error.EquipoNotFoundException;
 import com.salesianos.dam.sportify.error.UserNotFoundException;
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
@@ -37,7 +41,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EquipoRepository equipoRepository;
-
+    private final DeporteRepository deporteRepository;
 
     @Value("${activation.duration}")
     private int activationDuration;
@@ -100,8 +104,8 @@ public class UserService {
     }
 
 
+    @Transactional
     public User editMe(User username, EditUserDto updatedUser) {
-
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
                     if (updatedUser.password() != null) {
@@ -116,11 +120,16 @@ public class UserService {
                     if (updatedUser.fechaNacimiento() != null) {
                         user.setFechaNacimiento(updatedUser.fechaNacimiento());
                     }
-                    return userRepository.save(user);
+                    Hibernate.initialize(user.getEquiposSeguidos());
+                    Hibernate.initialize(user.getDeportesSeguidos());
+                    return user;
+
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
     }
 
+    @Transactional
     public User editUser(String username, EditUserDto updatedUser) {
 
         return userRepository.findFirstByUsername(username)
@@ -137,15 +146,15 @@ public class UserService {
                     if (updatedUser.fechaNacimiento() != null) {
                         user.setFechaNacimiento(updatedUser.fechaNacimiento());
                     }
-                    return userRepository.save(user);
+                    Hibernate.initialize(user.getEquiposSeguidos());
+                    Hibernate.initialize(user.getDeportesSeguidos());
+                    return user;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
     }
 
     @Transactional
     public void deleteUser(String user) {
-
-
         Optional<User> u = userRepository.findFirstByUsername(user);
 
         if (u.isPresent()) {
@@ -173,6 +182,17 @@ public class UserService {
                 .orElseThrow(() -> new ActivationExpiredException("El código de activación no existe o ha caducado"));
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public User getAuthenticatedUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        Hibernate.initialize(user.getEquiposSeguidos());
+        Hibernate.initialize(user.getDeportesSeguidos());
+
+        return user;
+    }
+
     @Transactional
     public User seguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
         User user = userRepository.findFirstByUsername(username)
@@ -181,6 +201,7 @@ public class UserService {
         Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
 
+        Hibernate.initialize(user.getDeportesSeguidos());
         user.addEquipo(equipo);
 
         return userRepository.save(user);
@@ -194,19 +215,27 @@ public class UserService {
         Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
 
+        Hibernate.initialize(user.getDeportesSeguidos());
         user.removeEquipo(equipo);
 
         return userRepository.save(user);
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public User getAuthenticatedUser(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+    @Transactional
+    public User seguirDeporte(String username, FollowDeporteRequest nombreDeporte) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+                .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
+
 
         Hibernate.initialize(user.getEquiposSeguidos());
 
-        return user;
+        user.addDeporte(deporte);
+
+        return userRepository.save(user);
     }
+
 
 }

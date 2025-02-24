@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.user.controller;
 
+import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.security.jwt.access.JwtService;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshToken;
@@ -398,7 +399,7 @@ public class UserController {
                     content = @Content),
     })
     @PutMapping("/seguirEquipo")
-    public GetUsuarioDto seguirEquipo(@AuthenticationPrincipal User user,@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public GetUsuarioDto seguirEquipo(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la petición", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FollowEquipoRequest.class),
@@ -406,10 +407,11 @@ public class UserController {
                                 {
                                      "nombreEquipo":"real-madrid"
                                  }
-                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo){
-       User u = userService.seguirEquipo(user.getUsername(), nombreEquipo);
+                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo) {
+        User u = userService.seguirEquipo(user.getUsername(), nombreEquipo);
         return GetUsuarioDto.of(u);
     }
+
     @Operation(summary = "Deja de seguir a un equipo ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
@@ -422,7 +424,7 @@ public class UserController {
                     content = @Content),
     })
     @PutMapping("/unfollowEquipo")
-    public GetUsuarioDto unfollowEquipo(@AuthenticationPrincipal User user,@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public GetUsuarioDto unfollowEquipo(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la petición", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = FollowEquipoRequest.class),
@@ -430,8 +432,14 @@ public class UserController {
                                 {
                                      "nombreEquipo":"real-madrid"
                                  }
-                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo){
+                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo) {
         User u = userService.dejarDeSeguirEquipo(user.getUsername(), nombreEquipo);
+        return GetUsuarioDto.of(u);
+    }
+
+    @PutMapping("/seguirDeporte")
+    public GetUsuarioDto seguirDeporte(@AuthenticationPrincipal User user, @RequestBody FollowDeporteRequest nombreDeporte) {
+        User u = userService.seguirDeporte(user.getUsername(), nombreDeporte);
         return GetUsuarioDto.of(u);
     }
 }

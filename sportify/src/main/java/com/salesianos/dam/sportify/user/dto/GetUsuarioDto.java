@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.user.dto;
 
+import com.salesianos.dam.sportify.deporte.dto.GetDeporteDto;
 import com.salesianos.dam.sportify.equipo.dto.GetEquipoDto;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.validation.*;
@@ -19,16 +20,19 @@ public record GetUsuarioDto(
         String email,
         LocalDate fechaNacimiento,
         List<GetEquipoDto> equiposSeguidos,
+        List<GetDeporteDto> deportesSeguidos,
         String nombre
 ) {
     public static GetUsuarioDto of(User user) {
         Hibernate.initialize(user.getEquiposSeguidos());
+        Hibernate.initialize(user.getDeportesSeguidos());
         return new GetUsuarioDto(
                 user.getUsername(),
                 user.getPassword(),
                 user.getNombre(),
                 user.getFechaNacimiento(),
                 user.getEquiposSeguidos().stream().map(GetEquipoDto::of).toList(),
+                user.getDeportesSeguidos().stream().map(GetDeporteDto::of).toList(),
                 user.getEmail()
 
         );
