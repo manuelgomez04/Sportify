@@ -186,6 +186,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User dejarDeSeguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
+                .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
+
+        user.removeEquipo(equipo);
+
+        return userRepository.save(user);
+    }
+
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public User getAuthenticatedUser(UUID userId) {
         User user = userRepository.findById(userId)
