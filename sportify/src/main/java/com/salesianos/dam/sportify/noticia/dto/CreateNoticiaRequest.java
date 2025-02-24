@@ -21,9 +21,8 @@ public record CreateNoticiaRequest(
 
         @NotNull(message = "{createNoticiaRequest.fechaPublicacion.notNull}")
         @PastOrPresent(message = "{createNoticiaRequest.fechaPublicacion.pastOrPresent}")
-        LocalDate fechaPublicacion,
+        LocalDate fechaPublicacion
 
-        String slug
 
 ) {
 }

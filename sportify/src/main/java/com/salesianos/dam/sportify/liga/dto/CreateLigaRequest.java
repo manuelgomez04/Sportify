@@ -11,6 +11,7 @@ public record CreateLigaRequest(
         @NotNull
         String nombre,
 
+
         @NotBlank
         @NotNull
         String nombreDeporte,

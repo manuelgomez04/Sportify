@@ -1,8 +1,8 @@
 package com.salesianos.dam.sportify.liga.service;
 
-import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
 import com.salesianos.dam.sportify.error.DeporteNotFoundException;
+import com.salesianos.dam.sportify.error.LigaNotFoundException;
 import com.salesianos.dam.sportify.liga.dto.CreateLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
@@ -29,6 +29,7 @@ public class LigaService {
                 .descripcion(createLigaRequest.descripcion())
                 .build();
 
+        l.generarNombreNoEspacio();
         ligaRepository.save(l);
 
 
@@ -41,6 +42,18 @@ public class LigaService {
 
         return l;
 
+    }
+
+    @Transactional
+    public void deleteLiga(String nombre) {
+        Optional<Liga> liga = ligaRepository.findBy(nombre);
+
+        if (liga.isPresent()) {
+            liga.get().getDeporte().deleteLiga(liga.get());
+            ligaRepository.delete(liga.get());
+        } else {
+            throw new LigaNotFoundException("Liga no encontrada", HttpStatus.NOT_FOUND);
+        }
     }
 
 

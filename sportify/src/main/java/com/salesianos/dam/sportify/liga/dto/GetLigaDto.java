@@ -8,10 +8,11 @@ public record GetLigaDto(
         UUID id,
         String nombre,
         String descripcion,
-        String nombreDeporte
+        String nombreDeporte,
+        String nombreSinEspacio
 ) {
 
     public static GetLigaDto of(Liga l) {
-        return new GetLigaDto(l.getId(), l.getNombre(), l.getDescripcion(), l.getDeporte().getNombre());
+        return new GetLigaDto(l.getId(), l.getNombre(), l.getDescripcion(), l.getDeporte().getNombre(), l.getNombreNoEspacio());
     }
 }
