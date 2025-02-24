@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,7 +56,7 @@ public class DeporteController {
                                         }
                                     }
                             """))) @RequestBody @Valid CreateDeporteRequest deporte) {
-        return ResponseEntity.ok(deporteService.createDeporte(deporte));
+        return ResponseEntity.status(HttpStatus.CREATED).body(deporteService.createDeporte(deporte));
     }
 
 

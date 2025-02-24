@@ -84,8 +84,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/deporte/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/liga").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/liga/delete/**").hasRole("ADMIN")
-
-                .anyRequest().permitAll());
+                .requestMatchers(HttpMethod.POST, "/equipo").hasRole("ADMIN")
+                .anyRequest().authenticated());
 
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

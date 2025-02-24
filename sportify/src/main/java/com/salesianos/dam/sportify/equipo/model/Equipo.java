@@ -1,13 +1,13 @@
-package com.salesianos.dam.sportify.liga.model;
+package com.salesianos.dam.sportify.equipo.model;
 
-import com.salesianos.dam.sportify.deporte.model.Deporte;
-import com.salesianos.dam.sportify.equipo.model.Equipo;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.dam.sportify.liga.model.Liga;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,27 +18,25 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Liga {
+public class Equipo {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    private String nombre;
-    private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "deporte_id", foreignKey = @ForeignKey(name = "fk_liga_deporte"))
-    private Deporte deporte;
+    private String nombre;
+
+    private String ciudad;
+
+    private String pais;
+
+    private String escudo;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate fechaCreacion;
 
     private String nombreNoEspacio;
-
-    @OneToMany(mappedBy = "liga", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @Builder.Default
-    @EqualsAndHashCode.Exclude
-    private List<Equipo> equipos = new ArrayList<>();
-
 
     public void generarNombreNoEspacio() {
         this.nombreNoEspacio = this.nombre.toLowerCase()
@@ -51,15 +49,11 @@ public class Liga {
                 .replaceAll("[^a-z0-9-]", "");
     }
 
-    public void addEquipo(Equipo e) {
-        this.equipos.add(e);
-        e.setLiga(this);
-    }
 
-    public void deleteEquipo(Equipo e) {
-        this.equipos.remove(e);
-        e.setLiga(null);
-    }
+    @ManyToOne
+    @JoinColumn(name = "liga_id", foreignKey = @ForeignKey(name = "fk_equipo_liga"))
+    private Liga liga;
+
 
     @Override
     public final boolean equals(Object o) {
@@ -68,8 +62,8 @@ public class Liga {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Liga liga = (Liga) o;
-        return getId() != null && Objects.equals(getId(), liga.getId());
+        Equipo equipo = (Equipo) o;
+        return getId() != null && Objects.equals(getId(), equipo.getId());
     }
 
     @Override

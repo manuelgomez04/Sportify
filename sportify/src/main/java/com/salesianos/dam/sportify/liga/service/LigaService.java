@@ -46,7 +46,7 @@ public class LigaService {
 
     @Transactional
     public void deleteLiga(String nombre) {
-        Optional<Liga> liga = ligaRepository.findBy(nombre);
+        Optional<Liga> liga = ligaRepository.findByNombreNoEspacio(nombre);
 
         if (liga.isPresent()) {
             liga.get().getDeporte().deleteLiga(liga.get());
