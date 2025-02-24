@@ -437,9 +437,53 @@ public class UserController {
         return GetUsuarioDto.of(u);
     }
 
+    @Operation(summary = "Sigue a un deporte ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha seguido al deporte",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado al deporte",
+                    content = @Content),
+    })
     @PutMapping("/seguirDeporte")
-    public GetUsuarioDto seguirDeporte(@AuthenticationPrincipal User user, @RequestBody FollowDeporteRequest nombreDeporte) {
+    public GetUsuarioDto seguirDeporte(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowDeporteRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreDeporte":"real-madrid"
+                                 }
+                            """))) @RequestBody FollowDeporteRequest nombreDeporte) {
         User u = userService.seguirDeporte(user.getUsername(), nombreDeporte);
+        return GetUsuarioDto.of(u);
+    }
+
+    @Operation(summary = "Deja des seguir  un deporte ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha dejado de seguir al deporte",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado al deporte",
+                    content = @Content),
+    })
+    @PutMapping("/unfollowDeporte")
+    public GetUsuarioDto unfollowDeporte(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowDeporteRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreDeporte":"futbol"
+                                 }
+                            """))) @RequestBody FollowDeporteRequest nombreDeporte) {
+        User u = userService.dejarDeSeguirDeporte(user.getUsername(), nombreDeporte);
         return GetUsuarioDto.of(u);
     }
 }

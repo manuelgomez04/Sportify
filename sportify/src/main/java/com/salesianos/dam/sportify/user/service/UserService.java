@@ -237,5 +237,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User dejarDeSeguirDeporte(String username, FollowDeporteRequest nombreDeporte) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+                .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
+
+        Hibernate.initialize(user.getEquiposSeguidos());
+        user.removeDeporte(deporte);
+
+        return userRepository.save(user);
+    }
+
 
 }
