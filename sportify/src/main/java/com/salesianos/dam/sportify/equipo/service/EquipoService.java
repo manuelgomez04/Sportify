@@ -3,6 +3,7 @@ package com.salesianos.dam.sportify.equipo.service;
 import com.salesianos.dam.sportify.equipo.dto.CreateEquipoRequest;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
+import com.salesianos.dam.sportify.error.EquipoNotFoundException;
 import com.salesianos.dam.sportify.error.LigaNotFoundException;
 import com.salesianos.dam.sportify.files.model.FileMetadata;
 import com.salesianos.dam.sportify.files.service.StorageService;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +59,18 @@ public class EquipoService {
                 .path("/download/")
                 .path(filename)
                 .toUriString();
+    }
+
+    @Transactional
+    public void deleteEquipo(String nombre) {
+        Optional<Equipo> e = equipoRepository.findByNombreNoEspacio(nombre);
+
+        if (e.isPresent()) {
+            e.get().getLiga().deleteEquipo(e.get());
+            equipoRepository.delete(e.get());
+        } else {
+            throw new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND);
+        }
+
     }
 }
