@@ -95,10 +95,18 @@ public class UserService {
 
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
-                    user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    user.setEmail(updatedUser.email());
-                    user.setNombre(updatedUser.nombre());
-                    user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    if (updatedUser.password() != null) {
+                        user.setPassword(passwordEncoder.encode(updatedUser.password()));
+                    }
+                    if (updatedUser.email() != null) {
+                        user.setEmail(updatedUser.email());
+                    }
+                    if (updatedUser.nombre() != null) {
+                        user.setNombre(updatedUser.nombre());
+                    }
+                    if (updatedUser.fechaNacimiento() != null) {
+                        user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    }
                     return userRepository.save(user);
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
@@ -108,10 +116,18 @@ public class UserService {
 
         return userRepository.findFirstByUsername(username)
                 .map(user -> {
-                    user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    user.setEmail(updatedUser.email());
-                    user.setNombre(updatedUser.nombre());
-                    user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    if (updatedUser.password() != null) {
+                        user.setPassword(passwordEncoder.encode(updatedUser.password()));
+                    }
+                    if (updatedUser.email() != null) {
+                        user.setEmail(updatedUser.email());
+                    }
+                    if (updatedUser.nombre() != null) {
+                        user.setNombre(updatedUser.nombre());
+                    }
+                    if (updatedUser.fechaNacimiento() != null) {
+                        user.setFechaNacimiento(updatedUser.fechaNacimiento());
+                    }
                     return userRepository.save(user);
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));

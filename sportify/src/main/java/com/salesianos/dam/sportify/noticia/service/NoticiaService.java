@@ -1,12 +1,10 @@
 package com.salesianos.dam.sportify.noticia.service;
 
-import com.salesianos.dam.sportify.error.EntidadNoEncontradaException;
-import com.salesianos.dam.sportify.error.NoticiaNotFoundException;
-import com.salesianos.dam.sportify.error.UnauthorizedEditException;
-import com.salesianos.dam.sportify.error.UserNotFoundException;
+import com.salesianos.dam.sportify.error.*;
+import com.salesianos.dam.sportify.files.model.FileMetadata;
+import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
-import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
 import com.salesianos.dam.sportify.user.model.User;
@@ -17,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +27,7 @@ public class NoticiaService {
 
     private final NoticiaRepository noticiaRepository;
     private final UserRepository userRepository;
+    private final StorageService storageService;
 
 
     public Noticia findById(Noticia noticia) {
@@ -40,13 +41,23 @@ public class NoticiaService {
     }
 
     @Transactional
-    public Noticia saveNoticia(CreateNoticiaRequest createNoticiaRequest, User username) {
+    public Noticia saveNoticia(CreateNoticiaRequest createNoticiaRequest, User username, List<MultipartFile> files) {
+
+        List<FileMetadata> fileMetadata = files.stream()
+                .map(storageService::store)
+                .toList();
+
+        List<String> imageUrls = fileMetadata.stream()
+                .map(FileMetadata::getFilename)
+                .map(this::getImageUrl)
+                .toList();
 
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
                 .cuerpo(createNoticiaRequest.cuerpo())
                 .fechaPublicacion(createNoticiaRequest.fechaPublicacion())
-                .multimedia(createNoticiaRequest.multimedia())
+                .multimedia(imageUrls)
+
                 .build());
 
         n.generarSlug();
@@ -64,10 +75,16 @@ public class NoticiaService {
 
     }
 
+    public String getImageUrl(String filename) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/download/")
+                .path(filename)
+                .toUriString();
+    }
+
     public Page<Noticia> findAllNoticias(Pageable pageable) {
         return noticiaRepository.findAll(pageable);
     }
-
 
     @Transactional
     public Noticia editNoticia(String slug, EditNoticiaDto createNoticiaRequest, User usuarioAutenticado) {
@@ -78,9 +95,15 @@ public class NoticiaService {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
         }
 
-        noticia.setTitular(createNoticiaRequest.titular());
-        noticia.setCuerpo(createNoticiaRequest.cuerpo());
-        noticia.setMultimedia(createNoticiaRequest.multimedia());
+        if (createNoticiaRequest.titular() != null) {
+            noticia.setTitular(createNoticiaRequest.titular());
+        }
+        if (createNoticiaRequest.cuerpo() != null) {
+            noticia.setCuerpo(createNoticiaRequest.cuerpo());
+        }
+        if (createNoticiaRequest.multimedia() != null) {
+            noticia.setMultimedia(createNoticiaRequest.multimedia());
+        }
         noticia.generarSlug();
 
         return noticiaRepository.save(noticia);
@@ -93,6 +116,19 @@ public class NoticiaService {
     private boolean esAdmin(User usuario) {
         return usuario.getRoles().stream()
                 .anyMatch(role -> role.name().equals("ADMIN"));
+    }
+
+    @Transactional
+    public void deleteNoticia(String slug, User usuarioAutenticado) {
+        Noticia noticia = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+
+        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
+            throw new UnauthorizedDeleteException("No tienes permiso para eliminar esta noticia", HttpStatus.FORBIDDEN);
+        }
+
+        noticia.getAutor().removeNoticia(noticia);
+        noticiaRepository.delete(noticia);
     }
 
 }

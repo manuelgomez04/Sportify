@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.FIELD }) // La anotación se aplica a campos
-@Retention(RetentionPolicy.RUNTIME) // La anotación estará disponible en tiempo de ejecución
-@Constraint(validatedBy = UniqueEmailValidator.class) // Validador asociado
+@Target({ ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = UniqueEmailValidator.class)
 public @interface UniqueMail {
-    String message() default "El email ya está registrado"; // Mensaje de error por defecto
+    String message() default "El email ya está registrado";
 
     Class<?>[] groups() default {}; // Grupos de validación
 

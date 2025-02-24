@@ -1,6 +1,5 @@
 package com.salesianos.dam.sportify.noticia.dto;
 
-import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
 import com.salesianos.dam.sportify.validation.UniqueTitular;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,9 +16,6 @@ public record CreateNoticiaRequest(
 
         @NotBlank(message = "{createNoticiaRequest.cuerpo.notBlank}")
         String cuerpo,
-
-        @NotNull(message = "{createNoticiaRequest.multimedia.notNull}")
-        List<String> multimedia,
 
         String autorUsername,
 
