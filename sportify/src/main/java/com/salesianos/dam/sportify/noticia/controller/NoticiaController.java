@@ -46,7 +46,7 @@ public class NoticiaController {
                             array = @ArraySchema(schema = @Schema(implementation = GetNoticiaDto.class))
                     )}),
             @ApiResponse(responseCode = "400",
-                    description = "No se ha creado un historico de curso",
+                    description = "No se ha creado una noticia",
                     content = @Content),
     })
     @PostMapping

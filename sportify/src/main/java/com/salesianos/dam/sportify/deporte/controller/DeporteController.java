@@ -30,7 +30,7 @@ public class DeporteController {
     private final DeporteService deporteService;
 
 
-    @Operation(summary = "Crea un nuevo historico de curso para un alumno")
+    @Operation(summary = "Crea un nuevo deporte")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se ha creado el deporte",
@@ -44,7 +44,7 @@ public class DeporteController {
     @PostAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Deporte> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Cuerpo de la noticia", required = true,
+            description = "Cuerpo del deporte", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CreateDeporteRequest.class),
                     examples = @ExampleObject(value = """

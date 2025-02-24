@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 public @interface UniqueMail {
     String message() default "El email ya está registrado";
 
-    Class<?>[] groups() default {}; // Grupos de validación
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {}; // Payload para metadata adicional
+    Class<? extends Payload>[] payload() default {};
 }

@@ -9,6 +9,7 @@ import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class LigaService {
     private final DeporteRepository deporteRepository;
 
 
+    @Transactional
     public Liga createLiga(CreateLigaRequest createLigaRequest) {
 
         Liga l = Liga.builder()
@@ -29,7 +31,6 @@ public class LigaService {
 
         ligaRepository.save(l);
 
-        Optional<Deporte> d = ;
 
         if (deporteRepository.findByNombreEqualsIgnoreCase(createLigaRequest.nombreDeporte()).isPresent()) {
             deporteRepository.findByNombreEqualsIgnoreCase(createLigaRequest.nombreDeporte()).get().addLiga(l);
