@@ -1,9 +1,10 @@
 package com.salesianos.dam.sportify.noticia.service;
 
 import com.salesianos.dam.sportify.error.*;
+import com.salesianos.dam.sportify.files.model.FileMetadata;
+import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
-import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
 import com.salesianos.dam.sportify.user.model.User;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,7 @@ public class NoticiaService {
 
     private final NoticiaRepository noticiaRepository;
     private final UserRepository userRepository;
+    private final StorageService storageService;
 
 
     public Noticia findById(Noticia noticia) {
@@ -37,13 +41,23 @@ public class NoticiaService {
     }
 
     @Transactional
-    public Noticia saveNoticia(CreateNoticiaRequest createNoticiaRequest, User username) {
+    public Noticia saveNoticia(CreateNoticiaRequest createNoticiaRequest, User username, List<MultipartFile> files) {
+
+        List<FileMetadata> fileMetadata = files.stream()
+                .map(storageService::store)
+                .toList();
+
+        List<String> imageUrls = fileMetadata.stream()
+                .map(FileMetadata::getFilename)
+                .map(this::getImageUrl)
+                .toList();
 
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
                 .cuerpo(createNoticiaRequest.cuerpo())
                 .fechaPublicacion(createNoticiaRequest.fechaPublicacion())
-                .multimedia(createNoticiaRequest.multimedia())
+                .multimedia(imageUrls)
+
                 .build());
 
         n.generarSlug();
@@ -59,6 +73,13 @@ public class NoticiaService {
 
         return n;
 
+    }
+
+    public String getImageUrl(String filename) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/download/")
+                .path(filename)
+                .toUriString();
     }
 
     public Page<Noticia> findAllNoticias(Pageable pageable) {
@@ -87,6 +108,7 @@ public class NoticiaService {
 
         return noticiaRepository.save(noticia);
     }
+
     private boolean esAutorDeNoticia(User usuario, Noticia noticia) {
         return noticia.getAutor().getId().equals(usuario.getId());
     }
