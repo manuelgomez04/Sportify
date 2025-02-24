@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,7 +55,7 @@ public class LigaController {
                                         "nombreDeporte": "Futbol"
                                     }
                             """))) @RequestBody @Valid CreateLigaRequest createLigaRequest) {
-        return ResponseEntity.ok(GetLigaDto.of(ligaService.createLiga(createLigaRequest)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(GetLigaDto.of(ligaService.createLiga(createLigaRequest)));
     }
 
 
