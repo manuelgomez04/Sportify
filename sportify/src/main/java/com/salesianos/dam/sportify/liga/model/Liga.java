@@ -1,12 +1,10 @@
-package com.salesianos.dam.sportify.deporte.model;
+package com.salesianos.dam.sportify.liga.model;
 
-
-import com.salesianos.dam.sportify.liga.model.Liga;
+import com.salesianos.dam.sportify.deporte.model.Deporte;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -17,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Deporte {
+public class Liga {
 
     @Id
     @GeneratedValue
@@ -26,23 +24,9 @@ public class Deporte {
     private String nombre;
     private String descripcion;
 
-
-    @OneToMany(mappedBy = "deporte", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @Builder.Default
-    @EqualsAndHashCode.Exclude
-    private java.util.List<Liga> ligas = new ArrayList<>();
-
-
-    public void addLiga(Liga l) {
-        this.ligas.add(l);
-        l.setDeporte(this);
-    }
-
-    public void deleteLiga(Liga l) {
-        this.ligas.remove(l);
-        l.setDeporte(null);
-    }
+    @ManyToOne
+    @JoinColumn(name = "deporte_id", foreignKey = @ForeignKey(name = "fk_liga_deporte"))
+    private Deporte deporte;
 
     @Override
     public final boolean equals(Object o) {
@@ -51,13 +35,12 @@ public class Deporte {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Deporte deporte = (Deporte) o;
-        return getId() != null && Objects.equals(getId(), deporte.getId());
+        Liga liga = (Liga) o;
+        return getId() != null && Objects.equals(getId(), liga.getId());
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
-
 }
