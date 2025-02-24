@@ -114,55 +114,11 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(NoticiaNotFoundException.class)
-    public ProblemDetail handleNoticiaNotFoundException(EntidadNoEncontradaException ex) {
+    @ExceptionHandler(EntidadNoEncontradaException.class)
+    public ProblemDetail handleEntityNotFoundException(EntidadNoEncontradaException ex) {
         ProblemDetail result = ProblemDetail
                 .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Noticia no encontrada");
-        result.setProperty("author", "Manuel");
-
-        return result;
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ProblemDetail handleUsuarioNotFoundException(EntidadNoEncontradaException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Usuario no encontrado");
-        result.setProperty("author", "Manuel");
-
-        return result;
-    }
-
-    @ExceptionHandler(UnauthorizedEditException.class)
-    public ProblemDetail handleUnauthorizedEditException(UnauthorizedEditException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Acceso denegado, no puedes editar esta noticia");
-        return result;
-    }
-    @ExceptionHandler(UnauthorizedDeleteException.class)
-    public ProblemDetail handleUnauthorizedDeleteException(UnauthorizedEditException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Acceso denegado, no puedes borrar esta noticia");
-        return result;
-    }
-
-    @ExceptionHandler(DeporteNotFoundException.class)
-    public ProblemDetail handleDeporteNotFoundException(DeporteNotFoundException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Deporte no encontrado");
-        result.setProperty("author", "Manuel");
-
-        return result;
-    }
-    @ExceptionHandler(LigaNotFoundException.class)
-    public ProblemDetail handleLigaNotFoundException(LigaNotFoundException ex) {
-        ProblemDetail result = ProblemDetail
-                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
-        result.setTitle("Liga no encontrada");
+        result.setTitle("Entidad no encontrada");
         result.setProperty("author", "Manuel");
 
         return result;

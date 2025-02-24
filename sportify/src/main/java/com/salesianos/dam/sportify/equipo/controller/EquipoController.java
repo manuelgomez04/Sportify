@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -30,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class EquipoController {
 
     private final EquipoService equipoService;
-
 
 
     @Operation(summary = "Crea un nuevo equipo")
@@ -57,7 +53,13 @@ public class EquipoController {
                                    "pais": "España",
                                    "fechaCreacion":"1889-01-01"
                                }
-                            """)))@RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest, @RequestPart("escudo") MultipartFile escudo) {
+                            """))) @RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest, @RequestPart("escudo") MultipartFile escudo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(GetEquipoDto.of(equipoService.createEquipo(createEquipoRequest, escudo)));
+    }
+
+    @DeleteMapping("/{nombre}")
+    public ResponseEntity<?> deleteEquipo(@PathVariable String nombre) {
+        equipoService.deleteEquipo(nombre);
+        return ResponseEntity.noContent().build();
     }
 }

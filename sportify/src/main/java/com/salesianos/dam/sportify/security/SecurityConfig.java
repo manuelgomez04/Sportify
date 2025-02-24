@@ -85,6 +85,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/liga").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/liga/delete/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/equipo").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/equipo/**").hasRole("ADMIN")
                 .anyRequest().authenticated());
 
 
