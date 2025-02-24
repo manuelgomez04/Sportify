@@ -12,6 +12,6 @@ public class UniqueDeporteNameValidator implements ConstraintValidator<UniqueDep
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return StringUtils.hasText(s) && !repo.existsByNombre(s);
+        return StringUtils.hasText(s) && !repo.existsByNombreEqualsIgnoreCase(s);
     }
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface DeporteRepository extends JpaRepository<Deporte, UUID> {
 
-    Optional<Deporte> findByNombre(String nombre);
+    Optional<Deporte> findByNombreEqualsIgnoreCase(String nombre);
 
-    boolean existsByNombre(String nombre);
+    boolean existsByNombreEqualsIgnoreCase(String nombre);
 }

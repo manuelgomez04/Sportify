@@ -142,7 +142,7 @@ public class NoticiaController {
     @Operation(summary = "Borra una noticia buscada por su slug")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",
-                    description = "Se ha eliminado el usuario",
+                    description = "Se ha eliminado la noticia",
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = Noticia.class))
                     )}),
