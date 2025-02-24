@@ -35,10 +35,10 @@ public class NoticiaController {
     private final NoticiaService noticiaService;
 
 
-    @Operation(summary = "Crea un nuevo historico de curso para un alumno")
+    @Operation(summary = "Crea una nueva noticia")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
-                    description = "Se ha creado el historico de curso",
+                    description = "Se ha creado la noticia",
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = GetNoticiaDto.class))
                     )}),
