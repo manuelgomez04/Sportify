@@ -21,8 +21,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByEmail(String email);
 
-    @Query("""
-            SELECT u FROM User u JOIN FETCH u.equiposSeguidos WHERE u.username = :username
-            """)
-    Optional<User> findWithEquiposSeguidosByUsername(@Param("username")  String username);
+
 }

@@ -410,4 +410,28 @@ public class UserController {
        User u = userService.seguirEquipo(user.getUsername(), nombreEquipo);
         return GetUsuarioDto.of(u);
     }
+    @Operation(summary = "Deja de seguir a un equipo ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha dejado de seguir al equipo",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado al equipo",
+                    content = @Content),
+    })
+    @PutMapping("/unfollowEquipo")
+    public GetUsuarioDto unfollowEquipo(@AuthenticationPrincipal User user,@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowEquipoRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreEquipo":"real-madrid"
+                                 }
+                            """))) @RequestBody @Valid FollowEquipoRequest nombreEquipo){
+        User u = userService.dejarDeSeguirEquipo(user.getUsername(), nombreEquipo);
+        return GetUsuarioDto.of(u);
+    }
 }
