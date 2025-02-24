@@ -17,9 +17,6 @@ public record CreateNoticiaRequest(
         @NotBlank(message = "{createNoticiaRequest.cuerpo.notBlank}")
         String cuerpo,
 
-        @NotNull(message = "{createNoticiaRequest.multimedia.notNull}")
-        List<String> multimedia,
-
         String autorUsername,
 
         @NotNull(message = "{createNoticiaRequest.fechaPublicacion.notNull}")
