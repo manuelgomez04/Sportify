@@ -149,4 +149,14 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
         return result;
     }
 
+    @ExceptionHandler(DeporteNotFoundException.class)
+    public ProblemDetail handleNoticiaNotFoundException(DeporteNotFoundException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        result.setTitle("Deporte no encontrado");
+        result.setProperty("author", "Manuel");
+
+        return result;
+    }
+
 }

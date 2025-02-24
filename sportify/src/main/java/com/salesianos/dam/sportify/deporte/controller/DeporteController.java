@@ -5,6 +5,7 @@ import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.deporte.service.DeporteService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
+import com.salesianos.dam.sportify.noticia.model.Noticia;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,10 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/deporte")
@@ -60,4 +58,19 @@ public class DeporteController {
         return ResponseEntity.ok(deporteService.createDeporte(deporte));
     }
 
+
+    @Operation(summary = "Borra un deporte buscado por su nombre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha eliminado el deporte",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Deporte.class))
+                    )}),
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{name}")
+    public ResponseEntity<?> deleteDeporte(@PathVariable String name) {
+        deporteService.deleteDeporte(name);
+        return ResponseEntity.noContent().build();
+    }
 }

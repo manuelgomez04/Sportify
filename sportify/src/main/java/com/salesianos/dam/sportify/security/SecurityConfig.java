@@ -81,6 +81,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
                 .requestMatchers(HttpMethod.POST, "/deporte").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/deporte/**").hasRole("ADMIN")
                 .anyRequest().permitAll());
 
 
