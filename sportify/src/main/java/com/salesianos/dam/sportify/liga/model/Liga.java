@@ -28,6 +28,19 @@ public class Liga {
     @JoinColumn(name = "deporte_id", foreignKey = @ForeignKey(name = "fk_liga_deporte"))
     private Deporte deporte;
 
+    private String nombreNoEspacio;
+
+    public void generarNombreNoEspacio() {
+        this.nombreNoEspacio = this.nombre.toLowerCase()
+                .replace(" ", "-")
+                .replace("á", "a")
+                .replace("é", "e")
+                .replace("í", "i")
+                .replace("ó", "o")
+                .replace("ú", "u")
+                .replaceAll("[^a-z0-9-]", "");
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

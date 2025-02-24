@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.liga.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.CreateDeporteRequest;
+import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.liga.dto.CreateLigaRequest;
 import com.salesianos.dam.sportify.liga.dto.GetLigaDto;
 import com.salesianos.dam.sportify.liga.model.Liga;
@@ -17,10 +18,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/liga")
@@ -54,7 +53,24 @@ public class LigaController {
                                         "descripcion":"Es la primera división española de futbol",
                                         "nombreDeporte": "Futbol"
                                     }
-                            """)))@RequestBody @Valid CreateLigaRequest createLigaRequest) {
+                            """))) @RequestBody @Valid CreateLigaRequest createLigaRequest) {
         return ResponseEntity.ok(GetLigaDto.of(ligaService.createLiga(createLigaRequest)));
     }
+
+
+    @Operation(summary = "Borra una liga buscada por su nombre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha eliminado la liga",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Liga.class))
+                    )}),
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{nombre}")
+    public ResponseEntity<?> deleteLiga(@PathVariable String nombre) {
+        ligaService.deleteLiga(nombre);
+        return ResponseEntity.noContent().build();
+    }
+
 }
