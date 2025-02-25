@@ -103,6 +103,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/equiposFavoritos").authenticated()
                 .requestMatchers(HttpMethod.POST, "/like").authenticated()
                 .requestMatchers(HttpMethod.GET, "/noticias/filtradas").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
+
                 .anyRequest().authenticated());
 
 

@@ -3,6 +3,8 @@ package com.salesianos.dam.sportify.user.controller;
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
+import com.salesianos.dam.sportify.like.model.Like;
+import com.salesianos.dam.sportify.like.service.LikeService;
 import com.salesianos.dam.sportify.security.jwt.access.JwtService;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshToken;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenRequest;
@@ -44,6 +46,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final LikeService likeService;
 
 
     @Operation(summary = "Registra un nuevo usuario")
@@ -546,7 +549,7 @@ public class UserController {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado ligas",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = GetLigasFavoritasDto.class)),
                             examples = {@ExampleObject(
                                     value = """
                                             "username": "regular_user",
@@ -602,7 +605,7 @@ public class UserController {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado los deportes",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = GetDeportesFavoritosDto.class)),
                             examples = {@ExampleObject(
                                     value = """
                                             {
@@ -659,7 +662,7 @@ public class UserController {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado los equipos",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = GetEquiposFavoritos.class)),
                             examples = {@ExampleObject(
                                     value = """
                                             {
@@ -708,5 +711,57 @@ public class UserController {
     public GetEquiposFavoritos getEquiposFavoritos(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
         GetEquiposFavoritos eF = GetEquiposFavoritos.of(user, userService.findEquiposFavoritosByUsername(user.getUsername(), pageable));
         return eF;
+    }
+
+    @Operation(summary = "Obtiene todas las noticias que le han gustado al usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado las noticias",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiasLikedDto.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                "username": "regular_user",
+                                                "noticiasLiked": {
+                                                    "content": [],
+                                                    "pageable": {
+                                                        "pageNumber": 0,
+                                                        "pageSize": 10,
+                                                        "sort": {
+                                                            "empty": true,
+                                                            "sorted": false,
+                                                            "unsorted": true
+                                                        },
+                                                        "offset": 0,
+                                                        "paged": true,
+                                                        "unpaged": false
+                                                    },
+                                                    "last": true,
+                                                    "totalPages": 0,
+                                                    "totalElements": 0,
+                                                    "first": true,
+                                                    "size": 10,
+                                                    "number": 0,
+                                                    "sort": {
+                                                        "empty": true,
+                                                        "sorted": false,
+                                                        "unsorted": true
+                                                    },
+                                                    "numberOfElements": 0,
+                                                    "empty": true
+                                                }
+                                            }                                                                         }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado los equipos",
+                    content = @Content),
+    })
+    @GetMapping("/noticiasLiked")
+    public GetNoticiasLikedDto getNoticiasLiked(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        GetNoticiasLikedDto nL = GetNoticiasLikedDto.of(user, likeService.findNoticiasLikedByUsuario(user.getUsername(), pageable));
+        return nL;
     }
 }
