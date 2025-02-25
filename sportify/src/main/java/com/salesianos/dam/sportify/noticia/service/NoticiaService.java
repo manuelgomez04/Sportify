@@ -18,8 +18,10 @@ import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
+import com.salesianos.dam.sportify.query.NoticiaSpecificationBuilder;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
+import com.salesianos.dam.sportify.util.SearchCriteria;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,7 +160,6 @@ public class NoticiaService {
     }
 
 
-
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public void deleteNoticia(String slug, User usuarioAutenticado) {
@@ -226,4 +230,33 @@ public class NoticiaService {
         Page<Comentario> comentarios = comentarioRepository.findByNoticiaSlug(slug, pageable);
         return new NoticiaWithComentarios(noticia, comentarios);
     }
+
+    public Page<Noticia> getNoticiasFiltradas(String username, String slug, String deporte, String liga, LocalDate fechaInicio, LocalDate fechaFin, Pageable pageable) {
+        List<SearchCriteria> params = new ArrayList<>();
+
+        if (username != null && !username.isBlank()) {
+            params.add(new SearchCriteria("autor.username", ":", username));
+        }
+        if (slug != null && !slug.isBlank()) {
+            params.add(new SearchCriteria("slug", ":", slug));
+        }
+        if (deporte != null && !deporte.isBlank()) {
+            params.add(new SearchCriteria("deporteNoticia.nombre", ":", deporte.toLowerCase()));
+        }
+        if (liga != null && !liga.isBlank()) {
+            params.add(new SearchCriteria("ligaNoticia.nombreNoEspacio", ":", liga.toLowerCase()));
+        }
+        if (fechaInicio != null) {
+            params.add(new SearchCriteria("fechaPublicacion", ">", fechaInicio));
+        }
+        if (fechaFin != null) {
+            params.add(new SearchCriteria("fechaPublicacion", "<", fechaFin));
+        }
+
+        NoticiaSpecificationBuilder builder = new NoticiaSpecificationBuilder(params);
+        Specification<Noticia> spec = builder.build();
+
+        return noticiaRepository.findAll(spec, pageable);
+    }
+
 }

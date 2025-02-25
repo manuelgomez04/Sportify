@@ -22,7 +22,9 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,6 +34,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -68,7 +71,7 @@ public class NoticiaController {
                                                 ],
                                                 "fechaPublicacion": "2025-02-23"
                                             }
-                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest, @RequestPart("file") List<MultipartFile> files) {
+                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         return ResponseEntity.status(HttpStatus.CREATED).body(GetNoticiaDto.of(noticiaService.saveNoticia(createNoticiaRequest, username, files)));
     }
 
@@ -106,7 +109,7 @@ public class NoticiaController {
     })
     @GetMapping
     public Page<GetNoticiaNoAuthDto> findAllNoticias(
-            @PageableDefault(size = 10, page = 0) Pageable pageable) { // Configuración por defecto
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
         Page<GetNoticiaNoAuthDto> noticias = noticiaService.findAllNoticias(pageable)
                 .map(GetNoticiaNoAuthDto::of);
 
@@ -239,6 +242,19 @@ public class NoticiaController {
         GetNoticiaComentarioDto response = GetNoticiaComentarioDto.of(result.getNoticia(), result.getComentarios());
 
         return response;
+    }
+
+    @GetMapping("/filtradas")
+    public Page<GetNoticiaNoAuthDto> findNoticiasByCriteria(@RequestParam(required = false) String username,
+                                                            @RequestParam(required = false) String slug,
+                                                            @RequestParam(required = false) String deporte,
+                                                            @RequestParam(required = false) String liga,
+                                                            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fechaInicio,
+                                                            @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fechaFin,
+                                                            @PageableDefault(size = 10, sort = "fechaPublicacion", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Noticia> n = noticiaService.getNoticiasFiltradas(username, slug, deporte, liga, fechaInicio, fechaFin, pageable);
+        return n.map(GetNoticiaNoAuthDto::of);
+
     }
 
 }
