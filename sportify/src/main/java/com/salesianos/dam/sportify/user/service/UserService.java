@@ -9,7 +9,11 @@ import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
 import com.salesianos.dam.sportify.equipo.service.EquipoService;
 import com.salesianos.dam.sportify.error.DeporteNotFoundException;
 import com.salesianos.dam.sportify.error.EquipoNotFoundException;
+import com.salesianos.dam.sportify.error.LigaNotFoundException;
 import com.salesianos.dam.sportify.error.UserNotFoundException;
+import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
+import com.salesianos.dam.sportify.liga.model.Liga;
+import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
 import com.salesianos.dam.sportify.user.dto.EditUserDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
@@ -42,6 +46,7 @@ public class UserService {
     private final EmailService emailService;
     private final EquipoRepository equipoRepository;
     private final DeporteRepository deporteRepository;
+    private final LigaRepository ligaRepository;
 
     @Value("${activation.duration}")
     private int activationDuration;
@@ -122,6 +127,8 @@ public class UserService {
                     }
                     Hibernate.initialize(user.getEquiposSeguidos());
                     Hibernate.initialize(user.getDeportesSeguidos());
+                    Hibernate.initialize(user.getLigasSeguidas());
+
                     return user;
 
                 })
@@ -148,6 +155,8 @@ public class UserService {
                     }
                     Hibernate.initialize(user.getEquiposSeguidos());
                     Hibernate.initialize(user.getDeportesSeguidos());
+                    Hibernate.initialize(user.getLigasSeguidas());
+
                     return user;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
@@ -195,13 +204,15 @@ public class UserService {
 
     @Transactional
     public User seguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
-        User user = userRepository.findFirstByUsername(username)
+        User user = userRepository.findFirstByUsername(username)    
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
         Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getDeportesSeguidos());
+        Hibernate.initialize(user.getLigasSeguidas());
+
         user.addEquipo(equipo);
 
         return userRepository.save(user);
@@ -216,6 +227,8 @@ public class UserService {
                 .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getDeportesSeguidos());
+        Hibernate.initialize(user.getLigasSeguidas());
+
         user.removeEquipo(equipo);
 
         return userRepository.save(user);
@@ -231,6 +244,7 @@ public class UserService {
 
 
         Hibernate.initialize(user.getEquiposSeguidos());
+        Hibernate.initialize(user.getLigasSeguidas());
 
         user.addDeporte(deporte);
 
@@ -246,7 +260,25 @@ public class UserService {
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getEquiposSeguidos());
+        Hibernate.initialize(user.getLigasSeguidas());
+
         user.removeDeporte(deporte);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User seguirLiga(String username, FollowLigaRequest nombreLiga) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Liga liga = ligaRepository.findByNombreNoEspacio(nombreLiga.nombreLiga())
+                .orElseThrow(() -> new LigaNotFoundException("Liga no encontrada", HttpStatus.NOT_FOUND));
+
+
+        Hibernate.initialize(user.getEquiposSeguidos());
+        Hibernate.initialize(user.getDeportesSeguidos());
+        user.addLiga(liga);
 
         return userRepository.save(user);
     }
