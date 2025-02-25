@@ -553,4 +553,10 @@ public class UserController {
         GetDeportesFavoritosDto dF = GetDeportesFavoritosDto.of(user, userService.findDeportesFavoritosByUsername(user.getUsername(), pageable));
         return dF;
     }
+
+    @GetMapping("/deportesFavoritos")
+    public GetEquiposFavoritos getEquiposFavoritos(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        GetEquiposFavoritos eF = GetEquiposFavoritos.of(user, userService.findEquiposFavoritosByUsername(user.getUsername(), pageable));
+        return eF;
+    }
 }

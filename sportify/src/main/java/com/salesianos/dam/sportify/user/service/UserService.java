@@ -308,4 +308,8 @@ public class UserService {
         return deporteRepository.findByUsuariosSeguidosUsername(username, pageable);
     }
 
+
+    public Page<Equipo> findEquiposFavoritosByUsername(String username, Pageable pageable) {
+        return equipoRepository.findByUsuariosSeguidosUsername(username, pageable);
+    }
 }
