@@ -1,9 +1,11 @@
 package com.salesianos.dam.sportify.comentario.service;
 
 import com.salesianos.dam.sportify.comentario.dto.CreateComentarioRequest;
+import com.salesianos.dam.sportify.comentario.dto.EditComentarioRequest;
 import com.salesianos.dam.sportify.comentario.model.Comentario;
 import com.salesianos.dam.sportify.comentario.model.ComentariosPk;
 import com.salesianos.dam.sportify.comentario.repo.ComentarioRepository;
+import com.salesianos.dam.sportify.error.ComentarioNotFoundException;
 import com.salesianos.dam.sportify.error.NoticiaNotFoundException;
 import com.salesianos.dam.sportify.error.UserNotFoundException;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
@@ -45,5 +47,27 @@ public class ComentarioService {
                 .build();
 
         return comentarioRepository.save(c);
+    }
+
+    public Comentario editComentario(User user, EditComentarioRequest editComentarioRequest, String slug) {
+
+        User u = userRepository.findFirstByUsername(user.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Noticia n = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        ComentariosPk id = new ComentariosPk(u.getId(), n.getID());
+
+        Comentario c = comentarioRepository.findById(id)
+                .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
+
+
+        c.setTitulo(editComentarioRequest.titulo());
+        c.setComentario(editComentarioRequest.comentario());
+
+        return comentarioRepository.save(c);
+
+
     }
 }

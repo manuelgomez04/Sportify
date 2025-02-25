@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public interface NoticiaRepository extends JpaRepository<Noticia, UUID> {
 
+
     Page<Noticia> findAll(Pageable pageable);
 
     boolean existsByTitular(String titular);
