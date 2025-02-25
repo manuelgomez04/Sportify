@@ -87,12 +87,29 @@ public class ComentarioController {
         return ResponseEntity.ok(GetComentarioDto.of(c));
     }
 
+
+    @Operation(summary = "Borra un comentario de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha eliminado el comentario",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Comentario.class))
+                    )}),
+    })
     @DeleteMapping("/{slug}/{username}")
     public ResponseEntity<?> deleteComentarioAdmin(@PathVariable String slug, @PathVariable String username) {
         comentarioService.deleteComentario(slug, username);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Borra un comentario de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha eliminado el comentario",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Comentario.class))
+                    )}),
+    })
     @DeleteMapping("/{slug}")
     public ResponseEntity<?> deleteComentario(@AuthenticationPrincipal User user, @PathVariable String slug) {
         comentarioService.deleteComentarioMe(user.getUsername(), slug);
