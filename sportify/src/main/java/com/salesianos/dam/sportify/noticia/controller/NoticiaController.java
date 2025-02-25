@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.noticia.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
+import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
@@ -26,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -158,10 +160,56 @@ public class NoticiaController {
     }
 
 
-    @PostAuthorize("hasAnyRole('ADMIN', 'WRITER')")
+    @Operation(summary = "Añade el deporte sobre el que trata la noticia")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha añadido el deporte",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiaDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia con ese Slug",
+                    content = @Content),
+    })
+    @PreAuthorize("hasAnyRole('ADMIN', 'WRITER')")
     @PutMapping("/addDeporte/{slug}")
-    public GetNoticiaDto addDeporte( @AuthenticationPrincipal User me,@PathVariable String slug, @RequestBody FollowDeporteRequest followDeporteRequest) {
-      Noticia d =  noticiaService.addDeporteEnNoticia(me, slug, followDeporteRequest);
+    public GetNoticiaDto addDeporte(@AuthenticationPrincipal User me, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowDeporteRequest.class),
+                    examples = @ExampleObject(value = """
+                               {
+                                                "nombreDeporte": "futbol"
+                                            }
+                            """)))@RequestBody FollowDeporteRequest followDeporteRequest) {
+        Noticia d = noticiaService.addDeporteEnNoticia(me, slug, followDeporteRequest);
+        return GetNoticiaDto.of(d);
+    }
+
+
+    @Operation(summary = "Añade el equipo sobre el que trata la noticia")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha añadido el equipo",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = FollowEquipoRequest.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia con ese Slug",
+                    content = @Content),
+    })
+    @PreAuthorize("hasAnyRole('ADMIN', 'WRITER')")
+    @PutMapping("/addEquipo/{slug}")
+    public GetNoticiaDto addEquipo(@AuthenticationPrincipal User me, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EditNoticiaDto.class),
+                    examples = @ExampleObject(value = """
+                               {
+                                                "nombreEquipo": "fc-barcelona"
+                                            }
+                            """))) @RequestBody FollowEquipoRequest followEquipoRequest) {
+        Noticia d = noticiaService.addEquipoEnNoticia(me, slug, followEquipoRequest);
         return GetNoticiaDto.of(d);
     }
 

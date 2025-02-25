@@ -6,16 +6,13 @@ import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
-import com.salesianos.dam.sportify.equipo.service.EquipoService;
-import com.salesianos.dam.sportify.error.DeporteNotFoundException;
-import com.salesianos.dam.sportify.error.EquipoNotFoundException;
-import com.salesianos.dam.sportify.error.LigaNotFoundException;
-import com.salesianos.dam.sportify.error.UserNotFoundException;
+import com.salesianos.dam.sportify.error.*;
 import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
 import com.salesianos.dam.sportify.user.dto.EditUserDto;
+import com.salesianos.dam.sportify.user.dto.GetUserNoAsociacionesDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
 import com.salesianos.dam.sportify.user.model.Role;
 import com.salesianos.dam.sportify.user.model.User;
@@ -163,8 +160,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String user) {
-        Optional<User> u = userRepository.findFirstByUsername(user);
+    public void deleteUser(GetUserNoAsociacionesDto user) {
+        Optional<User> u = userRepository.findFirstByUsername(user.username());
 
         if (u.isPresent()) {
             u.get().setDeleted(true);
@@ -216,6 +213,13 @@ public class UserService {
         user.addEquipo(equipo);
 
         return userRepository.save(user);
+    }
+
+    public void isDeleted(User user) {
+        if (user.getDeleted()) {
+            throw new UserDeletedException("El usuario ha sido eliminado", HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @Transactional

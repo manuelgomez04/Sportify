@@ -124,5 +124,14 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
         return result;
     }
 
+    @ExceptionHandler(UserDeletedException.class)
+    public ProblemDetail handleUserELiminatedExcpetion(UserDeletedException ex) {
+        ProblemDetail result = ProblemDetail
+                .forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        result.setTitle("Usuario eliminado");
+        result.setProperty("author", "Manuel");
+
+        return result;
+    }
 
 }
