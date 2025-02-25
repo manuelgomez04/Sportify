@@ -54,6 +54,7 @@ public class UserService {
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.USER))
+                .deleted(false)
                 .activationToken(generateRandomActivationCode())
                 .build();
 
@@ -215,12 +216,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void isDeleted(User user) {
+   /* public void isDeleted(User user) {
         if (user.getDeleted()) {
             throw new UserDeletedException("El usuario ha sido eliminado", HttpStatus.NOT_FOUND);
-        }
+        }*/
 
-    }
+
 
     @Transactional
     public User dejarDeSeguirEquipo(String username, FollowEquipoRequest nombreEquipo) {

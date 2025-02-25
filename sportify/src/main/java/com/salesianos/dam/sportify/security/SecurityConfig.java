@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+
 public class SecurityConfig {
 
 
@@ -96,6 +99,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/noticias/addDeporte/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/addEquipo/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/comentario").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/comentario/edit/**").authenticated()
 
 
                 .anyRequest().authenticated());

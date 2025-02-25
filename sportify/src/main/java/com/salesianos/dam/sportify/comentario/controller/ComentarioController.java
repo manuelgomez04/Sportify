@@ -1,10 +1,13 @@
 package com.salesianos.dam.sportify.comentario.controller;
 
 import com.salesianos.dam.sportify.comentario.dto.CreateComentarioRequest;
+import com.salesianos.dam.sportify.comentario.dto.EditComentarioRequest;
 import com.salesianos.dam.sportify.comentario.dto.GetComentarioDto;
 import com.salesianos.dam.sportify.comentario.model.Comentario;
+import com.salesianos.dam.sportify.comentario.model.ComentariosPk;
 import com.salesianos.dam.sportify.comentario.service.ComentarioService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
+import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
 import com.salesianos.dam.sportify.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +43,7 @@ public class ComentarioController {
                     content = @Content),
     })
     @PostMapping
-    public ResponseEntity<GetComentarioDto> createComentario(@AuthenticationPrincipal User user,@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public ResponseEntity<GetComentarioDto> createComentario(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo del comentario", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CreateComentarioRequest.class),
@@ -55,5 +58,32 @@ public class ComentarioController {
         Comentario c = comentarioService.createComentario(user, request.titular(), request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(GetComentarioDto.of(c));
+    }
+
+
+    @Operation(summary = "Edita un comentario de una noticia")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha editado la el comentario",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetComentarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia con ese Slug",
+                    content = @Content),
+    })
+    @PutMapping("/{slug}")
+    public ResponseEntity<GetComentarioDto> editComentario(@AuthenticationPrincipal User user, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la noticia", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EditComentarioRequest.class),
+                    examples = @ExampleObject(value = """
+                               {
+                                   "titulo": "con el tiempo es mejor",
+                                   "comentario": "yo que se no lo se"
+                               }
+                            """))) @RequestBody @Valid EditComentarioRequest request) {
+        Comentario c = comentarioService.editComentario(user, request, slug);
+        return ResponseEntity.ok(GetComentarioDto.of(c));
     }
 }

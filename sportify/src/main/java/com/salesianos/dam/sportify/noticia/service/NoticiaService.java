@@ -24,6 +24,8 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,14 +45,17 @@ public class NoticiaService {
     private final LigaRepository ligaRepository;
 
 
-    public Noticia findById(Noticia noticia) {
-        Optional<Noticia> n = noticiaRepository.findById(noticia.getID());
+    public Noticia findBySlug(String n) {
+        return noticiaRepository.findBySlug(n).orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+    }
 
-        if (n.isPresent()) {
-            return n.get();
-        } else {
-            throw new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND);
-        }
+    public User findUserByUsername(String username) {
+        return userRepository.findFirstByUsername(username).orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+    }
+
+
+    public Liga findLigaByNombre(String nombre) {
+        return ligaRepository.findByNombreNoEspacio(nombre).orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
     }
 
     @Transactional
@@ -71,8 +76,7 @@ public class NoticiaService {
         Equipo e = equipoRepository.findByNombreNoEspacio(createNoticiaRequest.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("No se ha encontrado el equipo", HttpStatus.NOT_FOUND));
 
-        Liga l = ligaRepository.findByNombreNoEspacio(createNoticiaRequest.nombreLiga())
-                .orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
+        Liga l = findLigaByNombre(createNoticiaRequest.nombreLiga());
 
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
@@ -81,18 +85,17 @@ public class NoticiaService {
                 .multimedia(imageUrls)
                 .deporteNoticia(d)
                 .equipoNoticia(e)
+                .ligaNoticia(l)
                 .build());
 
         n.generarSlug();
 
         noticiaRepository.save(n);
 
-        if (userRepository.findFirstByUsername(username.getUsername()).isPresent()) {
-            userRepository.findFirstByUsername(username.getUsername()).get().addNoticia(n);
-            noticiaRepository.save(n);
-        } else {
-            throw new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND);
-        }
+        findUserByUsername(username.getUsername()).addNoticia(n);
+        noticiaRepository.save(n);
+
+
 
         return n;
 
@@ -110,13 +113,11 @@ public class NoticiaService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public Noticia editNoticia(String slug, EditNoticiaDto createNoticiaRequest, User usuarioAutenticado) {
-        Noticia noticia = noticiaRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
 
-        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
-            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
-        }
+        Noticia noticia = findBySlug(slug);
+
 
         if (createNoticiaRequest.titular() != null) {
             noticia.setTitular(createNoticiaRequest.titular());
@@ -129,43 +130,35 @@ public class NoticiaService {
         }
         noticia.generarSlug();
 
+
         return noticiaRepository.save(noticia);
     }
 
-    private boolean esAutorDeNoticia(User usuario, Noticia noticia) {
-        return noticia.getAutor().getId().equals(usuario.getId());
+
+    public boolean esAutorDeNoticiaSlug(String usuario, String noticia) {
+        Noticia n = findBySlug(noticia);
+        User u = findUserByUsername(usuario);
+        return n.getAutor().getId().equals(u.getId());
     }
 
-    private boolean esAdmin(User usuario) {
-        return usuario.getRoles().stream()
-                .anyMatch(role -> role.name().equals("ADMIN"));
-    }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public void deleteNoticia(String slug, User usuarioAutenticado) {
-        Noticia noticia = noticiaRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+        Noticia noticia = findBySlug(slug);
 
-        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
-            throw new UnauthorizedDeleteException("No tienes permiso para eliminar esta noticia", HttpStatus.FORBIDDEN);
-        }
 
         noticia.getAutor().removeNoticia(noticia);
         noticiaRepository.delete(noticia);
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public Noticia addDeporteEnNoticia(User autenticado, String slug, FollowDeporteRequest followDeporteRequest) {
 
-        User u = userRepository.findFirstByUsername(autenticado.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+        User u = findUserByUsername(autenticado.getUsername());
 
-        Noticia n = noticiaRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
-
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
-            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
-        }
+        Noticia n = findBySlug(slug);
 
 
         Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(followDeporteRequest.nombreDeporte())
@@ -178,17 +171,12 @@ public class NoticiaService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public Noticia addEquipoEnNoticia(User autenticado, String slug, FollowEquipoRequest followEquipoRequest) {
 
-        User u = userRepository.findFirstByUsername(autenticado.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+        User u = findUserByUsername(autenticado.getUsername());
 
-        Noticia n = noticiaRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
-
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
-            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
-        }
+        Noticia n = findBySlug(slug);
 
 
         Equipo e = equipoRepository.findByNombreNoEspacio(followEquipoRequest.nombreEquipo())
@@ -201,20 +189,15 @@ public class NoticiaService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
     public Noticia addLigaNoticia(User autenticado, String slug, FollowLigaRequest followLigaRequest) {
 
-        User u = userRepository.findFirstByUsername(autenticado.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+        User u = findUserByUsername(autenticado.getUsername());
 
-        Noticia n = noticiaRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+        Noticia n = findBySlug(slug);
 
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
-            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
-        }
 
-        Liga l = ligaRepository.findByNombreNoEspacio(followLigaRequest.nombreLiga())
-                .orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
+        Liga l = findLigaByNombre(followLigaRequest.nombreLiga());
 
         n.setLigaNoticia(l);
 

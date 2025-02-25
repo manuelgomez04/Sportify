@@ -153,7 +153,7 @@ public class NoticiaController {
                             array = @ArraySchema(schema = @Schema(implementation = Noticia.class))
                     )}),
     })
-    @PostAuthorize("hasAnyRole('ADMIN', 'WRITER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WRITER')")
     @DeleteMapping("/delete/{slug}")
     public ResponseEntity<?> deleteNoticia(@PathVariable String slug, @AuthenticationPrincipal User me) {
         noticiaService.deleteNoticia(slug, me);
