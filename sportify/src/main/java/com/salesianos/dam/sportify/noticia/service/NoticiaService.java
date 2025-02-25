@@ -9,6 +9,9 @@ import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
 import com.salesianos.dam.sportify.error.*;
 import com.salesianos.dam.sportify.files.model.FileMetadata;
 import com.salesianos.dam.sportify.files.service.StorageService;
+import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
+import com.salesianos.dam.sportify.liga.model.Liga;
+import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
@@ -37,6 +40,7 @@ public class NoticiaService {
     private final StorageService storageService;
     private final DeporteRepository deporteRepository;
     private final EquipoRepository equipoRepository;
+    private final LigaRepository ligaRepository;
 
 
     public Noticia findById(Noticia noticia) {
@@ -66,6 +70,9 @@ public class NoticiaService {
 
         Equipo e = equipoRepository.findByNombreNoEspacio(createNoticiaRequest.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("No se ha encontrado el equipo", HttpStatus.NOT_FOUND));
+
+        Liga l = ligaRepository.findByNombreNoEspacio(createNoticiaRequest.())
+                .orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
 
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
@@ -191,6 +198,28 @@ public class NoticiaService {
         n.setEquipoNoticia(e);
 
         return noticiaRepository.save(n);
+    }
+
+    @Transactional
+    public Noticia addLigaNoticia(User autenticado, String slug, FollowLigaRequest followLigaRequest) {
+
+        User u = userRepository.findFirstByUsername(autenticado.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+
+        Noticia n = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+
+        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
+            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
+        }
+
+        Liga l = ligaRepository.findByNombreNoEspacio(followLigaRequest.nombreLiga())
+                .orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
+
+        n.setLigaNoticia(l);
+
+        return noticiaRepository.save(n);
+
     }
 
 }

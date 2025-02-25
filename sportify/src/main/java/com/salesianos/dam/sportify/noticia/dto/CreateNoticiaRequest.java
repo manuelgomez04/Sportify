@@ -23,10 +23,11 @@ public record CreateNoticiaRequest(
         @PastOrPresent(message = "{createNoticiaRequest.fechaPublicacion.pastOrPresent}")
         LocalDate fechaPublicacion,
 
-
         String nombreDeporte,
 
-        String nombreEquipo
+        String nombreEquipo,
+
+        String nombreLiga
 
 ) {
 }
