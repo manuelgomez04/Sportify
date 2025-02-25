@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/edit/me").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/edit/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/delete/me").hasAnyRole("USER", "WRITER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/delete/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/admin/delete/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/noticias").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
@@ -98,8 +98,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/unfollowLiga").hasAnyRole("USER", "WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/addDeporte/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/addEquipo/**").hasAnyRole("WRITER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/comentario").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/comentario/edit/**").authenticated()
+
+
 
 
                 .anyRequest().authenticated());
