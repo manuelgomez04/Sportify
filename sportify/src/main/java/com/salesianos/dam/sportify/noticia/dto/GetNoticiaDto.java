@@ -2,6 +2,7 @@ package com.salesianos.dam.sportify.noticia.dto;
 
 import com.salesianos.dam.sportify.deporte.dto.GetDeporteDto;
 import com.salesianos.dam.sportify.deporte.dto.GetNombreDeporteDto;
+import com.salesianos.dam.sportify.equipo.dto.GetNombreEquipoDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.user.dto.GetUserNoAsociacionesDto;
 import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
@@ -18,6 +19,7 @@ public record GetNoticiaDto(
         List<String> multimedia,
         GetUserNoAsociacionesDto usuario,
         LocalDate fechaCreacion,
+        GetNombreEquipoDto equipo,
         GetNombreDeporteDto deporte,
         String slug
 ) {
@@ -31,7 +33,8 @@ public record GetNoticiaDto(
                 n.getMultimedia(),
                 GetUserNoAsociacionesDto.of(n.getAutor()),
                 n.getFechaPublicacion(),
-                GetNombreDeporteDto.of(n.getDeporteNoticia()),
+                n.getEquipoNoticia() != null ? GetNombreEquipoDto.of(n.getEquipoNoticia()) : null,
+                n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null,
                 n.getSlug()
         );
     }
