@@ -3,6 +3,7 @@ package com.salesianos.dam.sportify.user.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
+import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import jakarta.persistence.*;
 import lombok.*;
@@ -91,6 +92,15 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "equipo_id"))
     private Set<Deporte> deportesSeguidos = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @Setter(AccessLevel.NONE)
+    @Builder.Default
+    @JoinTable(name = "usuario_liga",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "liga_id"))
+    private Set<Liga> ligasSeguidas = new HashSet<>();
+
 
     public void addEquipo(Equipo e) {
         equiposSeguidos.add(e);
@@ -106,6 +116,14 @@ public class User implements UserDetails {
 
     public void removeDeporte(Deporte d) {
         deportesSeguidos.remove(d);
+    }
+
+    public void addLiga(Liga l) {
+        ligasSeguidas.add(l);
+    }
+
+    public void removeLiga(Liga l) {
+        ligasSeguidas.remove(l);
     }
 
 

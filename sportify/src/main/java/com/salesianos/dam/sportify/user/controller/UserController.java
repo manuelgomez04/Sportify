@@ -2,6 +2,7 @@ package com.salesianos.dam.sportify.user.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
+import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.security.jwt.access.JwtService;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshToken;
 import com.salesianos.dam.sportify.security.jwt.refresh.RefreshTokenRequest;
@@ -484,6 +485,31 @@ public class UserController {
                                  }
                             """))) @RequestBody FollowDeporteRequest nombreDeporte) {
         User u = userService.dejarDeSeguirDeporte(user.getUsername(), nombreDeporte);
+        return GetUsuarioDto.of(u);
+    }
+
+    @Operation(summary = "Sigue una Liga")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha dejado de seguir la liga",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado la liga",
+                    content = @Content),
+    })
+    @PutMapping("/seguirLiga")
+    public GetUsuarioDto seguirLiga(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowLigaRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreLiga":"laliga-easports"
+                                 }
+                            """))) @RequestBody FollowLigaRequest nombreLiga) {
+        User u = userService.seguirLiga(user.getUsername(), nombreLiga);
         return GetUsuarioDto.of(u);
     }
 }
