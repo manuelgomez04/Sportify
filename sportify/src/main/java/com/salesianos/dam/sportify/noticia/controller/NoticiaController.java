@@ -1,12 +1,11 @@
 package com.salesianos.dam.sportify.noticia.controller;
 
+import com.salesianos.dam.sportify.comentario.model.Comentario;
+import com.salesianos.dam.sportify.comentario.service.ComentarioService;
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
-import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
-import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
-import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
-import com.salesianos.dam.sportify.noticia.dto.GetNoticiaNoAuthDto;
+import com.salesianos.dam.sportify.noticia.dto.*;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.service.NoticiaService;
 import com.salesianos.dam.sportify.user.model.User;
@@ -42,6 +41,7 @@ import java.util.List;
 @Tag(name = "Noticias", description = "Gestión de las operaciones relacionadas con las noticias")
 public class NoticiaController {
     private final NoticiaService noticiaService;
+    private final ComentarioService comentarioService;
 
 
     @Operation(summary = "Crea una nueva noticia")
@@ -127,21 +127,23 @@ public class NoticiaController {
                     content = @Content),
     })
     @PutMapping("/edit/{slug}")
-    public GetNoticiaDto editNoticia(@PathVariable String slug, @AuthenticationPrincipal User me, @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Cuerpo de la noticia", required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = EditNoticiaDto.class),
-                    examples = @ExampleObject(value = """
-                               {
-                                                "titular": "Este es el nuevo titular",
-                                                "cuerpo": "Este es el nuevo cuerpo de la noticia.",
-                                                "multimedia": [
-                                                    "imagen1.jpg",
-                                                    "video1.mp4"
-                                                ]
-                                            }
-                            """))) @RequestBody @Valid EditNoticiaDto createNoticiaRequest) {
-        return GetNoticiaDto.of(noticiaService.editNoticia(slug, createNoticiaRequest, me));
+    public GetNoticiaDto editNoticia(
+            @PathVariable String slug,
+            @AuthenticationPrincipal User me,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Cuerpo de la noticia", required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EditNoticiaDto.class),
+                            examples = @ExampleObject(value = """
+                                       {
+                                            "titular": "Este es el nuevo titular",
+                                            "cuerpo": "Este es el nuevo cuerpo de la noticia."
+                                        }
+                                    """)))
+            @RequestPart("editNoticiaDto") @Valid EditNoticiaDto editNoticiaDto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+
+        return GetNoticiaDto.of(noticiaService.editNoticia(slug, editNoticiaDto, me, files));
     }
 
 
@@ -226,6 +228,17 @@ public class NoticiaController {
                             """))) @RequestBody FollowLigaRequest followLigaRequest) {
         Noticia d = noticiaService.addLigaNoticia(me, slug, followLigaRequest);
         return GetNoticiaDto.of(d);
+    }
+
+    @GetMapping("/{slug}/comentarios")
+    public GetNoticiaComentarioDto findComentariosByNoticiaSlug(@PathVariable String slug, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+
+
+        NoticiaService.NoticiaWithComentarios result = noticiaService.findNoticiaWithComentariosBySlug(slug, pageable);
+
+        GetNoticiaComentarioDto response = GetNoticiaComentarioDto.of(result.getNoticia(), result.getComentarios());
+
+        return response;
     }
 
 }
