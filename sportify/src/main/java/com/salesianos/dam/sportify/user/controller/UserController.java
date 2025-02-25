@@ -180,6 +180,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = (User) authentication.getPrincipal();
+        userService.isDeleted(user);
 
         String accessToken = jwtService.generateAccessToken(user);
 
@@ -368,7 +369,7 @@ public class UserController {
                     )}),
     })
     @DeleteMapping("/delete/{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+    public ResponseEntity<?> deleteUser(@PathVariable GetUserNoAsociacionesDto username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
@@ -382,7 +383,7 @@ public class UserController {
                     )}),
     })
     @DeleteMapping("/delete/me")
-    public ResponseEntity<?> deleteMe(@PathVariable String username) {
+    public ResponseEntity<?> deleteMe(@PathVariable GetUserNoAsociacionesDto username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
