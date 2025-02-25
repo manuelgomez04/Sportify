@@ -1,6 +1,8 @@
 package com.salesianos.dam.sportify.liga.repo;
 
 import com.salesianos.dam.sportify.liga.model.Liga;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,15 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
     boolean existsByNombreEqualsIgnoreCaseAndIgnoreWhitespace(@Param("nombre") String nombre);
 
     Optional<Liga> findByNombreNoEspacio(String nombre);
+
+    @Query(value = "SELECT l.* FROM liga l " +
+            "JOIN usuario_liga ul ON l.id = ul.liga_id " +
+            "JOIN users u ON ul.usuario_id = u.id " +
+            "WHERE u.username = :username",
+            countQuery = "SELECT COUNT(*) FROM liga l " +
+                    "JOIN usuario_liga ul ON l.id = ul.liga_id " +
+                    "JOIN users u ON ul.usuario_id = u.id " +
+                    "WHERE u.username = :username",
+            nativeQuery = true)
+    Page<Liga> findLigasFavoritasByUsername(@Param("username") String username, Pageable pageable);
 }

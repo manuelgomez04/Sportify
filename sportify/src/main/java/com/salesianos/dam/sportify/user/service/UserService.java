@@ -22,6 +22,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -216,12 +218,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-   /* public void isDeleted(User user) {
-        if (user.getDeleted()) {
-            throw new UserDeletedException("El usuario ha sido eliminado", HttpStatus.NOT_FOUND);
-        }*/
-
-
 
     @Transactional
     public User dejarDeSeguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
@@ -304,5 +300,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Page<Liga> findLigasFavoritasByUsername(String username, Pageable pageable) {
+        return ligaRepository.findLigasFavoritasByUsername(username, pageable);
+    }
 
 }

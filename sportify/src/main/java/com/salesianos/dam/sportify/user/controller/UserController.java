@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -537,5 +540,11 @@ public class UserController {
                             """))) @RequestBody FollowLigaRequest nombreLiga) {
         User u = userService.dejarDeSeguirLiga(user.getUsername(), nombreLiga);
         return GetUsuarioDto.of(u);
+    }
+
+    @GetMapping("/ligasFavoritas")
+    public GetLigasFavoritasDto getLigasFavoritas(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        GetLigasFavoritasDto g = GetLigasFavoritasDto.of(user, userService.findLigasFavoritasByUsername(user.getUsername(), pageable));
+        return g;
     }
 }
