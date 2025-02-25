@@ -12,6 +12,7 @@ import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,9 +66,10 @@ public class ComentarioService {
                 .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
 
 
-        if (editComentarioRequest.comentario() != null){
+        if (editComentarioRequest.comentario() != null) {
             c.setComentario(editComentarioRequest.comentario());
-        } if (editComentarioRequest.titulo() != null){
+        }
+        if (editComentarioRequest.titulo() != null) {
             c.setTitulo(editComentarioRequest.titulo());
 
         }
@@ -76,5 +78,56 @@ public class ComentarioService {
         return comentarioRepository.save(c);
 
 
+    }
+
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteComentario( String slug, String user) {
+        User u = userRepository.findFirstByUsername(user)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Noticia n = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        ComentariosPk id = new ComentariosPk(u.getId(), n.getID());
+
+        Comentario c = comentarioRepository.findById(id)
+                .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
+
+        comentarioRepository.delete(c);
+
+    }
+
+    @Transactional
+    public void deleteComentarioMe(String user, String slug) {
+        User u = userRepository.findFirstByUsername(user)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Noticia n = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        ComentariosPk id = new ComentariosPk(u.getId(), n.getID());
+
+        Comentario c = comentarioRepository.findById(id)
+                .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
+
+        comentarioRepository.delete(c);
+
+    }
+
+    public boolean isOwner(String user, String slug) {
+        User u = userRepository.findFirstByUsername(user)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Noticia n = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        ComentariosPk id = new ComentariosPk(u.getId(), n.getID());
+
+        Comentario c = comentarioRepository.findById(id)
+                .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
+
+        return c.getUsuario().equals(u);
     }
 }

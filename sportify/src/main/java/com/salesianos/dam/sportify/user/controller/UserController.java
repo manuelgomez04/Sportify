@@ -368,7 +368,7 @@ public class UserController {
                             array = @ArraySchema(schema = @Schema(implementation = User.class))
                     )}),
     })
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/admin/delete/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable GetUserNoAsociacionesDto username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
@@ -383,8 +383,8 @@ public class UserController {
                     )}),
     })
     @DeleteMapping("/delete/me")
-    public ResponseEntity<?> deleteMe(@PathVariable GetUserNoAsociacionesDto username) {
-        userService.deleteUser(username);
+    public ResponseEntity<?> deleteMe(@AuthenticationPrincipal User username) {
+        userService.deleteUser(GetUserNoAsociacionesDto.of(username));
         return ResponseEntity.noContent().build();
     }
 

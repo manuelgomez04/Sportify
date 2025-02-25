@@ -86,4 +86,19 @@ public class ComentarioController {
         Comentario c = comentarioService.editComentario(user, request, slug);
         return ResponseEntity.ok(GetComentarioDto.of(c));
     }
+
+    @DeleteMapping("/{slug}/{username}")
+    public ResponseEntity<?> deleteComentarioAdmin(@PathVariable String slug, @PathVariable String username) {
+        comentarioService.deleteComentario(slug, username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deleteComentario(@AuthenticationPrincipal User user, @PathVariable String slug) {
+        comentarioService.deleteComentarioMe(user.getUsername(), slug);
+        return ResponseEntity.noContent().build();
+    }
+
 }
+
+
