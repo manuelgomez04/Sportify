@@ -1,6 +1,8 @@
 package com.salesianos.dam.sportify.noticia.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.salesianos.dam.sportify.comentario.model.Comentario;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.liga.model.Liga;
@@ -10,9 +12,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -64,6 +64,12 @@ public class Noticia {
                 .replace("ú", "u")
                 .replaceAll("[^a-z0-9-]", "");
     }
+
+    @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Comentario> comentarios = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {

@@ -71,7 +71,7 @@ public class NoticiaService {
         Equipo e = equipoRepository.findByNombreNoEspacio(createNoticiaRequest.nombreEquipo())
                 .orElseThrow(() -> new EquipoNotFoundException("No se ha encontrado el equipo", HttpStatus.NOT_FOUND));
 
-        Liga l = ligaRepository.findByNombreNoEspacio(createNoticiaRequest.())
+        Liga l = ligaRepository.findByNombreNoEspacio(createNoticiaRequest.nombreLiga())
                 .orElseThrow(() -> new LigaNotFoundException("No se ha encontrado la liga", HttpStatus.NOT_FOUND));
 
         Noticia n = noticiaRepository.save(Noticia.builder()

@@ -1,6 +1,8 @@
 package com.salesianos.dam.sportify.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.salesianos.dam.sportify.comentario.model.Comentario;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.liga.model.Liga;
@@ -92,6 +94,14 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "equipo_id"))
     private Set<Deporte> deportesSeguidos = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Comentario> comentarioss = new HashSet<>();
+
+
     @ManyToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
     @Setter(AccessLevel.NONE)
@@ -100,6 +110,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "liga_id"))
     private Set<Liga> ligasSeguidas = new HashSet<>();
+
 
 
     public void addEquipo(Equipo e) {
