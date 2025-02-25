@@ -304,4 +304,8 @@ public class UserService {
         return ligaRepository.findLigasFavoritasByUsername(username, pageable);
     }
 
+    public Page<Deporte> findDeportesFavoritosByUsername(String username, Pageable pageable) {
+        return deporteRepository.findByUsuariosSeguidosUsername(username, pageable);
+    }
+
 }
