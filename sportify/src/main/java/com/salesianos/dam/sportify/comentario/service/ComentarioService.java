@@ -14,6 +14,8 @@ import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -129,5 +131,9 @@ public class ComentarioService {
                 .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
 
         return c.getUsuario().equals(u);
+    }
+
+    public Page<Comentario> findComentariosByNoticiaSlug(String slug, Pageable pageable) {
+        return comentarioRepository.findByNoticiaSlug(slug, pageable);
     }
 }

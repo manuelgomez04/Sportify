@@ -1,5 +1,7 @@
 package com.salesianos.dam.sportify.noticia.service;
 
+import com.salesianos.dam.sportify.comentario.model.Comentario;
+import com.salesianos.dam.sportify.comentario.repo.ComentarioRepository;
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
@@ -19,6 +21,8 @@ import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
@@ -43,7 +47,15 @@ public class NoticiaService {
     private final DeporteRepository deporteRepository;
     private final EquipoRepository equipoRepository;
     private final LigaRepository ligaRepository;
+    private final ComentarioRepository comentarioRepository;
 
+
+    @Data
+    @AllArgsConstructor
+    public static class NoticiaWithComentarios {
+        private Noticia noticia;
+        private Page<Comentario> comentarios;
+    }
 
     public Noticia findBySlug(String n) {
         return noticiaRepository.findBySlug(n).orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
@@ -96,7 +108,6 @@ public class NoticiaService {
         noticiaRepository.save(n);
 
 
-
         return n;
 
     }
@@ -114,32 +125,35 @@ public class NoticiaService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN') or @noticiaService.esAutorDeNoticiaSlug(authentication.principal.username,#slug )")
-    public Noticia editNoticia(String slug, EditNoticiaDto createNoticiaRequest, User usuarioAutenticado) {
+    public Noticia editNoticia(String slug, EditNoticiaDto editNoticiaDto, User usuarioAutenticado, List<MultipartFile> files) {
 
         Noticia noticia = findBySlug(slug);
 
+        if (editNoticiaDto.titular() != null) {
+            noticia.setTitular(editNoticiaDto.titular());
+        }
+        if (editNoticiaDto.cuerpo() != null) {
+            noticia.setCuerpo(editNoticiaDto.cuerpo());
+        }
 
-        if (createNoticiaRequest.titular() != null) {
-            noticia.setTitular(createNoticiaRequest.titular());
+        if (files != null && !files.isEmpty()) {
+            List<FileMetadata> fileMetadata = files.stream()
+                    .map(storageService::store)
+                    .toList();
+
+            List<String> imageUrls = fileMetadata.stream()
+                    .map(FileMetadata::getFilename)
+                    .map(this::getImageUrl)
+                    .toList();
+
+            noticia.setMultimedia(imageUrls);
         }
-        if (createNoticiaRequest.cuerpo() != null) {
-            noticia.setCuerpo(createNoticiaRequest.cuerpo());
-        }
-        if (createNoticiaRequest.multimedia() != null) {
-            noticia.setMultimedia(createNoticiaRequest.multimedia());
-        }
+
         noticia.generarSlug();
-
 
         return noticiaRepository.save(noticia);
     }
 
-
-    public boolean esAutorDeNoticiaSlug(String usuario, String noticia) {
-        Noticia n = findBySlug(noticia);
-        User u = findUserByUsername(usuario);
-        return n.getAutor().getId().equals(u.getId());
-    }
 
 
     @Transactional
@@ -205,4 +219,11 @@ public class NoticiaService {
 
     }
 
+    public NoticiaWithComentarios findNoticiaWithComentariosBySlug(String slug, Pageable pageable) {
+        Noticia noticia = noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        Page<Comentario> comentarios = comentarioRepository.findByNoticiaSlug(slug, pageable);
+        return new NoticiaWithComentarios(noticia, comentarios);
+    }
 }
