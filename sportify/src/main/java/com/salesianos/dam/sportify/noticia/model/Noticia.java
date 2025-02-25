@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.noticia.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +39,10 @@ public class Noticia {
     @ManyToOne
     @JoinColumn(name = "autor_id", foreignKey = @ForeignKey(name = "fk_noticia_autor"))
     private User autor;
+
+    @ManyToOne
+    @JoinColumn(name = "deporte_id", foreignKey = @ForeignKey(name = "fk_noticia_deporte"))
+    private Deporte deporteNoticia;
 
     public void generarSlug() {
         this.slug = this.titular.toLowerCase()

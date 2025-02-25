@@ -1,7 +1,11 @@
 package com.salesianos.dam.sportify.noticia.dto;
 
+import com.salesianos.dam.sportify.deporte.dto.GetDeporteDto;
+import com.salesianos.dam.sportify.deporte.dto.GetNombreDeporteDto;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
+import com.salesianos.dam.sportify.user.dto.GetUserNoAsociacionesDto;
 import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,19 +16,22 @@ public record GetNoticiaDto(
         String titular,
         String cuerpo,
         List<String> multimedia,
-        GetUsuarioDto usuario,
+        GetUserNoAsociacionesDto usuario,
         LocalDate fechaCreacion,
+        GetNombreDeporteDto deporte,
         String slug
 ) {
 
     public static GetNoticiaDto of(Noticia n) {
+
         return new GetNoticiaDto(
                 n.getID(),
                 n.getTitular(),
                 n.getCuerpo(),
                 n.getMultimedia(),
-                GetUsuarioDto.of(n.getAutor()),
+                GetUserNoAsociacionesDto.of(n.getAutor()),
                 n.getFechaPublicacion(),
+                GetNombreDeporteDto.of(n.getDeporteNoticia()),
                 n.getSlug()
         );
     }

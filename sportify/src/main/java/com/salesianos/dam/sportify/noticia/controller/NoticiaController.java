@@ -1,5 +1,6 @@
 package com.salesianos.dam.sportify.noticia.controller;
 
+import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -153,6 +155,14 @@ public class NoticiaController {
     public ResponseEntity<?> deleteNoticia(@PathVariable String slug, @AuthenticationPrincipal User me) {
         noticiaService.deleteNoticia(slug, me);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PostAuthorize("hasAnyRole('ADMIN', 'WRITER')")
+    @PutMapping("/addDeporte/{slug}")
+    public GetNoticiaDto addDeporte( @AuthenticationPrincipal User me,@PathVariable String slug, @RequestBody FollowDeporteRequest followDeporteRequest) {
+      Noticia d =  noticiaService.addDeporteEnNoticia(me, slug, followDeporteRequest);
+        return GetNoticiaDto.of(d);
     }
 
 }
