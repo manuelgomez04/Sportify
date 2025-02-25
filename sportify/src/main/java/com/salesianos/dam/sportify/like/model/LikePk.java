@@ -1,4 +1,4 @@
-package com.salesianos.dam.sportify.comentario.model;
+package com.salesianos.dam.sportify.like.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -13,11 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class ComentariosPk implements Serializable {
+public class LikePk  implements Serializable {
+    @Column(name = "id_usuario_like")
+    private UUID idUsuario_like;
 
-    @Column(name = "id_usuario_comentario")
-    private UUID idUsuario_comentario;
-
-    @Column(name = "id_noticia_comentario")
-    private UUID idNoticia_comentario;
+    @Column(name = "id_noticia_like")
+    private UUID idNoticia_like;
 }

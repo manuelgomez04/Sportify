@@ -38,7 +38,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequiredArgsConstructor
-
 public class UserController {
 
     private final UserService userService;
@@ -312,7 +311,7 @@ public class UserController {
         return GetUsuarioDto.of(updatedUser);
     }
 
-    @Operation(summary = "Obtiene todos los usuarios")
+    @Operation(summary = "Obtiene todos los datos de mi usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado usuarios",
@@ -542,19 +541,170 @@ public class UserController {
         return GetUsuarioDto.of(u);
     }
 
+    @Operation(summary = "Obtiene todas las ligas favoritas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado ligas",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            "username": "regular_user",
+                                                "ligasFavoritas": {
+                                                    "content": [
+                                                        {
+                                                            "nombreLiga": "LaLiga EaSports"
+                                                        }
+                                                    ],
+                                                    "pageable": {
+                                                        "pageNumber": 0,
+                                                        "pageSize": 10,
+                                                        "sort": {
+                                                            "empty": true,
+                                                            "sorted": false,
+                                                            "unsorted": true
+                                                        },
+                                                        "offset": 0,
+                                                        "paged": true,
+                                                        "unpaged": false
+                                                    },
+                                                    "last": true,
+                                                    "totalElements": 1,
+                                                    "totalPages": 1,
+                                                    "first": true,
+                                                    "size": 10,
+                                                    "number": 0,
+                                                    "sort": {
+                                                        "empty": true,
+                                                        "sorted": false,
+                                                        "unsorted": true
+                                                    },
+                                                    "numberOfElements": 1,
+                                                    "empty": false
+                                                }
+                                            }                                                                                       }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado la liga",
+                    content = @Content),
+    })
     @GetMapping("/ligasFavoritas")
     public GetLigasFavoritasDto getLigasFavoritas(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
         GetLigasFavoritasDto lF = GetLigasFavoritasDto.of(user, userService.findLigasFavoritasByUsername(user.getUsername(), pageable));
         return lF;
     }
 
+
+    @Operation(summary = "Obtiene todas los deportes favoritos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado los deportes",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                               "username": "regular_user",
+                                                               "deportesFavoritos": {
+                                                                   "content": [
+                                                                       {
+                                                                           "nombreDeporte": "Futbol"
+                                                                       }
+                                                                   ],
+                                                                   "pageable": {
+                                                                       "pageNumber": 0,
+                                                                       "pageSize": 10,
+                                                                       "sort": {
+                                                                           "empty": true,
+                                                                           "sorted": false,
+                                                                           "unsorted": true
+                                                                       },
+                                                                       "offset": 0,
+                                                                       "paged": true,
+                                                                       "unpaged": false
+                                                                   },
+                                                                   "last": true,
+                                                                   "totalPages": 1,
+                                                                   "totalElements": 1,
+                                                                   "size": 10,
+                                                                   "number": 0,
+                                                                   "sort": {
+                                                                       "empty": true,
+                                                                       "sorted": false,
+                                                                       "unsorted": true
+                                                                   },
+                                                                   "first": true,
+                                                                   "numberOfElements": 1,
+                                                                   "empty": false
+                                                               }
+                                                           }                                                                         }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado los deportes",
+                    content = @Content),
+    })
     @GetMapping("/deportesFavoritos")
     public GetDeportesFavoritosDto getDeportesFavoritos(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
         GetDeportesFavoritosDto dF = GetDeportesFavoritosDto.of(user, userService.findDeportesFavoritosByUsername(user.getUsername(), pageable));
         return dF;
     }
 
-    @GetMapping("/deportesFavoritos")
+
+    @Operation(summary = "Obtiene todas los equipops favoritos ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado los equipos",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                               "username": "regular_user",
+                                                               "equiposFavoritos": {
+                                                                   "content": [
+                                                                       {
+                                                                           "nombreEquipo": "Fc Barcelona"
+                                                                       }
+                                                                   ],
+                                                                   "pageable": {
+                                                                       "pageNumber": 0,
+                                                                       "pageSize": 10,
+                                                                       "sort": {
+                                                                           "empty": true,
+                                                                           "sorted": false,
+                                                                           "unsorted": true
+                                                                       },
+                                                                       "offset": 0,
+                                                                       "paged": true,
+                                                                       "unpaged": false
+                                                                   },
+                                                                   "last": true,
+                                                                   "totalPages": 1,
+                                                                   "totalElements": 1,
+                                                                   "size": 10,
+                                                                   "number": 0,
+                                                                   "sort": {
+                                                                       "empty": true,
+                                                                       "sorted": false,
+                                                                       "unsorted": true
+                                                                   },
+                                                                   "first": true,
+                                                                   "numberOfElements": 1,
+                                                                   "empty": false
+                                                               }
+                                                           }                                                                         }
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado los equipos",
+                    content = @Content),
+    })
+    @GetMapping("/equiposFavoritos")
     public GetEquiposFavoritos getEquiposFavoritos(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
         GetEquiposFavoritos eF = GetEquiposFavoritos.of(user, userService.findEquiposFavoritosByUsername(user.getUsername(), pageable));
         return eF;

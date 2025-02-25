@@ -40,7 +40,7 @@ public class ComentarioController {
                     )}),
             @ApiResponse(responseCode = "400",
                     description = "No se ha creado el comentario",
-                    content = @Content),
+                    content = @Content)
     })
     @PostMapping
     public ResponseEntity<GetComentarioDto> createComentario(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(

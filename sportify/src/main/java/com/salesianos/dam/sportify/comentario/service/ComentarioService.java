@@ -44,9 +44,9 @@ public class ComentarioService {
         Comentario c = Comentario.builder()
                 .idComentario(id)
                 .usuario(u)
-                .noticia(n)
-                .titulo(createComentarioRequest.titulo()) // Asignar el título correctamente
-                .comentario(createComentarioRequest.comentario()) // Asignar el comentario correctamente
+                .noticia_comentario(n)
+                .titulo(createComentarioRequest.titulo())
+                .comentario(createComentarioRequest.comentario())
                 .fechaComentario(LocalDateTime.now())
                 .build();
 

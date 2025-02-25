@@ -27,17 +27,16 @@ public class Comentario {
 
 
     @ManyToOne
-    @MapsId("idUsuario")
-    @JoinColumn(name = "usuario_id")
+    @MapsId("idUsuario_comentario")
+    @JoinColumn(name = "id_usuario_comentario")
     @JsonBackReference
     private User usuario;
 
     @ManyToOne
-    @MapsId("idNoticia")
-    @JoinColumn(name = "noticia_id")
+    @MapsId("idNoticia_comentario")
+    @JoinColumn(name = "id_noticia_comentario")
     @JsonBackReference
-    private Noticia noticia;
-
+    private Noticia noticia_comentario;
 
 
 }

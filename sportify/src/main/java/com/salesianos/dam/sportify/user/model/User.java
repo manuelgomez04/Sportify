@@ -6,6 +6,7 @@ import com.salesianos.dam.sportify.comentario.model.Comentario;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.liga.model.Liga;
+import com.salesianos.dam.sportify.like.model.Like;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import jakarta.persistence.*;
 import lombok.*;
@@ -99,7 +100,13 @@ public class User implements UserDetails {
     @Builder.Default
     @ToString.Exclude
     @JsonManagedReference
-    private Set<Comentario> comentarioss = new HashSet<>();
+    private Set<Comentario> comentarios = new HashSet<>();
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Like> likes = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY)
