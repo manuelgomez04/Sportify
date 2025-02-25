@@ -512,4 +512,29 @@ public class UserController {
         User u = userService.seguirLiga(user.getUsername(), nombreLiga);
         return GetUsuarioDto.of(u);
     }
+
+    @Operation(summary = "Deja des seguir  una liga ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha dejado de seguir a la liga",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetUsuarioDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado la liga",
+                    content = @Content),
+    })
+    @PutMapping("/unfollowLiga")
+    public GetUsuarioDto unFollowLiga(@AuthenticationPrincipal User user, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowLigaRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                     "nombreLiga":"laliga-easports"
+                                 }
+                            """))) @RequestBody FollowLigaRequest nombreLiga) {
+        User u = userService.dejarDeSeguirLiga(user.getUsername(), nombreLiga);
+        return GetUsuarioDto.of(u);
+    }
 }

@@ -204,7 +204,7 @@ public class UserService {
 
     @Transactional
     public User seguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
-        User user = userRepository.findFirstByUsername(username)    
+        User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
         Equipo equipo = equipoRepository.findByNombreNoEspacio(nombreEquipo.nombreEquipo())
@@ -279,6 +279,22 @@ public class UserService {
         Hibernate.initialize(user.getEquiposSeguidos());
         Hibernate.initialize(user.getDeportesSeguidos());
         user.addLiga(liga);
+
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User dejarDeSeguirLiga(String username, FollowLigaRequest nombreLiga) {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
+
+        Liga liga = ligaRepository.findByNombreNoEspacio(nombreLiga.nombreLiga())
+                .orElseThrow(() -> new LigaNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
+
+        Hibernate.initialize(user.getDeportesSeguidos());
+        Hibernate.initialize(user.getEquiposSeguidos());
+
+        user.removeLiga(liga);
 
         return userRepository.save(user);
     }
