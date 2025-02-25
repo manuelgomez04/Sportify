@@ -14,6 +14,7 @@ import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,6 +50,7 @@ public class ComentarioService {
         return comentarioRepository.save(c);
     }
 
+
     public Comentario editComentario(User user, EditComentarioRequest editComentarioRequest, String slug) {
 
         User u = userRepository.findFirstByUsername(user.getUsername())
@@ -63,8 +65,13 @@ public class ComentarioService {
                 .orElseThrow(() -> new ComentarioNotFoundException("Comentario no encontrado", HttpStatus.NOT_FOUND));
 
 
-        c.setTitulo(editComentarioRequest.titulo());
-        c.setComentario(editComentarioRequest.comentario());
+        if (editComentarioRequest.comentario() != null){
+            c.setComentario(editComentarioRequest.comentario());
+        } if (editComentarioRequest.titulo() != null){
+            c.setTitulo(editComentarioRequest.titulo());
+
+        }
+
 
         return comentarioRepository.save(c);
 
