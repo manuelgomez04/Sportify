@@ -99,6 +99,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/noticias/addDeporte/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/noticias/addEquipo/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/ligasFavoritas").authenticated()
+                .requestMatchers(HttpMethod.GET, "/deportesFavoritos").authenticated()
+
                 .anyRequest().authenticated());
 
 

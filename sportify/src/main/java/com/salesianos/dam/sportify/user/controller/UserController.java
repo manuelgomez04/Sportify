@@ -544,7 +544,13 @@ public class UserController {
 
     @GetMapping("/ligasFavoritas")
     public GetLigasFavoritasDto getLigasFavoritas(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
-        GetLigasFavoritasDto g = GetLigasFavoritasDto.of(user, userService.findLigasFavoritasByUsername(user.getUsername(), pageable));
-        return g;
+        GetLigasFavoritasDto lF = GetLigasFavoritasDto.of(user, userService.findLigasFavoritasByUsername(user.getUsername(), pageable));
+        return lF;
+    }
+
+    @GetMapping("/deportesFavoritos")
+    public GetDeportesFavoritosDto getDeportesFavoritos(@AuthenticationPrincipal User user, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        GetDeportesFavoritosDto dF = GetDeportesFavoritosDto.of(user, userService.findDeportesFavoritosByUsername(user.getUsername(), pageable));
+        return dF;
     }
 }

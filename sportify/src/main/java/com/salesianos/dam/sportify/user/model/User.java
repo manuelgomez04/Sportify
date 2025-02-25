@@ -91,7 +91,7 @@ public class User implements UserDetails {
     @Builder.Default
     @JoinTable(name = "usuario_deporte",
             joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipo_id"))
+            inverseJoinColumns = @JoinColumn(name = "deporte_id"))
     private Set<Deporte> deportesSeguidos = new HashSet<>();
 
 
