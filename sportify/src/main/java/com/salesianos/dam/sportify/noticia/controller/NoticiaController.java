@@ -2,6 +2,7 @@ package com.salesianos.dam.sportify.noticia.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
 import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
+import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.EditNoticiaDto;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
@@ -181,7 +182,7 @@ public class NoticiaController {
                                {
                                                 "nombreDeporte": "futbol"
                                             }
-                            """)))@RequestBody FollowDeporteRequest followDeporteRequest) {
+                            """))) @RequestBody FollowDeporteRequest followDeporteRequest) {
         Noticia d = noticiaService.addDeporteEnNoticia(me, slug, followDeporteRequest);
         return GetNoticiaDto.of(d);
     }
@@ -192,7 +193,7 @@ public class NoticiaController {
             @ApiResponse(responseCode = "200",
                     description = "Se ha añadido el equipo",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = FollowEquipoRequest.class))
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiaDto.class))
                     )}),
             @ApiResponse(responseCode = "404",
                     description = "No se ha encontrado ninguna noticia con ese Slug",
@@ -203,13 +204,27 @@ public class NoticiaController {
     public GetNoticiaDto addEquipo(@AuthenticationPrincipal User me, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la petición", required = true,
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = EditNoticiaDto.class),
+                    schema = @Schema(implementation = FollowEquipoRequest.class),
                     examples = @ExampleObject(value = """
                                {
                                                 "nombreEquipo": "fc-barcelona"
                                             }
                             """))) @RequestBody FollowEquipoRequest followEquipoRequest) {
         Noticia d = noticiaService.addEquipoEnNoticia(me, slug, followEquipoRequest);
+        return GetNoticiaDto.of(d);
+    }
+
+    @PutMapping("/addLiga/{slug}")
+    public GetNoticiaDto addLiga(@AuthenticationPrincipal User me, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Cuerpo de la petición", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = FollowLigaRequest.class),
+                    examples = @ExampleObject(value = """
+                               {
+                                                "nombreLiga": "la-liga-easports"
+                                            }
+                            """))) @RequestBody FollowLigaRequest followLigaRequest) {
+        Noticia d = noticiaService.addLigaNoticia(me, slug, followLigaRequest);
         return GetNoticiaDto.of(d);
     }
 
