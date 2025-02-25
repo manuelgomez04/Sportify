@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,7 @@ public class EquipoController {
                     description = "No se ha creado una noticia",
                     content = @Content),
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<GetEquipoDto> createEquipo(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la noticia", required = true,
@@ -56,7 +58,7 @@ public class EquipoController {
                             """))) @RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest, @RequestPart("escudo") MultipartFile escudo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(GetEquipoDto.of(equipoService.createEquipo(createEquipoRequest, escudo)));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<?> deleteEquipo(@PathVariable String nombre) {
         equipoService.deleteEquipo(nombre);

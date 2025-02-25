@@ -41,7 +41,7 @@ public class LigaController {
                     description = "No se ha creado la noticia",
                     content = @Content),
     })
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<GetLigaDto> createLiga(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la liga", required = true,

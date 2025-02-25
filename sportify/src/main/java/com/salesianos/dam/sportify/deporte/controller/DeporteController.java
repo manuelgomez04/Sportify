@@ -42,7 +42,7 @@ public class DeporteController {
                     description = "No se ha creado el deporte",
                     content = @Content),
     })
-    @PostAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Deporte> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo del deporte", required = true,
