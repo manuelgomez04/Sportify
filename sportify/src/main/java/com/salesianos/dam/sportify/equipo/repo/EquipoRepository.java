@@ -2,6 +2,8 @@ package com.salesianos.dam.sportify.equipo.repo;
 
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +17,15 @@ public interface EquipoRepository extends JpaRepository<Equipo, UUID> {
     boolean existsByNombreEqualsIgnoreCaseAndIgnoreWhitespace(@Param("nombre") String nombre);
 
     Optional<Equipo> findByNombreNoEspacio(String nombreNoEspacios);
+
+    @Query(value = "SELECT e.* FROM equipo e " +
+            "JOIN usuario_equipo ue ON e.id = ue.equipo_id " +
+            "JOIN users u ON ue.usuario_id = u.id " +
+            "WHERE u.username = :username",
+            countQuery = "SELECT COUNT(*) FROM equipo e " +
+                    "JOIN usuario_equipo ue ON e.id = ue.equipo_id " +
+                    "JOIN users u ON ue.usuario_id = u.id " +
+                    "WHERE u.username = :username",
+            nativeQuery = true)
+    Page<Equipo> findByUsuariosSeguidosUsername(@Param("username") String username, Pageable pageable);
 }
