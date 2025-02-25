@@ -92,6 +92,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/seguirDeporte").hasAnyRole("USER", "WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/unfollowDeporte").hasAnyRole("USER", "WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/seguirLiga").hasAnyRole("USER", "WRITER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/unfollowLiga").hasAnyRole("USER", "WRITER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/noticias/addDeporte/**").hasAnyRole("WRITER", "ADMIN")
 
 
                 .anyRequest().authenticated());

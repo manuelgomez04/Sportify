@@ -1,5 +1,8 @@
 package com.salesianos.dam.sportify.noticia.service;
 
+import com.salesianos.dam.sportify.deporte.dto.FollowDeporteRequest;
+import com.salesianos.dam.sportify.deporte.model.Deporte;
+import com.salesianos.dam.sportify.deporte.repo.DeporteRepository;
 import com.salesianos.dam.sportify.error.*;
 import com.salesianos.dam.sportify.files.model.FileMetadata;
 import com.salesianos.dam.sportify.files.service.StorageService;
@@ -11,6 +14,7 @@ import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,7 @@ public class NoticiaService {
     private final NoticiaRepository noticiaRepository;
     private final UserRepository userRepository;
     private final StorageService storageService;
+    private final DeporteRepository deporteRepository;
 
 
     public Noticia findById(Noticia noticia) {
@@ -129,6 +134,32 @@ public class NoticiaService {
 
         noticia.getAutor().removeNoticia(noticia);
         noticiaRepository.delete(noticia);
+    }
+
+    @Transactional
+    public Noticia addDeporteEnNoticia(User autenticado, String slug, FollowDeporteRequest followDeporteRequest) {
+
+        User u = userRepository.findFirstByUsername(autenticado.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario", HttpStatus.NOT_FOUND));
+
+        Noticia n =  noticiaRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
+
+        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
+            throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
+        }
+
+
+        Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(followDeporteRequest.nombreDeporte())
+                .orElseThrow(() -> new DeporteNotFoundException("No se ha encontrado el deporte", HttpStatus.NOT_FOUND));
+
+
+        Hibernate.initialize(u.getEquiposSeguidos());
+        Hibernate.initialize(u.getDeportesSeguidos());
+        Hibernate.initialize(u.getLigasSeguidas());
+        n.setDeporteNoticia(d);
+
+        return noticiaRepository.save(n);
     }
 
 }
