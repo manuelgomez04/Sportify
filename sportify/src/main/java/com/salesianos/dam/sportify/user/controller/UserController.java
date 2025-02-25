@@ -180,7 +180,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = (User) authentication.getPrincipal();
-        userService.isDeleted(user);
+//        userService.isDeleted(user);
 
         String accessToken = jwtService.generateAccessToken(user);
 

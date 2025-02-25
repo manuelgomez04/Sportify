@@ -24,6 +24,7 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -110,13 +111,15 @@ public class NoticiaService {
     }
 
     @Transactional
+    @PreAuthorize("#username.username == authentication.principal.username")
     public Noticia editNoticia(String slug, EditNoticiaDto createNoticiaRequest, User usuarioAutenticado) {
+
         Noticia noticia = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
-
-        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
+/*
+        if (!esAutorDeNoticia(usuarioAutenticado, noticia)) {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
-        }
+        }*/
 
         if (createNoticiaRequest.titular() != null) {
             noticia.setTitular(createNoticiaRequest.titular());
@@ -136,17 +139,13 @@ public class NoticiaService {
         return noticia.getAutor().getId().equals(usuario.getId());
     }
 
-    private boolean esAdmin(User usuario) {
-        return usuario.getRoles().stream()
-                .anyMatch(role -> role.name().equals("ADMIN"));
-    }
 
     @Transactional
     public void deleteNoticia(String slug, User usuarioAutenticado) {
         Noticia noticia = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
 
-        if (!esAutorDeNoticia(usuarioAutenticado, noticia) && !esAdmin(usuarioAutenticado)) {
+        if (!esAutorDeNoticia(usuarioAutenticado, noticia)) {
             throw new UnauthorizedDeleteException("No tienes permiso para eliminar esta noticia", HttpStatus.FORBIDDEN);
         }
 
@@ -163,7 +162,7 @@ public class NoticiaService {
         Noticia n = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
 
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
+        if (!esAutorDeNoticia(u, n)) {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
         }
 
@@ -186,7 +185,7 @@ public class NoticiaService {
         Noticia n = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
 
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
+        if (!esAutorDeNoticia(u, n)) {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
         }
 
@@ -209,7 +208,7 @@ public class NoticiaService {
         Noticia n = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("No se ha encontrado la noticia", HttpStatus.NOT_FOUND));
 
-        if (!esAutorDeNoticia(u, n) && !esAdmin(u)) {
+        if (!esAutorDeNoticia(u, n)) {
             throw new UnauthorizedEditException("No tienes permiso para editar esta noticia", HttpStatus.FORBIDDEN);
         }
 
