@@ -15,6 +15,8 @@ import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +61,9 @@ public class LikeService {
 
         likeRepository.delete(l);
 
+    }
+
+    public Page<Noticia> findNoticiasLikedByUsuario(String username, Pageable pageable) {
+        return likeRepository.findNoticiasLikedByUsuario(username, pageable);
     }
 }
