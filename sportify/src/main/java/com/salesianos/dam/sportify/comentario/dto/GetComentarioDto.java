@@ -17,7 +17,7 @@ public record GetComentarioDto(
     public static GetComentarioDto of(Comentario c) {
         return new GetComentarioDto(
                 GetUserNoAsociacionesDto.of(c.getUsuario()),
-                GetTitularDto.of(c.getNoticia()),
+                GetTitularDto.of(c.getNoticia_comentario()),
                 c.getComentario(),
                 c.getTitulo(),
                 c.getFechaComentario()

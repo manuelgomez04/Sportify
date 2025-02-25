@@ -16,11 +16,11 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Comentar
     @Query("""
             SELECT c FROM Comentario c 
             JOIN FETCH c.usuario 
-            JOIN FETCH c.noticia
+            JOIN FETCH c.noticia_comentario
             WHERE c.idComentario = :idComentario
             """)
     Optional<Comentario> findComentarioById(@Param("idComentario") ComentariosPk idComentario);
 
-    @Query("SELECT c FROM Comentario c JOIN c.noticia n WHERE n.slug = :slug")
+    @Query("SELECT c FROM Comentario c JOIN c.noticia_comentario n WHERE n.slug = :slug")
     Page<Comentario> findByNoticiaSlug(@Param("slug") String slug, Pageable pageable);
 }

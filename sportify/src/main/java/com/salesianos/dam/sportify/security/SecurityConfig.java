@@ -100,7 +100,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/noticias/addEquipo/**").hasAnyRole("WRITER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/ligasFavoritas").authenticated()
                 .requestMatchers(HttpMethod.GET, "/deportesFavoritos").authenticated()
-
+                .requestMatchers(HttpMethod.GET, "/equiposFavoritos").authenticated()
+                .requestMatchers(HttpMethod.POST, "/like").authenticated()
                 .anyRequest().authenticated());
 
 

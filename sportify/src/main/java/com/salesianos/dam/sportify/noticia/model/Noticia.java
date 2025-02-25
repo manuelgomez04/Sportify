@@ -6,6 +6,7 @@ import com.salesianos.dam.sportify.comentario.model.Comentario;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.liga.model.Liga;
+import com.salesianos.dam.sportify.like.model.Like;
 import com.salesianos.dam.sportify.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -65,11 +66,17 @@ public class Noticia {
                 .replaceAll("[^a-z0-9-]", "");
     }
 
-    @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "noticia_comentario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     @JsonManagedReference
     private Set<Comentario> comentarios = new HashSet<>();
+
+    @OneToMany(mappedBy = "noticia_like", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Like> likes = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {
