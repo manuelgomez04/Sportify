@@ -1,7 +1,6 @@
 # Sportify 🏆
 Sportify es una aplicación de diario deportivo que permite a los usuarios mantenerse al día con las últimas noticias, seguir sus equipos, ligas y deportes favoritos, y participar en la comunidad mediante comentarios y likes.
 
-
 ### El programa se ejecuta en el puerto Localhost:8080
 ### La documentación está realizada con swagger
 ### Realiza diferentes tipos de operaciones con Noticias, Deportes, Ligas, Usuarios y Equipos
@@ -66,3 +65,6 @@ Likes
 Dar like: Los usuarios pueden dar like a las noticias.
 
 Eliminar like: Los usuarios pueden quitar su like de una noticia.
+
+# FIGMA
+https://www.figma.com/design/TRX8PXakgZfeypgalOE8rf/Sportify?node-id=0-1&t=gq5vhpOqOb9mmJaS-1
