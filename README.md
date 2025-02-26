@@ -9,6 +9,8 @@ Sportify es una aplicación de diario deportivo que permite a los usuarios mante
 ## A la hora de ejecutar el programa habrá que escribir en la terminal el comando docker-compose up --build 
 
 ## Funcionalidades
+> En función del tipo de Login que hagas pordrás hacer un tipo de peticiones u otras
+
 ### Usuarios
 Registro: Los usuarios pueden registrarse como regulares, escritores o administradores.
 
@@ -27,7 +29,7 @@ Editar noticia: Los escritores pueden modificar sus noticias.
 
 Eliminar noticia: Los escritores pueden eliminar sus noticias.
 
-Filtrar noticias: Los usuarios pueden filtrar noticias por título y fecha.
+Filtrar noticias: Los usuarios pueden filtrar noticias por el titular, una fecha de creación entre dos rangos, por el deporte, la liga y .
 
 ### Deportes
 Crear deporte: Los administradores pueden agregar nuevos deportes.
