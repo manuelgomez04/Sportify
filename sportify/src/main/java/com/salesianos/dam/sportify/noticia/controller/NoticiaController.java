@@ -76,7 +76,7 @@ public class NoticiaController {
     }
 
 
-    @Operation(summary = "Obtiene todos los alumnos")
+    @Operation(summary = "Obtiene todas las noticias")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se han encontrado las noticias",
@@ -219,6 +219,18 @@ public class NoticiaController {
         return GetNoticiaDto.of(d);
     }
 
+
+    @Operation(summary = "Añade la liga sobre la que trata la noticia")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha añadido la liga",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiaDto.class))
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia con ese Slug",
+                    content = @Content),
+    })
     @PutMapping("/addLiga/{slug}")
     public GetNoticiaDto addLiga(@AuthenticationPrincipal User me, @PathVariable String slug, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo de la petición", required = true,
@@ -233,6 +245,8 @@ public class NoticiaController {
         return GetNoticiaDto.of(d);
     }
 
+
+    
     @GetMapping("/{slug}/comentarios")
     public GetNoticiaComentarioDto findComentariosByNoticiaSlug(@PathVariable String slug, @PageableDefault(size = 10, page = 0) Pageable pageable) {
 
