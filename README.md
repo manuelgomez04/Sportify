@@ -1,4 +1,4 @@
-#Sportify 🏆
+# Sportify 🏆
 Sportify es una aplicación de diario deportivo que permite a los usuarios mantenerse al día con las últimas noticias, seguir sus equipos, ligas y deportes favoritos, y participar en la comunidad mediante comentarios y likes.
 
 
