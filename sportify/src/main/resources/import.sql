@@ -72,3 +72,78 @@ INSERT INTO equipo (id, nombre, nombre_no_espacio, ciudad, pais, escudo, fecha_c
 
 INSERT INTO equipo (id, nombre, nombre_no_espacio, ciudad, pais, escudo, fecha_creacion, liga_id) VALUES (gen_random_uuid(), 'Swim USA', 'swim-usa', 'Washington', 'EEUU', 'swim_usa.png', '2000-01-01', (SELECT id FROM liga WHERE nombre = 'Liga Natacion 1'));
 INSERT INTO equipo (id, nombre, nombre_no_espacio, ciudad, pais, escudo, fecha_creacion, liga_id) VALUES (gen_random_uuid(), 'Aussie Dolphins', 'aussie-dolphins', 'Sídney', 'Australia', 'aussie_dolphins.png', '1998-05-22', (SELECT id FROM liga WHERE nombre = 'Liga Natacion 1'));
+
+
+-- Asociaciones entre usuarios y equipos seguidos
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM equipo WHERE nombre = 'Real Madrid'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM equipo WHERE nombre = 'FC Barcelona'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM equipo WHERE nombre = 'Atletico Madrid'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM equipo WHERE nombre = 'Valencia CF'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM equipo WHERE nombre = 'Sevilla FC'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM equipo WHERE nombre = 'Los Angeles Lakers'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user3'), (SELECT id FROM equipo WHERE nombre = 'Chicago Bulls'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user4'), (SELECT id FROM equipo WHERE nombre = 'Miami Heat'));
+INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user5'), (SELECT id FROM equipo WHERE nombre = 'Golden State Warriors'));
+
+-- Asociaciones entre usuarios y deportes seguidos
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM deporte WHERE nombre = 'Tenis'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+
+-- Asociaciones entre usuarios y ligas seguidas
+INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM liga WHERE nombre = 'LaLiga EaSports'));
+INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM liga WHERE nombre = 'Liga Baloncesto 1'));
+INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM liga WHERE nombre = 'Liga Tenis 1'));
+INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM liga WHERE nombre = 'Liga Atletismo 1'));
+INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM liga WHERE nombre = 'Liga Natacion 1'));
+
+-- Asociaciones entre noticias y deportes
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Futbol') WHERE titular = 'Titular de la noticia 1';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Baloncesto') WHERE titular = 'Titular de la noticia 2';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Tenis') WHERE titular = 'Titular de la noticia 3';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Atletismo') WHERE titular = 'Titular de la noticia 4';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Natacion') WHERE titular = 'Titular de la noticia 5';
+
+-- Asociaciones entre noticias y equipos
+UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Real Madrid') WHERE titular = 'Titular de la noticia 1';
+UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Los Angeles Lakers') WHERE titular = 'Titular de la noticia 2';
+UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Roger Federer Academy') WHERE titular = 'Titular de la noticia 3';
+UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Jamaican Sprinters') WHERE titular = 'Titular de la noticia 4';
+UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Swim USA') WHERE titular = 'Titular de la noticia 5';
+
+-- Asociaciones entre noticias y ligas
+UPDATE noticia SET liga_id = (SELECT id FROM liga WHERE nombre = 'LaLiga EaSports') WHERE titular = 'Titular de la noticia 1';
+UPDATE noticia SET liga_id = (SELECT id FROM liga WHERE nombre = 'Liga Baloncesto 1') WHERE titular = 'Titular de la noticia 2';
+UPDATE noticia SET liga_id = (SELECT id FROM liga WHERE nombre = 'Liga Tenis 1') WHERE titular = 'Titular de la noticia 3';
+UPDATE noticia SET liga_id = (SELECT id FROM liga WHERE nombre = 'Liga Atletismo 1') WHERE titular = 'Titular de la noticia 4';
+UPDATE noticia SET liga_id = (SELECT id FROM liga WHERE nombre = 'Liga Natacion 1') WHERE titular = 'Titular de la noticia 5';
+
+-- Asociaciones entre comentarios y usuarios
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 4'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 4'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 4'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 5'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 5'),'Gran noticia', 'Me encantó esta noticia.' );
+INSERT INTO comentario (fecha_comentario,  id_usuario_comentario,id_noticia_comentario, comentario, titulo) VALUES ( NOW() ,(SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 5'),'Gran noticia', 'Me encantó esta noticia.' );
+
+-- Asociaciones entre likes y usuarios
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 1'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 2'));
+INSERT INTO like_user (id_usuario_like, id_noticia_like) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM noticia WHERE titular = 'Titular de la noticia 3'));
