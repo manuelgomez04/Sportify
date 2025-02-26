@@ -244,9 +244,48 @@ public class NoticiaController {
         Noticia d = noticiaService.addLigaNoticia(me, slug, followLigaRequest);
         return GetNoticiaDto.of(d);
     }
-
-
-    
+    @Operation(summary = "Obtiene todos los comentarios de una noticia")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado las noticias",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiaNoAuthDto.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [  {
+                                                        "titular": "Titular de la noticia 9",
+                                                        "cuerpo": "Cuerpo de la noticia 9. Este es el contenido de la noticia.",
+                                                        "multimedia": null,
+                                                        "fechaCreacion": "2025-02-17",
+                                                        "slug": "titular-de-la-noticia-9",
+                                                        "usuario": {
+                                                            "username": "writer_user"
+                                                        },
+                                                        "equipo": null,
+                                                        "liga": null,
+                                                        "deporte": null
+                                                    },
+                                                    {
+                                                        "titular": "Titular de la noticia 10",
+                                                        "cuerpo": "Cuerpo de la noticia 10. Este es el contenido de la noticia.",
+                                                        "multimedia": null,
+                                                        "fechaCreacion": "2025-02-16",
+                                                        "slug": "titular-de-la-noticia-10",
+                                                        "usuario": {
+                                                            "username": "writer_user"
+                                                        },
+                                                        "equipo": null,
+                                                        "liga": null,
+                                                        "deporte": null
+                                                    }
+                                                   ]
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia",
+                    content = @Content),
+    })
     @GetMapping("/{slug}/comentarios")
     public GetNoticiaComentarioDto findComentariosByNoticiaSlug(@PathVariable String slug, @PageableDefault(size = 10, page = 0) Pageable pageable) {
 
@@ -258,6 +297,48 @@ public class NoticiaController {
         return response;
     }
 
+    @Operation(summary = "Obtiene todas las noticias filtradas por criterios y paginada")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se han encontrado las noticias",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = GetNoticiaNoAuthDto.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [  {
+                                                        "titular": "Titular de la noticia 9",
+                                                        "cuerpo": "Cuerpo de la noticia 9. Este es el contenido de la noticia.",
+                                                        "multimedia": null,
+                                                        "fechaCreacion": "2025-02-17",
+                                                        "slug": "titular-de-la-noticia-9",
+                                                        "usuario": {
+                                                            "username": "writer_user"
+                                                        },
+                                                        "equipo": null,
+                                                        "liga": null,
+                                                        "deporte": null
+                                                    },
+                                                    {
+                                                        "titular": "Titular de la noticia 10",
+                                                        "cuerpo": "Cuerpo de la noticia 10. Este es el contenido de la noticia.",
+                                                        "multimedia": null,
+                                                        "fechaCreacion": "2025-02-16",
+                                                        "slug": "titular-de-la-noticia-10",
+                                                        "usuario": {
+                                                            "username": "writer_user"
+                                                        },
+                                                        "equipo": null,
+                                                        "liga": null,
+                                                        "deporte": null
+                                                    }
+                                                   ]
+                                            """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado ninguna noticia",
+                    content = @Content),
+    })
     @GetMapping("/filtradas")
     public Page<GetNoticiaNoAuthDto> findNoticiasByCriteria(@RequestParam(required = false) String username,
                                                             @RequestParam(required = false) String slug,
