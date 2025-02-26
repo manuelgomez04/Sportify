@@ -340,31 +340,6 @@ public class UserController {
     }
 
 
-    @Operation(summary = "Obtiene todos los usuarios")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Se han encontrado usuarios",
-                    content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
-                            examples = {@ExampleObject(
-                                    value = """
-                                            {
-                                                "id": "a6c97d8f-99d0-43fe-8daf-32b9247c4fc6",
-                                                "username": "admin_user"
-                                                }                                                                                        }
-                                            """
-                            )}
-                    )}),
-            @ApiResponse(responseCode = "404",
-                    description = "No se ha encontrado el usuario autenticado",
-                    content = @Content),
-    })
-    @GetMapping("/me/admin")
-    public UserResponse adminMe(@AuthenticationPrincipal User user) {
-        return UserResponse.of(user);
-    }
-
-
     @Operation(summary = "Borra un usuario buscado por su username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204",

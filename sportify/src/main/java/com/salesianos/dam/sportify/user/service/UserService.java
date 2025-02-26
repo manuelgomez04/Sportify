@@ -61,7 +61,6 @@ public class UserService {
                 .build();
 
         try {
-            // Enviar el código de verificación por correo electrónico
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
@@ -80,7 +79,6 @@ public class UserService {
                 .build();
 
         try {
-            // Enviar el código de verificación por correo electrónico
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
@@ -99,7 +97,6 @@ public class UserService {
                 .build();
 
         try {
-            // Enviar el código de verificación por correo electrónico
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
@@ -198,6 +195,7 @@ public class UserService {
 
         Hibernate.initialize(user.getEquiposSeguidos());
         Hibernate.initialize(user.getDeportesSeguidos());
+        Hibernate.initialize(user.getLigasSeguidas());
 
         return user;
     }
