@@ -1,0 +1,1590 @@
+{
+	"info": {
+		"_postman_id": "1598686a-4963-43d0-9d01-1aa75a58f417",
+		"name": "SPORTIFY",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38617630"
+	},
+	"item": [
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "RegisterUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"manuelgmez\",\r\n  \"password\": \"Password123.\",\r\n  \"verifyPassword\": \"Password123.\",\r\n  \"email\": \"gomez.maman24@triana.salesianos.edu\",\r\n  \"verifyEmail\": \"gomez.maman24@triana.salesianos.edu\",\r\n  \"fechaNacimiento\": \"2000-01-01\",\r\n  \"nombre\": \"Manuel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/user/auth/register",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"user",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegisterAdmin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"manuelgmezz\",\r\n  \"password\": \"Password123.\",\r\n  \"verifyPassword\": \"Password123.\",\r\n  \"email\": \"tu@correo.com\",\r\n  \"verifyEmail\": \"tu@correo.com\",\r\n  \"fechaNacimiento\": \"2000-01-01\",\r\n  \"nombre\": \"Manuel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/admin/auth/register",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegisterWriter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"manuelgmezzz\",\r\n  \"password\": \"Password123.\",\r\n  \"verifyPassword\": \"Password123.\",\r\n  \"email\": \"gomez.maman24@triana.salesianos.eduA\",\r\n  \"verifyEmail\": \"gomez.maman24@triana.salesianos.eduA\",\r\n  \"fechaNacimiento\": \"2000-01-01\",\r\n  \"nombre\": \"Manuel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/writer/auth/register",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"writer",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"bf8cba3b-3471-46c3-85fe-31ac588e92ec\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/activate/account/",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"activate",
+								"account",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login reg user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token_user\", json.token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"regular_user\",\r\n    \"password\":\"user\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/auth/login",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login writer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token_user\", json.token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"writer_user\",\r\n    \"password\":\"writer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/auth/login",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token_user\", json.token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refreshToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin_user\",\r\n    \"password\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/auth/login",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/me",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"{{refresh_token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/auth/refresh/token",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"auth",
+								"refresh",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditMe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"Password1234.\",\r\n  \"verifyPassword\": \"Password1234.\",\r\n  \"email\": \"gomez.maman24@triana.salesianos.eduaz\",\r\n  \"verifyEmail\": \"gomez.maman24@triana.salesianos.eduaz\",\r\n  \"nombre\": \"Manuelillo adsjkfhaksljdhfklasjhdklfjhasdlkjhflaksjdhflkasj\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/edit/me",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"edit",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/admin/delete/regular_user",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"admin",
+								"delete",
+								"regular_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/delete/me",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"delete",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"Password12345.\",\r\n  \"verifyPassword\": \"Password12345.\",\r\n  \"email\": \"gomez.maman24@triana.salesianos.eduaz\",\r\n  \"verifyEmail\": \"gomez.maman24@triana.salesianos.eduaz\",\r\n  \"nombre\": \"Manuelillo adsjkfhaksljdhfklasjhdklfjhasdlkjhflaksjdhflkasj\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/edit/regular_user",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"edit",
+								"regular_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LigasFavoritas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/ligasFavoritas?page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"ligasFavoritas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDeportesFavoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/deportesFavoritos?page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"deportesFavoritos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEquiposFavoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/equiposFavoritos?page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"equiposFavoritos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Likes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/noticiasLiked?page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticiasLiked"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTICIA",
+			"item": [
+				{
+					"name": "noticia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/gomez.maman24_triana/Downloads/images (1).jpg"
+								},
+								{
+									"key": "createNoticiaRequest",
+									"type": "file",
+									"src": "/C:/Users/gomez.maman24_triana/Desktop/Sportify/sportify/jsonFolder/createNoticiaRequest.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{initial_route}}/noticias",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllNoticias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/noticias?page=1&size=5&sort=fechaPublicacion,desc",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "fechaPublicacion,desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditNoticia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "editNoticiaDto",
+									"type": "file",
+									"src": "/C:/Users/gomez.maman24_triana/Desktop/Sportify/sportify/jsonFolder/editNoticiaDto.json"
+								},
+								{
+									"key": "",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{initial_route}}/noticias/edit/titular-de-la-noticia-1",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"edit",
+								"titular-de-la-noticia-1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteNoticia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/noticias/delete/titular-de-la-noticia-7",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"delete",
+								"titular-de-la-noticia-7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addDeporteAnoticia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreDeporte\": \"futbol\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/noticias/addDeporte/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"addDeporte",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addEquipo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreEquipo\": \"fc-barcelona\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/noticias/addEquipo/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"addEquipo",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addLiga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreLiga\": \"laliga-easports\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/noticias/addLiga/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"addLiga",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Noticias Comentarios",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/noticias/titular-de-la-noticia-2/comentarios?page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"este-es-el-nuevo-titular",
+								"comentarios"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNoticiasFIltradas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/noticias/filtradas?slug=tit&fechaInicio=16/02/2025&page=0&size=10",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"noticias",
+								"filtradas"
+							],
+							"query": [
+								{
+									"key": "slug",
+									"value": "tit"
+								},
+								{
+									"key": "fechaInicio",
+									"value": "16/02/2025"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DEPORTES",
+			"item": [
+				{
+					"name": "CreateDeporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"FutSal\",\r\n    \"descripcion\": \"Deporte de 11 contra 11\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/deporte",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"deporte"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDeporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/deporte/baloncesto",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"deporte",
+								"baloncesto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SeguirDeporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreDeporte\": \"futsal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/seguirDeporte",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"seguirDeporte"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow Deporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombreDeporte\":\"futsal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/unfollowDeporte",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"unfollowDeporte"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LIGA",
+			"item": [
+				{
+					"name": "Create Liga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"LaLiga Hypermotion\",\r\n    \"descripcion\":\"Segunda división del futbol español\",\r\n    \"nombreDeporte\": \"Futbol\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/liga",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"liga"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seguir Liga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreLiga\":\"laliga-hypermotion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/seguirLiga",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"seguirLiga"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow Liga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreLiga\": \"laliga-hypermotion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/unfollowLiga",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"unfollowLiga"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EQUIPO",
+			"item": [
+				{
+					"name": "CreateEquipo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "escudo",
+									"type": "file",
+									"src": [
+										"/C:/Users/gomez.maman24_triana/Downloads/images (1).jpg",
+										"/C:/Users/gomez.maman24_triana/Downloads/images (1).jpg"
+									]
+								},
+								{
+									"key": "equipo",
+									"type": "file",
+									"src": "/C:/Users/gomez.maman24_triana/Desktop/Sportify/sportify/jsonFolder/equipo.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{initial_route}}/equipo",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"equipo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SeguirEquipo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreEquipo\":\"real-madrid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/seguirEquipo",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"seguirEquipo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow Equipo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombreEquipo\":\"real-madrid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/unfollowEquipo",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"unfollowEquipo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "COMENTARIO",
+			"item": [
+				{
+					"name": "Add comentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n    \"titular\": \"titular-de-la-noticia-6\",\r\n    \"titulo\":\"Noticia  asquerosa\",\r\n    \"comentario\": \"Esta noticia es muy mala\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/comentario",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"comentario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditComentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"La noticia ha mejorado\",\r\n    \"comentario\": \"Después de leerla 25 veces resulta que es mejor y todo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/comentario/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"comentario",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comentario Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/comentario/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"comentario",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comentario Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/comentario/titular-de-la-noticia-6/regular_user",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"comentario",
+								"titular-de-la-noticia-6",
+								"regular_user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LIKE",
+			"item": [
+				{
+					"name": "DarLike",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titular\":\"titular-de-la-noticia-5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{initial_route}}/like",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete like",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{initial_route}}/like/titular-de-la-noticia-6",
+							"host": [
+								"{{initial_route}}"
+							],
+							"path": [
+								"like",
+								"titular-de-la-noticia-6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "initial_route",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token_admin",
+			"value": ""
+		},
+		{
+			"key": "refresh_token_admin",
+			"value": ""
+		},
+		{
+			"key": "token_user",
+			"value": ""
+		},
+		{
+			"key": "refresh_token_user",
+			"value": ""
+		},
+		{
+			"key": "token_writer",
+			"value": ""
+		},
+		{
+			"key": "refresh_token_writer",
+			"value": ""
+		},
+		{
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
