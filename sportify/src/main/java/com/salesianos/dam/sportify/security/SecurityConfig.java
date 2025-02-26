@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
         );
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers("/swagger-ui*/**", "/api-docs*/**", "/swagger-resources/**", "/webjars/**", "/api-docs/swagger-config").permitAll()
+                    .requestMatchers("/swagger-ui*/**", "/api-docs*/**", "/swagger-resources/**", "/webjars/**", "/api-docs/swagger-config").permitAll()
                 .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register", "/auth/login", "/auth/refresh/token", "/activate/account/", "/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/me/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/admin/auth/register").hasRole("ADMIN")
