@@ -1,0 +1,50 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center">
+          <h3>Iniciar Sesión</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Usuario</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                formControlName="username"
+                placeholder="Ingresa tu usuario"
+              >
+              <div class="text-danger" *ngIf="loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.touched">
+                El usuario es requerido
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                placeholder="Ingresa tu contraseña"
+              >
+              <div class="text-danger" *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched">
+                La contraseña es requerida
+              </div>
+            </div>
+
+            <div class="text-danger mb-3" *ngIf="error">
+              {{ error }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" [disabled]="!loginForm.valid">
+              Iniciar Sesión
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
