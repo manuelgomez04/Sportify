@@ -44,7 +44,7 @@ public class DeporteController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Deporte> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public ResponseEntity<CreateDeporteRequest> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo del deporte", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CreateDeporteRequest.class),
@@ -56,7 +56,7 @@ public class DeporteController {
                                         }
                                     }
                             """))) @RequestBody @Valid CreateDeporteRequest deporte) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(deporteService.createDeporte(deporte));
+        return ResponseEntity.status(HttpStatus.CREATED).body(deporteService.createDeporte(CreateDeporteRequest));
     }
 
 
