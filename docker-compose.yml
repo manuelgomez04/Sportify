@@ -31,7 +31,9 @@ services:
       - pgadmin-data:/var/lib/pgadmin
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: DockerfileBack
     container_name: sportify
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://pg:5432/sportify
@@ -44,7 +46,16 @@ services:
         condition: service_healthy
     restart: on-failure
 
-
+  frontend:
+    build:
+      context: .
+      dockerfile: DockerfileFront
+    container_name: sportify-frontend
+    ports:
+      - "4200:4200"
+    restart: on-failure
+    depends_on:
+      - app
 
 volumes:
   pgdata:
