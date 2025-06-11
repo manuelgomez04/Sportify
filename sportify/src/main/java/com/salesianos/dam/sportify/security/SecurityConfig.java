@@ -80,6 +80,7 @@ public class SecurityConfig {
                                                 "/webjars/**", "/api-docs/swagger-config")
                                 .permitAll()
                                 .requestMatchers("/download/**").permitAll()
+                                .requestMatchers("/uploads/**").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register",
                                                 "/auth/login", "/auth/refresh/token", "/activate/account/", "/error")

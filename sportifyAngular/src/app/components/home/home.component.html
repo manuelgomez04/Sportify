@@ -1,69 +1,96 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold fs-3" href="#">
-            <img src="assets/logo-sportify.png" alt="Sportify Logo" style="height:40px; margin-right:10px;">
-            Sportify
-        </a>
-        <div class="d-flex ms-auto align-items-center">
-            <span *ngIf="isLoggedIn" class="text-white me-3">Hola, {{ nombre }}</span>
-            <button *ngIf="isLoggedIn" class="btn btn-outline-light me-2" (click)="logout()">Cerrar sesión</button>
-            <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold d-flex align-items-center" routerLink="/home">
+      <img src="http://localhost:8080/uploads/LogoSportify.png" alt="Sportify Logo"
+           style="height:32px; margin-right:10px;">
+      Sportify
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/noticias" routerLinkActive="active">Noticias</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/equipos" routerLinkActive="active">Equipos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/ligas" routerLinkActive="active">Ligas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/deportes" routerLinkActive="active">Deportes</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center">
+        <button *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" routerLink="/perfil">Mi perfil</button>
+        <button *ngIf="isLoggedIn" class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+        <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
+      </div>
     </div>
+  </div>
 </nav>
-
 <!-- Hero Section -->
 <section class="bg-light py-5 text-center">
     <div class="container">
         <h1 class="display-4 fw-bold mb-3">Bienvenido a Sportify</h1>
         <p class="lead mb-4">Descubre, sigue y disfruta de tus deportes favoritos en una sola plataforma.</p>
-        <a routerLink="/explore" class="btn btn-primary btn-lg px-5">Explorar deportes</a>
     </div>
 </section>
 
-<!-- Popular Sports -->
-<section class="container my-5">
-    <h2 class="fw-bold mb-4">Deportes populares</h2>
-    <div class="row g-4">
-        <div class="col-6 col-md-3" *ngFor="let sport of ['Fútbol', 'Baloncesto', 'Tenis', 'Natación']">
-            <div class="card shadow-sm border-0 h-100 text-center">
-                <img [src]="'assets/sports/' + sport.toLowerCase() + '.jpg'" class="card-img-top"
-                    style="height:120px; object-fit:cover;" alt="{{ sport }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ sport }}</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- Recent News -->
 <section class="bg-white py-5">
     <div class="container">
         <h2 class="fw-bold mb-4">Noticias recientes</h2>
         <div *ngIf="noticias.length > 0">
-            <div *ngFor="let noticia of noticias" class="card flex-row shadow-sm border-0 mb-4" style="min-height:180px;">
+            <div *ngFor="let noticia of noticias" class="card flex-row shadow-sm border-0 mb-4"
+                style="min-height:180px;">
                 <div class="card-body d-flex flex-column justify-content-between" style="min-width:0;">
                     <div>
                         <h4 class="card-title fw-bold">{{ noticia.titular }}</h4>
-                        <p class="card-text text-muted mb-2">{{ noticia.cuerpo }}</p>
+                        <p class="card-text text-muted mb-2">
+                            {{ noticia.cuerpo.length > 120 ? (noticia.cuerpo | slice:0:120) + '...' : noticia.cuerpo }}
+                        </p>
                         <p class="card-text mb-1">
                             <small class="text-secondary">Por {{ noticia.usuario.username }}</small>
                         </p>
+                        <div class="row g-2 mt-2">
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.equipo?.nombreEquipo || 'Sin equipo' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.liga?.nombreLiga || 'Sin liga' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.deporte?.nombreDeporte || 'Sin deporte' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small></p>
+                    <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small>
+                    </p>
                 </div>
                 <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
-                     [src]="noticia.multimedia[0]"
-                     class="d-none d-md-block rounded-end"
-                     style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;"
-                     alt="Noticia">
-                <img *ngIf="(!noticia.multimedia || noticia.multimedia.length === 0)"
-                     src="assets/no-image.png"
-                     class="d-none d-md-block rounded-end"
-                     style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;"
-                     alt="Sin imagen">
+                    [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
+                    style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
             </div>
         </div>
         <div *ngIf="noticias.length === 0" class="text-center text-muted py-5">
@@ -74,15 +101,16 @@
         <nav *ngIf="noticiasPage && noticiasPage.totalPages > 1" class="mt-4">
             <ul class="pagination justify-content-center">
                 <li class="page-item" [class.disabled]="page === 0">
-                    <button class="page-link" (click)="cargarNoticias(page - 1)" [disabled]="page === 0">Anterior</button>
+                    <button class="page-link" (click)="cargarNoticias(page - 1)"
+                        [disabled]="page === 0">Anterior</button>
                 </li>
-                <li class="page-item"
-                    *ngFor="let p of [].constructor(noticiasPage.totalPages); let i = index"
+                <li class="page-item" *ngFor="let p of [].constructor(noticiasPage.totalPages); let i = index"
                     [class.active]="i === page">
                     <button class="page-link" (click)="cargarNoticias(i)">{{ i + 1 }}</button>
                 </li>
                 <li class="page-item" [class.disabled]="page >= noticiasPage.totalPages - 1">
-                    <button class="page-link" (click)="cargarNoticias(page + 1)" [disabled]="page >= noticiasPage.totalPages - 1">Siguiente</button>
+                    <button class="page-link" (click)="cargarNoticias(page + 1)"
+                        [disabled]="page >= noticiasPage.totalPages - 1">Siguiente</button>
                 </li>
             </ul>
         </nav>

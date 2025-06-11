@@ -34,14 +34,14 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void init() {
         rootLocation = Paths.get(storageLocation).toAbsolutePath().normalize();
-        System.out.println("Intentando crear carpeta uploads en: " + rootLocation); // LOG
+      
 
         try {
             Files.createDirectories(rootLocation);
-            System.out.println("Carpeta uploads creada o ya existente en: " + rootLocation); // LOG
+           
         } catch (IOException e) {
-            System.err.println("ERROR al crear carpeta uploads: " + e.getMessage()); // LOG
-            e.printStackTrace(); // Muestra el error completo en consola
+         
+            e.printStackTrace(); 
             throw new StorageException("Could not initialize storage location: " + rootLocation, e);
         }
 
@@ -93,7 +93,7 @@ public class FileSystemStorageService implements StorageService {
 
         newFilename = calculateNewFilename(newFilename);
 
-        System.out.println("Guardando archivo en: " + rootLocation.resolve(newFilename)); // <-- LOG
+        System.out.println("Guardando archivo en: " + rootLocation.resolve(newFilename)); 
 
         try (InputStream inputStream = new ByteArrayInputStream(file)) {
             Files.copy(inputStream, rootLocation.resolve(newFilename),

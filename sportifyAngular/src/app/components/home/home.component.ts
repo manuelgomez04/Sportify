@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private noticiasService: NoticiasService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const username = this.getUsernameFromToken();
@@ -65,4 +65,19 @@ export class HomeComponent implements OnInit {
       return null;
     }
   }
+  getMultimediaUrl(url: string): string {
+    if (!url) return '';
+
+    const cleanUrl = url.trim();
+
+    if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/download')) {
+      return cleanUrl;
+    }
+
+  
+
+    return '/download/' + cleanUrl;
+  }
+
+
 }

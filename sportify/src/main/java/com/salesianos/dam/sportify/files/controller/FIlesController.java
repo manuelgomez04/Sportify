@@ -20,11 +20,11 @@ public class FIlesController {
 
 @GetMapping("/download/{id:.+}")
 public ResponseEntity<Resource> getFile(@PathVariable String id) {
-    System.out.println("Petición para descargar archivo: " + id);
+
     Resource resource =  storageService.loadAsResource(id);
     
     if (!resource.exists()) {
-        System.out.println("Archivo no encontrado: " + id);
+        
         return ResponseEntity.notFound().build();
     }
 

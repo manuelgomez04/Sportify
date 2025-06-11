@@ -20,25 +20,19 @@ public record GetNoticiaNoAuthDto(
         GetUserNoAsociacionesDto usuario,
         GetNombreEquipoDto equipo,
         GetNombreLiga liga,
-        GetNombreDeporteDto deporte
-) {
+        GetNombreDeporteDto deporte) {
 
     public static GetNoticiaNoAuthDto of(Noticia n) {
         return new GetNoticiaNoAuthDto(
                 n.getTitular(),
                 n.getCuerpo(),
-                n.getMultimedia() != null
-                    ? n.getMultimedia().stream()
-                        .map(filename -> "/download/" + filename)
-                        .collect(Collectors.toList())
-                    : null,
+                n.getMultimedia(),
                 n.getFechaPublicacion(),
                 n.getSlug(),
                 GetUserNoAsociacionesDto.of(n.getAutor()),
                 n.getEquipoNoticia() != null ? GetNombreEquipoDto.of(n.getEquipoNoticia()) : null,
                 n.getLigaNoticia() != null ? GetNombreLiga.of(n.getLigaNoticia()) : null,
-                n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null
-        );
+                n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null);
 
     }
 }
