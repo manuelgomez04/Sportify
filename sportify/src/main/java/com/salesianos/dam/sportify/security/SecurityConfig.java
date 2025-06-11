@@ -81,6 +81,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/download/**").permitAll()
                                 .requestMatchers("/uploads/**").permitAll()
+                                .requestMatchers("/assets/**").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register",
                                                 "/auth/login", "/auth/refresh/token", "/activate/account/", "/error")
