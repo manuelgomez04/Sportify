@@ -1,43 +1,45 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  error: string = '';
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+  constructor(private fb: FormBuilder, private userService: AuthService, private router: Router) {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
-  onSubmit(): void {
+  login() {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
-      this.authService.login(username, password).subscribe({
+      const body = this.loginForm.value;
+
+      this.userService.userLogin(body).subscribe({
         next: (response) => {
-          if (response.token) {
-            this.authService.saveToken(response.token);
-            this.router.navigate(['/home']);
-          }
+          console.log('Login exitoso:', response);
+
+          localStorage.setItem('accessToken', response.token);
+          localStorage.setItem('refreshToken', response.refreshToken);
+          this.router.navigate(['/home']); 
         },
         error: (error) => {
-          this.error = 'Error al iniciar sesión. Por favor, verifica tus credenciales.';
-          console.error('Error de login:', error);
+          if (error.status === 401) {
+            alert('Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.');
+          } else {
+            console.error('Error inesperado:', error);
+          }
         }
       });
+    } else {
+      alert('Por favor, completa todos los campos.');
     }
   }
-} 
+}
+

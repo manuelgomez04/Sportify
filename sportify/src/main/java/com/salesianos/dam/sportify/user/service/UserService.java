@@ -310,4 +310,5 @@ public class UserService {
     public Page<Equipo> findEquiposFavoritosByUsername(String username, Pageable pageable) {
         return equipoRepository.findByUsuariosSeguidosUsername(username, pageable);
     }
+    
 }

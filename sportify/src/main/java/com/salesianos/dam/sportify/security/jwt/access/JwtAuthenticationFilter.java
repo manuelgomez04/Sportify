@@ -1,6 +1,5 @@
 package com.salesianos.dam.sportify.security.jwt.access;
 
-
 import com.salesianos.dam.sportify.security.exceptionhandling.JwtException;
 import com.salesianos.dam.sportify.user.model.User;
 import com.salesianos.dam.sportify.user.repo.UserRepository;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -36,7 +34,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private HandlerExceptionResolver resolver;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return "OPTIONS".equalsIgnoreCase(request.getMethod());
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String path = request.getServletPath();
+        if (path.startsWith("/download/")) {
+            System.out.println("Saltando filtro JWT para: " + path); // <-- Añade este log
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String token = getJwtAccessTokenFromRequest(request);
 
@@ -55,26 +66,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (result.isPresent()) {
                     User user = result.get();
-                    UsernamePasswordAuthenticationToken
-                            authenticationToken = new UsernamePasswordAuthenticationToken(
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             user,
                             null,
-                            user.getAuthorities()
-                    );
+                            user.getAuthorities());
 
                     authenticationToken.setDetails(new WebAuthenticationDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-
                 }
-
 
             }
         } catch (JwtException ex) {
             resolver.resolveException(request, response, null, ex);
         }
-
 
         filterChain.doFilter(request, response);
 

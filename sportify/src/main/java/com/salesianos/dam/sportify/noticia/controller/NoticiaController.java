@@ -71,8 +71,10 @@ public class NoticiaController {
                                                 ],
                                                 "fechaPublicacion": "2025-02-23"
                                             }
-                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(GetNoticiaDto.of(noticiaService.saveNoticia(createNoticiaRequest, username, files)));
+                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest,
+                             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+        .body(GetNoticiaDto.of(noticiaService.saveNoticia(createNoticiaRequest, username, files)));
     }
 
 

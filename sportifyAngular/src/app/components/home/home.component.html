@@ -1,0 +1,124 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold d-flex align-items-center" routerLink="/home">
+      <img src="/assets/logo.png" alt="Sportify Logo"
+           style="height:32px; margin-right:10px;">
+      Sportify
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/noticias" routerLinkActive="active">Noticias</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/equipos" routerLinkActive="active">Equipos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/ligas" routerLinkActive="active">Ligas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/deportes" routerLinkActive="active">Deportes</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center">
+        <button *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" routerLink="/perfil">Mi perfil</button>
+        <button *ngIf="isLoggedIn" class="btn btn-outline-danger d-flex align-items-center" (click)="logout()" title="Cerrar sesión" style="padding: 0.375rem 0.75rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+          </svg>
+        </button>
+        <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Hero Section -->
+<section class="bg-light py-5 text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Bienvenido a Sportify</h1>
+        <p class="lead mb-4">Descubre, sigue y disfruta de tus deportes favoritos en una sola plataforma.</p>
+    </div>
+</section>
+
+
+
+<!-- Recent News -->
+<section class="bg-white py-5">
+    <div class="container">
+        <h2 class="fw-bold mb-4">Noticias recientes</h2>
+        <div *ngIf="noticias.length > 0">
+            <div *ngFor="let noticia of noticias" class="card flex-row shadow-sm border-0 mb-4"
+                style="min-height:180px;">
+                <div class="card-body d-flex flex-column justify-content-between" style="min-width:0;">
+                    <div>
+                        <h4 class="card-title fw-bold">{{ noticia.titular }}</h4>
+                        <p class="card-text text-muted mb-2">
+                            {{ noticia.cuerpo.length > 120 ? (noticia.cuerpo | slice:0:120) + '...' : noticia.cuerpo }}
+                        </p>
+                        <p class="card-text mb-1">
+                            <small class="text-secondary">Por {{ noticia.usuario.username }}</small>
+                        </p>
+                        <div class="row g-2 mt-2">
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.equipo.nombreEquipo || 'Sin equipo' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.liga.nombreLiga || 'Sin liga' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.deporte.nombreDeporte || 'Sin deporte' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small>
+                    </p>
+                </div>
+                <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
+                    [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
+                    style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
+            </div>
+        </div>
+        <div *ngIf="noticias.length === 0" class="text-center text-muted py-5">
+            No hay noticias para mostrar.
+        </div>
+
+        <!-- Paginación -->
+        <nav *ngIf="noticiasPage && noticiasPage.totalPages > 1" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="page === 0">
+                    <button class="page-link" (click)="cargarNoticias(page - 1)"
+                        [disabled]="page === 0">Anterior</button>
+                </li>
+                <li class="page-item" *ngFor="let p of [].constructor(noticiasPage.totalPages); let i = index"
+                    [class.active]="i === page">
+                    <button class="page-link" (click)="cargarNoticias(i)">{{ i + 1 }}</button>
+                </li>
+                <li class="page-item" [class.disabled]="page >= noticiasPage.totalPages - 1">
+                    <button class="page-link" (click)="cargarNoticias(page + 1)"
+                        [disabled]="page >= noticiasPage.totalPages - 1">Siguiente</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+<!-- ...puedes agregar más secciones según el diseño de Figma... -->
