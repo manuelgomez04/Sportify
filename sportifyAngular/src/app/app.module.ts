@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -10,12 +11,14 @@ import { NoticiasComponent } from './components/noticias/noticias.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NoticiasComponent,
     HomeComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -27,6 +30,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+
 
   ],
   bootstrap: [AppComponent]

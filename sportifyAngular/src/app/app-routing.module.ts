@@ -7,9 +7,9 @@ import { HomeComponent } from './components/home/home.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'noticias', component: NoticiasComponent },
-  {path: 'home', component: HomeComponent}, // Asumiendo que NoticiasComponent es la página de inicio
+  {path: 'home', component: HomeComponent}, 
 
-  { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirige la raíz al login
+  { path: '', redirectTo: '/home', pathMatch: 'full' } 
 ];
 
 @NgModule({

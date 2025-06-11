@@ -20,7 +20,7 @@ export class AuthService {
         return this.http.post('/auth/logout', {}).subscribe({
             next: () => {
                 localStorage.clear();
-                // Aquí puedes hacer más limpieza si lo necesitas
+               
             },
             error: () => {
                 localStorage.clear();
@@ -28,3 +28,4 @@ export class AuthService {
         });
     }
 }
+
