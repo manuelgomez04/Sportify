@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Noticia } from '../models/noticia.model';
+import { Noticia } from '../models/noticia/noticia.model';
 
 export interface NoticiasPage {
   content: Noticia[];
@@ -9,7 +9,7 @@ export interface NoticiasPage {
   totalPages: number;
   number: number;
   size: number;
-  // ...otros campos de paginación si los necesitas
+
 }
 
 @Injectable({ providedIn: 'root' })

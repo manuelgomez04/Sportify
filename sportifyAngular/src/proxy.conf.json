@@ -17,6 +17,13 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+
+  "/download/*": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/deporte": {
     "target": "http://localhost:8080",
     "secure": false,

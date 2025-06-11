@@ -42,6 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+        if (path.startsWith("/download/")) {
+            System.out.println("Saltando filtro JWT para: " + path); // <-- Añade este log
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getJwtAccessTokenFromRequest(request);
 
         // Validar el token

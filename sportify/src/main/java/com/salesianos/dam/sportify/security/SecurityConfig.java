@@ -79,6 +79,7 @@ public class SecurityConfig {
                                 .requestMatchers("/swagger-ui*/**", "/api-docs*/**", "/swagger-resources/**",
                                                 "/webjars/**", "/api-docs/swagger-config")
                                 .permitAll()
+                                .requestMatchers("/download/**").permitAll()
 
                                 .requestMatchers(HttpMethod.POST, "/writer/auth/register", "/user/auth/register",
                                                 "/auth/login", "/auth/refresh/token", "/activate/account/", "/error")
@@ -119,7 +120,6 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/noticias/filtradas").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
-
                                 .anyRequest().authenticated());
 
                 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -138,7 +138,7 @@ public class SecurityConfig {
                 configuration.setAllowedHeaders(
                                 List.of("Authorization", "Content-Type", "content-type", "Accept", "X-Requested-With"));
                 configuration.setAllowCredentials(true);
-                configuration.setMaxAge(3600L); // Cache de opciones CORS por 1 hora
+                configuration.setMaxAge(3600L);
 
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);

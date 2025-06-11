@@ -9,6 +9,7 @@ import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record GetNoticiaNoAuthDto(
         String titular,
@@ -26,13 +27,18 @@ public record GetNoticiaNoAuthDto(
         return new GetNoticiaNoAuthDto(
                 n.getTitular(),
                 n.getCuerpo(),
-                n.getMultimedia(),
+                n.getMultimedia() != null
+                    ? n.getMultimedia().stream()
+                        .map(filename -> "/download/" + filename)
+                        .collect(Collectors.toList())
+                    : null,
                 n.getFechaPublicacion(),
                 n.getSlug(),
                 GetUserNoAsociacionesDto.of(n.getAutor()),
                 n.getEquipoNoticia() != null ? GetNombreEquipoDto.of(n.getEquipoNoticia()) : null,
                 n.getLigaNoticia() != null ? GetNombreLiga.of(n.getLigaNoticia()) : null,
-                n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null);
+                n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null
+        );
 
     }
 }

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { userLogin } from '../../model/user/model-login';
-import { miUsuario } from '../../model/user/miUsuario';
+import { userLogin } from '../models/user/model-login';
+import { miUsuario } from '../models/user/miUsuario';
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NoticiasService, NoticiasPage } from '../../services/noticias.service';
-import { Noticia } from '../../models/noticia.model';
+import { Noticia } from '../../models/noticia/noticia.model';
 
 @Component({
   selector: 'app-home',
