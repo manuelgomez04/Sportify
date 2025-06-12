@@ -23,12 +23,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const username = this.getUsernameFromToken();
-    if (username) {
-      this.authService.getUsuario(username).subscribe(usuario => {
-        this.nombre = usuario.nombre;
-      });
-    }
     this.cargarNoticias();
   }
 
@@ -41,30 +35,11 @@ export class HomeComponent implements OnInit {
       },
       error: err => {
         this.noticias = [];
-        // Puedes mostrar un mensaje de error aquí si quieres
+       
       }
     });
   }
 
-  get isLoggedIn(): boolean {
-    return !!localStorage.getItem('accessToken');
-  }
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
-
-  // Ejemplo simple si el username está en el token (JWT)
-  getUsernameFromToken(): string | null {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.sub || payload.username || null;
-    } catch {
-      return null;
-    }
-  }
   getMultimediaUrl(url: string): string {
     if (!url) return '';
 
@@ -74,10 +49,15 @@ export class HomeComponent implements OnInit {
       return cleanUrl;
     }
 
-  
-
     return '/download/' + cleanUrl;
   }
 
-
+  cambiarPagina(page: number) {
+    if (page < 0 || (this.noticiasPage && page >= this.noticiasPage.totalPages) || page === this.page) {
+      return;
+    }
+    this.page = page;
+    this.cargarNoticias(page);
+  }
+¡
 }
