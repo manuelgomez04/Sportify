@@ -24,7 +24,7 @@ INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Tenis'
 INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Atletismo', 'Conjunto de disciplinas deportivas que incluyen carreras, saltos, lanzamientos y pruebas combinadas.');
 INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Natacion', 'Deporte acuático que consiste en recorrer una distancia en el agua en el menor tiempo posible, utilizando diferentes estilos.');
 
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'LaLiga EaSports', 'Primera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'laliga-easports');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio, imagen) VALUES (gen_random_uuid(), 'LaLiga EaSports', 'Primera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'laliga-easports', 'https://brandemia.org/sites/default/files/sites/default/files/logotipos4.jpg');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 2', 'Segunda liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-2');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 3', 'Tercera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-3');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 4', 'Cuarta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-4');

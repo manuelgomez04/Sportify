@@ -176,6 +176,7 @@ public class UserService {
 
         if (u.isPresent()) {
             u.get().setDeleted(true);
+            u.get().setEmail(null);
             userRepository.save(u.get());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");

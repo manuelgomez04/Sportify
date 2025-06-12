@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/liga")
@@ -52,10 +53,11 @@ public class LigaController {
                                     {
                                         "nombre": "LaLiga EaSports",
                                         "descripcion":"Es la primera división española de futbol",
-                                        "nombreDeporte": "Futbol"
+                                        "nombreDeporte": "Futbol",
+                                        "imagen": "https://example.com/imagen.jpg"
                                     }
-                            """))) @RequestBody @Valid CreateLigaRequest createLigaRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(GetLigaDto.of(ligaService.createLiga(createLigaRequest)));
+                            """))) @RequestPart("createLigaRequest") @Valid CreateLigaRequest createLigaRequest, @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(GetLigaDto.of(ligaService.createLiga(createLigaRequest, imagen)));
     }
 
 
