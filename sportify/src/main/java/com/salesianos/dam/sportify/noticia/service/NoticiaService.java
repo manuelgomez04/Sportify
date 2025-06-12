@@ -87,7 +87,7 @@ public class NoticiaService {
                 .map(this::getImageUrl)
                 .toList();
 
-        Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(createNoticiaRequest.nombreDeporte())
+        Deporte d = deporteRepository.findByNombreNoEspacio(createNoticiaRequest.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("No se ha encontrado el deporte", HttpStatus.NOT_FOUND));
 
         Equipo e = equipoRepository.findByNombreNoEspacio(createNoticiaRequest.nombreEquipo())
@@ -179,7 +179,7 @@ public class NoticiaService {
         Noticia n = findBySlug(slug);
 
 
-        Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(followDeporteRequest.nombreDeporte())
+        Deporte d = deporteRepository.findByNombreNoEspacio(followDeporteRequest.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("No se ha encontrado el deporte", HttpStatus.NOT_FOUND));
 
 

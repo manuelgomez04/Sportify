@@ -9,6 +9,7 @@ import { MeComponent } from './components/me/me.component';
 import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
 import { LigasSeguidasComponent } from './components/ligas-seguidas/ligas-seguidas.component';
 import { SeguidosComponent } from './components/seguidos/seguidos.component';
+import { DeportesSeguidosComponent } from './components/deportes-seguidos/deportes-seguidos.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'editar-cuenta', component: EditarCuentaComponent },
   { path: 'ligas-seguidas', component: LigasSeguidasComponent },
   { path: 'seguidos', component: SeguidosComponent },
+  {path: 'deportes-seguidos', component: DeportesSeguidosComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];

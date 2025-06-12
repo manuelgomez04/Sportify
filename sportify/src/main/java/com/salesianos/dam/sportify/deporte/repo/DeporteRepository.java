@@ -17,6 +17,8 @@ public interface DeporteRepository extends JpaRepository<Deporte, UUID> {
 
     boolean existsByNombreEqualsIgnoreCase(String nombre);
 
+    Optional<Deporte> findByNombreNoEspacio(String nombre);
+
     @Query(value = "SELECT d.* FROM deporte d " +
             "JOIN usuario_deporte ud ON d.id = ud.deporte_id " +
             "JOIN users u ON ud.usuario_id = u.id " +

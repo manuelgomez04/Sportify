@@ -21,9 +21,7 @@ export class LigasSeguidasComponent implements OnInit {
     });
   }
 
-  getLigaImg(nombreLiga: string): string {
-    return '/assets/ligas/' + nombreLiga.toLowerCase().replace(/ /g, '-') + '.png';
-  }
+  
 
   get visibleLigas() {
     return this.ligas.slice(this.currentIndex, this.currentIndex + this.visibleCards);

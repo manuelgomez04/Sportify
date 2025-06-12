@@ -248,7 +248,7 @@ public class UserService {
         User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
-        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+        Deporte deporte = deporteRepository.findByNombreNoEspacio(nombreDeporte.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getEquiposSeguidos());
@@ -264,7 +264,7 @@ public class UserService {
         User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
-        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+        Deporte deporte = deporteRepository.findByNombreNoEspacio(nombreDeporte.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getEquiposSeguidos());

@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/deporte")
@@ -56,8 +57,8 @@ public class DeporteController {
                                         "descripcion": "Deporte de 11 contra 11"
                                         }
                                     }
-                            """))) @RequestBody @Valid CreateDeporteRequest deporte) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(GetDeporteDto.of(deporteService.createDeporte(deporte)));
+                            """))) @RequestPart ("createDeporteRequest") @Valid CreateDeporteRequest deporte, @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(GetDeporteDto.of(deporteService.createDeporte(deporte, imagen)));
     }
 
 

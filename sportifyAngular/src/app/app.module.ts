@@ -17,6 +17,7 @@ import { MeComponent } from './components/me/me.component';
 import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
 import { LigasSeguidasComponent } from './components/ligas-seguidas/ligas-seguidas.component';
 import { SeguidosComponent } from './components/seguidos/seguidos.component';
+import { DeportesSeguidosComponent } from './components/deportes-seguidos/deportes-seguidos.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { SeguidosComponent } from './components/seguidos/seguidos.component';
     MeComponent,
     EditarCuentaComponent,
     LigasSeguidasComponent,
-    SeguidosComponent
+    SeguidosComponent,
+    DeportesSeguidosComponent
   ],
   imports: [
     BrowserModule,
