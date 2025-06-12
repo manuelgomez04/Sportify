@@ -13,6 +13,8 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterComponent } from './components/register/register.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
+import { MeComponent } from './components/me/me.component';
+import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import { VerifyAccountComponent } from './components/verify-account/verify-accou
     HomeComponent,
     NavbarComponent,
     RegisterComponent,
-    VerifyAccountComponent
+    VerifyAccountComponent,
+    MeComponent,
+    EditarCuentaComponent
   ],
   imports: [
     BrowserModule,
