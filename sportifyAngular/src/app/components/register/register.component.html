@@ -1,0 +1,49 @@
+<div class="container mt-4" style="max-width: 500px;">
+  <h2 class="mb-4 text-center">Registro</h2>
+  <div class="mb-3">
+    <label class="form-label">Tipo de usuario</label>
+    <select class="form-select" [(ngModel)]="userType" name="userType">
+      <option value="user">Usuario</option>
+      <option value="writer">Escritor</option>
+    </select>
+  </div>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input formControlName="nombre" type="text" class="form-control" />
+      <div *ngIf="fieldErrors['nombre']" class="text-danger small mt-1">{{ fieldErrors['nombre'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Nombre de usuario</label>
+      <input formControlName="username" type="text" class="form-control" />
+      <div *ngIf="fieldErrors['username']" class="text-danger small mt-1">{{ fieldErrors['username'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input formControlName="email" type="email" class="form-control" />
+      <div *ngIf="fieldErrors['email']" class="text-danger small mt-1">{{ fieldErrors['email'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Verifica Email</label>
+      <input formControlName="verifyEmail" type="email" class="form-control" />
+      <div *ngIf="fieldErrors['verifyEmail']" class="text-danger small mt-1">{{ fieldErrors['verifyEmail'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input formControlName="password" type="password" class="form-control" autocomplete="new-password" />
+      <div *ngIf="fieldErrors['password']" class="text-danger small mt-1">{{ fieldErrors['password'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Verifica Contraseña</label>
+      <input formControlName="verifyPassword" type="password" class="form-control" autocomplete="new-password" />
+      <div *ngIf="fieldErrors['verifyPassword']" class="text-danger small mt-1">{{ fieldErrors['verifyPassword'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Fecha de nacimiento</label>
+      <input formControlName="fechaNacimiento" type="date" class="form-control" />
+      <div *ngIf="fieldErrors['fechaNacimiento']" class="text-danger small mt-1">{{ fieldErrors['fechaNacimiento'] }}</div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+    <div *ngIf="error" class="alert alert-danger mt-3" [innerHTML]="error"></div>
+  </form>
+</div>

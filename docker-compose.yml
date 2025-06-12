@@ -32,19 +32,21 @@ services:
 
   app:
     build:
-      context: .
-      dockerfile: DockerfileBack
+        context: .
+        dockerfile: DockerfileBack
     container_name: sportify
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://pg:5432/sportify
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=12345678
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://pg:5432/sportify
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=12345678
     ports:
-      - "8080:8080"
+        - "8080:8080"
     depends_on:
-      pg:
-        condition: service_healthy
+        pg:
+          condition: service_healthy
     restart: on-failure
+    volumes:
+        - ./uploads:/app/uploads
 
   frontend:
     build:

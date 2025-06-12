@@ -1,85 +1,87 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">Sports Hub</a>
-        <div class="d-flex ms-auto">
-            <button *ngIf="isLoggedIn" (click)="logout()">Cerrar sesión</button>
-            <button *ngIf="!isLoggedIn" routerLink="/login">Iniciar sesión</button>
-            <span *ngIf="isLoggedIn" class="navbar-text">Hola, {{ nombre }}</span>
-        </div>
+<app-navbar></app-navbar>
+<!-- Hero Section -->
+<section class="bg-light py-5 text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Bienvenido a Sportify</h1>
+        <p class="lead mb-4">Descubre, sigue y disfruta de tus deportes favoritos en una sola plataforma.</p>
     </div>
-</nav>
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col">
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                <input type="text" class="form-control border-start-0" placeholder="Search">
-            </div>
-        </div>
-        <div class="col-auto d-flex align-items-center">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="rounded-circle" width="40"
-                height="40">
-        </div>
-    </div>
+</section>
 
-    <div class="mb-3">
-        <h6 class="fw-bold">Recent Searches</h6>
-        <div>
-            <span class="badge bg-light text-dark me-2">Basketball</span>
-            <span class="badge bg-light text-dark me-2">Soccer</span>
-            <span class="badge bg-light text-dark me-2">Tennis</span>
-            <span class="badge bg-light text-dark me-2">Olympics</span>
-            <span class="badge bg-light text-dark">Football</span>
-        </div>
-    </div>
 
-    <div>
-        <h5 class="fw-bold mb-3">Trending Now</h5>
-        <div class="row g-4">
-            <div class="col-12 d-flex">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">The Rise of Young Tennis Stars</div>
-                    <div class="text-muted small">
-                        A new generation of tennis players is making waves in the sport, challenging established
-                        champions and bringing fresh energy to the court.
+
+<!-- Recent News -->
+<section class="bg-white py-5">
+    <div class="container">
+        <h2 class="fw-bold mb-4">Noticias recientes</h2>
+        <div *ngIf="noticias.length > 0">
+            <div *ngFor="let noticia of noticias" class="card flex-row shadow-sm border-0 mb-4"
+                style="min-height:180px;">
+                <div class="card-body d-flex flex-column justify-content-between" style="min-width:0;">
+                    <div>
+                        <h4 class="card-title fw-bold">{{ noticia.titular }}</h4>
+                        <p class="card-text text-muted mb-2">
+                            {{ noticia.cuerpo.length > 120 ? (noticia.cuerpo | slice:0:120) + '...' : noticia.cuerpo }}
+                        </p>
+                        <p class="card-text mb-1">
+                            <small class="text-secondary">Por {{ noticia.usuario.username }}</small>
+                        </p>
+                        <div class="row g-2 mt-2">
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.equipo?.nombreEquipo || 'Sin equipo' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.liga?.nombreLiga || 'Sin liga' }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                                    <small>
+                                        {{ noticia.deporte?.nombreDeporte || 'Sin deporte' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small>
+                    </p>
                 </div>
-                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=200&q=80"
-                    class="ms-3 rounded" style="width:180px; height:100px; object-fit:cover;">
-            </div>
-            <div class="col-12 d-flex">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Football Season Preview: Top Teams and Players to Watch</div>
-                    <div class="text-muted small">
-                        As the football season approaches, analysts predict the top contenders and highlight key players
-                        who could define the season.
-                    </div>
-                </div>
-                <img src="https://images.unsplash.com/photo-1505843276877-1a8b1bfa6d4b?auto=format&fit=crop&w=200&q=80"
-                    class="ms-3 rounded" style="width:180px; height:100px; object-fit:cover;">
-            </div>
-            <div class="col-12 d-flex">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Olympic Hopefuls: Athletes to Follow in the Upcoming Games</div>
-                    <div class="text-muted small">
-                        Meet the rising stars and seasoned athletes who are preparing to compete in the upcoming Olympic
-                        Games, representing their countries on the world stage.
-                    </div>
-                </div>
-                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=200&q=80"
-                    class="ms-3 rounded" style="width:180px; height:100px; object-fit:cover;">
-            </div>
-            <div class="col-12 d-flex">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Basketball Playoffs: Key Matchups and Predictions</div>
-                    <div class="text-muted small">
-                        The basketball playoffs are heating up with intense matchups and surprising upsets. Experts
-                        weigh in on the teams to watch and potential outcomes.
-                    </div>
-                </div>
-                <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=200&q=80"
-                    class="ms-3 rounded" style="width:180px; height:100px; object-fit:cover;">
+                <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
+                    [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
+                    style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
             </div>
         </div>
+        <div *ngIf="noticias.length === 0" class="text-center text-muted py-5">
+            No hay noticias para mostrar.
+        </div>
+
+        <!-- Paginación -->
+        <nav *ngIf="noticiasPage && noticiasPage.totalPages > 1" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="page === 0">
+                    <button class="page-link"
+                        (click)="cargarNoticias(page - 1)"
+                        [disabled]="page === 0">Anterior</button>
+                </li>
+                <li class="page-item"
+                    *ngFor="let p of [].constructor(noticiasPage.totalPages); let i = index"
+                    [class.active]="i === page">
+                    <button class="page-link"
+                        (click)="cargarNoticias(i)"
+                        [disabled]="i === page">{{ i + 1 }}</button>
+                </li>
+                <li class="page-item" [class.disabled]="page >= noticiasPage.totalPages - 1">
+                    <button class="page-link"
+                        (click)="cargarNoticias(page + 1)"
+                        [disabled]="page >= noticiasPage.totalPages - 1">Siguiente</button>
+                </li>
+            </ul>
+        </nav>
     </div>
-</div>
+</section>

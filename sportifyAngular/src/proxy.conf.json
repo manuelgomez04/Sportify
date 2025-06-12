@@ -5,6 +5,7 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+
   "/me": {
     "target": "http://localhost:8080",
     "secure": false,
@@ -12,6 +13,13 @@
     "logLevel": "debug"
   },
   "/noticias": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+
+  "/download/": {
     "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true,
@@ -34,5 +42,40 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/user":{
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/writer":{
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/admin": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  
+  "/user/auth": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/writer/auth": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/activate/account/": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
   }
 }
+

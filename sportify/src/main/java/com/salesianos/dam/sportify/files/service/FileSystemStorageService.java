@@ -33,11 +33,16 @@ public class FileSystemStorageService implements StorageService {
     @PostConstruct
     @Override
     public void init() {
-        rootLocation = Paths.get(storageLocation);
+        rootLocation = Paths.get(storageLocation).toAbsolutePath().normalize();
+      
+
         try {
             Files.createDirectories(rootLocation);
+           
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage location", e);
+         
+            e.printStackTrace(); 
+            throw new StorageException("Could not initialize storage location: " + rootLocation, e);
         }
 
     }
@@ -80,13 +85,15 @@ public class FileSystemStorageService implements StorageService {
 
     private String store(byte[] file, String filename, String contentType) throws Exception {
 
-        // Limpiamos el nombre del fichero
-        String newFilename = StringUtils.cleanPath(filename);
+        // Limpiamos el nombre del fichero: sin espacios ni caracteres raros
+        String newFilename = StringUtils.cleanPath(filename).replaceAll("\\s+", "_");
 
         if (file.length == 0)
             throw new StorageException("The file is empty");
 
         newFilename = calculateNewFilename(newFilename);
+
+        System.out.println("Guardando archivo en: " + rootLocation.resolve(newFilename)); 
 
         try (InputStream inputStream = new ByteArrayInputStream(file)) {
             Files.copy(inputStream, rootLocation.resolve(newFilename),

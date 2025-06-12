@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.deporte.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.CreateDeporteRequest;
+import com.salesianos.dam.sportify.deporte.dto.GetDeporteDto;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.deporte.service.DeporteService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
@@ -44,7 +45,7 @@ public class DeporteController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<CreateDeporteRequest> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public ResponseEntity<GetDeporteDto> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo del deporte", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CreateDeporteRequest.class),
@@ -56,7 +57,7 @@ public class DeporteController {
                                         }
                                     }
                             """))) @RequestBody @Valid CreateDeporteRequest deporte) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(deporteService.createDeporte(CreateDeporteRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(GetDeporteDto.of(deporteService.createDeporte(deporte)));
     }
 
 
