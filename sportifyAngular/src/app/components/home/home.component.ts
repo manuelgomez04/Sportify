@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
       },
       error: err => {
         this.noticias = [];
-        // Puedes mostrar un mensaje de error aquí si quieres
+       
       }
     });
   }
@@ -59,23 +59,5 @@ export class HomeComponent implements OnInit {
     this.page = page;
     this.cargarNoticias(page);
   }
-
-  // Eliminar lo siguiente, ya que va en NavbarComponent:
-  // get isLoggedIn(): boolean {
-  //   return !!localStorage.getItem('accessToken');
-  // }
-  // logout() {
-  //   this.authService.logout();
-  //   this.router.navigate(['/']);
-  // }
-  // getUsernameFromToken(): string | null {
-  //   const token = localStorage.getItem('accessToken');
-  //   if (!token) return null;
-  //   try {
-  //     const payload = JSON.parse(atob(token.split('.')[1]));
-  //     return payload.sub || payload.username || null;
-  //   } catch {
-  //     return null;
-  //   }
-  // }
+¡
 }
