@@ -65,7 +65,7 @@ public class UserService {
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-            e.printStackTrace(); // <-- Añade esta línea para ver el error real en consola
+           
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al enviar el correo de activación");
         }
