@@ -117,11 +117,15 @@ public class UserService {
     public User editMe(User username, EditUserDto updatedUser) {
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
+                    if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
+                        // Comprobar si el email ya existe en otro usuario
+                        if (userRepository.existsByEmail(updatedUser.email())) {
+                            throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en uso");
+                        }
+                        user.setEmail(updatedUser.email());
+                    }
                     if (updatedUser.password() != null) {
                         user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    }
-                    if (updatedUser.email() != null) {
-                        user.setEmail(updatedUser.email());
                     }
                     if (updatedUser.nombre() != null) {
                         user.setNombre(updatedUser.nombre());

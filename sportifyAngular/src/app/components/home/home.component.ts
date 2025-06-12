@@ -59,5 +59,5 @@ export class HomeComponent implements OnInit {
     this.page = page;
     this.cargarNoticias(page);
   }
-¡
+
 }

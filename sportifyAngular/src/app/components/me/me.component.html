@@ -1,0 +1,93 @@
+<app-navbar></app-navbar>
+
+<div class="config-container">
+  <h1 class="config-title">Configuración</h1>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Comentarios</h2>
+    <button type="button" class="config-item">
+      <div class="config-icon">
+        <i class="bi bi-chat-left-text"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Historial de comentarios</div>
+        <div class="config-item-desc">Ver tu historial de comentarios</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Cuenta</h2>
+    <button type="button" class="config-item" routerLink="/editar-cuenta">
+      <div class="config-icon">
+        <i class="bi bi-person"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Editar cuenta</div>
+        <div class="config-item-desc">Gestiona la información de tu cuenta</div>
+      </div>
+    </button>
+   
+    <button type="button" class="config-item" (click)="logout()">
+      <div class="config-icon">
+        <i class="bi bi-arrow-right"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Cerrar sesión</div>
+        <div class="config-item-desc">Cerrar sesión de tu cuenta</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Noticias Favoritas</h2>
+    <button type="button" class="config-item">
+      <div class="config-icon">
+        <i class="bi bi-star"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Noticias Favoritas</div>
+        <div class="config-item-desc">Ver tus noticias favoritas</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Equipos Seguidos</h2>
+    <button type="button" class="config-item">
+      <div class="config-icon">
+        <i class="bi bi-people"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Equipos Seguidos</div>
+        <div class="config-item-desc">Gestionar los equipos que sigues</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Deportes Seguidos</h2>
+    <button type="button" class="config-item">
+      <div class="config-icon">
+        <i class="bi bi-people"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Deportes Seguidos</div>
+        <div class="config-item-desc">Gestionar los deportes que sigues</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="config-section">
+    <h2 class="config-section-title">Ligas Seguidas</h2>
+    <button type="button" class="config-item">
+      <div class="config-icon">
+        <i class="bi bi-people"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Ligas Seguidas</div>
+        <div class="config-item-desc">Gestionar las ligas que sigues</div>
+      </div>
+    </button>
+  </div>
+</div>

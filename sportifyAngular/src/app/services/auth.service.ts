@@ -44,10 +44,8 @@ export class AuthService {
     }
 
     verifyAccount(body: { token: string }) {
-        // Prueba primero sin barra final
         return this.http.post('/activate/account/', body);
-        // Si sigue sin funcionar, prueba con barra final:
-        // return this.http.post('/activate/account/', body);
+     
     }
 }
 

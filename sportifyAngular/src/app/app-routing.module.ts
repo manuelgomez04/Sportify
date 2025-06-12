@@ -5,6 +5,8 @@ import { NoticiasComponent } from './components/noticias/noticias.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
+import { MeComponent } from './components/me/me.component';
+import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +14,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify-account', component: VerifyAccountComponent },
+  { path: 'me', component: MeComponent },
+  { path: 'editar-cuenta', component: EditarCuentaComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];

@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+<div class="container mt-4" style="max-width: 500px;">
+  <h2>Editar cuenta</h2>
+  <form [formGroup]="editForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input formControlName="nombre" class="form-control" />
+      <div *ngIf="fieldErrors['nombre']" class="text-danger small mt-1">{{ fieldErrors['nombre'] }}</div>
+      <div *ngIf="editForm.get('nombre')?.touched && editForm.get('nombre')?.invalid" class="text-danger small">
+        El nombre es obligatorio.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input formControlName="email" class="form-control" />
+      <div *ngIf="fieldErrors['email']" class="text-danger small mt-1">{{ fieldErrors['email'] }}</div>
+      <div *ngIf="editForm.get('email')?.touched && editForm.get('email')?.hasError('required')" class="text-danger small">
+        El email es obligatorio.
+      </div>
+      <div *ngIf="editForm.get('email')?.touched && editForm.get('email')?.hasError('email')" class="text-danger small">
+        El email no es válido.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Verificar Email</label>
+      <input formControlName="verifyEmail" class="form-control" />
+      <div *ngIf="fieldErrors['verifyEmail']" class="text-danger small mt-1">{{ fieldErrors['verifyEmail'] }}</div>
+      <div *ngIf="editForm.get('verifyEmail')?.touched && editForm.get('verifyEmail')?.hasError('required')" class="text-danger small">
+        Debes verificar el email.
+      </div>
+      <div *ngIf="editForm.get('verifyEmail')?.touched && editForm.get('verifyEmail')?.hasError('email')" class="text-danger small">
+        El email no es válido.
+      </div>
+      <div *ngIf="editForm.get('verifyEmail')?.touched && editForm.get('verifyEmail')?.value !== editForm.get('email')?.value" class="text-danger small">
+        Los emails no coinciden.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input type="password" formControlName="password" class="form-control" />
+      <div *ngIf="fieldErrors['password']" class="text-danger small mt-1">{{ fieldErrors['password'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Verificar Contraseña</label>
+      <input type="password" formControlName="verifyPassword" class="form-control" />
+      <div *ngIf="fieldErrors['verifyPassword']" class="text-danger small mt-1">{{ fieldErrors['verifyPassword'] }}</div>
+      <div *ngIf="editForm.get('password')?.value && editForm.get('verifyPassword')?.touched && editForm.get('verifyPassword')?.value !== editForm.get('password')?.value" class="text-danger small">
+        Las contraseñas no coinciden.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Guardar</button>
+    <a routerLink="/me" class="btn btn-secondary ms-2">Cancelar</a>
+    <div *ngIf="success" class="alert alert-success mt-3">Cuenta actualizada correctamente</div>
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      <ng-container [ngSwitch]="error">
+        <span *ngSwitchCase="'El correo electrónico ya está en uso por otro usuario.'">
+          El correo electrónico ya está en uso por otro usuario.
+        </span>
+        <span *ngSwitchCase="'La contraseña no cumple los requisitos de seguridad.'">
+          La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.
+        </span>
+        <span *ngSwitchDefault>
+          {{ error }}
+        </span>
+      </ng-container>
+    </div>
+  </form>
+</div>
