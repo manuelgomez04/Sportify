@@ -65,7 +65,7 @@ public class UserService {
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-           
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al enviar el correo de activación");
         }
@@ -315,6 +315,13 @@ public class UserService {
 
     public Page<Equipo> findEquiposFavoritosByUsername(String username, Pageable pageable) {
         return equipoRepository.findByUsuariosSeguidosUsername(username, pageable);
+    }
+
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        return user;
     }
 
 }
