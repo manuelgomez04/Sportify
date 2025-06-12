@@ -51,8 +51,8 @@ public class LigaService {
         l.generarNombreNoEspacio();
         ligaRepository.save(l);
 
-        if (deporteRepository.findByNombreEqualsIgnoreCase(createLigaRequest.nombreDeporte()).isPresent()) {
-            deporteRepository.findByNombreEqualsIgnoreCase(createLigaRequest.nombreDeporte()).get().addLiga(l);
+        if (deporteRepository.findByNombreNoEspacio(createLigaRequest.nombreDeporte()).isPresent()) {
+            deporteRepository.findByNombreNoEspacio(createLigaRequest.nombreDeporte()).get().addLiga(l);
             ligaRepository.save(l);
         } else {
             throw new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND);
