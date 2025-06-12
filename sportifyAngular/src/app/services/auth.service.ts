@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { userLogin } from '../models/user/model-login';
 import { miUsuario } from '../models/user/miUsuario';
+import { UserRegister } from '../models/user/model-register';
+import { ActivateAccount } from '../models/user/model-activate-account';
 
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +28,26 @@ export class AuthService {
                 localStorage.clear();
             }
         });
+    }
+
+    register(userData: UserRegister, type: 'user' | 'writer') {
+        const url = type === 'writer' ? '/writer/auth/register' : '/user/auth/register';
+        return this.http.post(url, userData);
+    }
+
+    isAuthenticated(): boolean {
+        return !!localStorage.getItem('accessToken');
+    }
+
+    getAuthorizationHeader(): string {
+        return 'Bearer ' + localStorage.getItem('accessToken');
+    }
+
+    verifyAccount(body: { token: string }) {
+        // Prueba primero sin barra final
+        return this.http.post('/activate/account/', body);
+        // Si sigue sin funcionar, prueba con barra final:
+        // return this.http.post('/activate/account/', body);
     }
 }
 

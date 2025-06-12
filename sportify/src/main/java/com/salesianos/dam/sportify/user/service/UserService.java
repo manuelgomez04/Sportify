@@ -56,6 +56,8 @@ public class UserService {
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.USER))
+                .nombre(createUserRequest.nombre())
+                .fechaNacimiento(createUserRequest.fechaNacimiento())
                 .deleted(false)
                 .activationToken(generateRandomActivationCode())
                 .build();
@@ -63,7 +65,9 @@ public class UserService {
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
+            e.printStackTrace(); // <-- Añade esta línea para ver el error real en consola
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al enviar el correo de activación");
         }
 
         return userRepository.save(user);
@@ -76,12 +80,15 @@ public class UserService {
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.WRITER, Role.USER))
                 .activationToken(generateRandomActivationCode())
+                .nombre(createUserRequest.nombre())
+                .fechaNacimiento(createUserRequest.fechaNacimiento())
                 .build();
 
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al enviar el correo de activación");
         }
 
         return userRepository.save(user);
@@ -99,12 +106,12 @@ public class UserService {
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el correo de activación");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al enviar el correo de activación");
         }
 
         return userRepository.save(user);
     }
-
 
     @Transactional
     public User editMe(User username, EditUserDto updatedUser) {
@@ -171,7 +178,6 @@ public class UserService {
         }
     }
 
-
     public String generateRandomActivationCode() {
         return UUID.randomUUID().toString();
     }
@@ -216,7 +222,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
     @Transactional
     public User dejarDeSeguirEquipo(String username, FollowEquipoRequest nombreEquipo) {
         User user = userRepository.findFirstByUsername(username)
@@ -240,7 +245,6 @@ public class UserService {
 
         Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
-
 
         Hibernate.initialize(user.getEquiposSeguidos());
         Hibernate.initialize(user.getLigasSeguidas());
@@ -274,7 +278,6 @@ public class UserService {
         Liga liga = ligaRepository.findByNombreNoEspacio(nombreLiga.nombreLiga())
                 .orElseThrow(() -> new LigaNotFoundException("Liga no encontrada", HttpStatus.NOT_FOUND));
 
-
         Hibernate.initialize(user.getEquiposSeguidos());
         Hibernate.initialize(user.getDeportesSeguidos());
         user.addLiga(liga);
@@ -306,9 +309,8 @@ public class UserService {
         return deporteRepository.findByUsuariosSeguidosUsername(username, pageable);
     }
 
-
     public Page<Equipo> findEquiposFavoritosByUsername(String username, Pageable pageable) {
         return equipoRepository.findByUsuariosSeguidosUsername(username, pageable);
     }
-    
+
 }

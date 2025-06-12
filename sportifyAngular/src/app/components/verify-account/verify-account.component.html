@@ -1,0 +1,12 @@
+<div class="container mt-4" style="max-width: 400px;">
+  <h2 class="mb-4 text-center">Verificar cuenta</h2>
+  <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Código de verificación</label>
+      <input formControlName="token" type="text" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Verificar</button>
+    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+  </form>
+</div>

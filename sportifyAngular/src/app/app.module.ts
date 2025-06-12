@@ -10,6 +10,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NoticiasComponent } from './components/noticias/noticias.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { RegisterComponent } from './components/register/register.component';
+import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
 
 
 @NgModule({
@@ -18,7 +21,9 @@ import { AuthInterceptor } from './services/auth.interceptor';
     LoginComponent,
     NoticiasComponent,
     HomeComponent,
-
+    NavbarComponent,
+    RegisterComponent,
+    VerifyAccountComponent
   ],
   imports: [
     BrowserModule,
