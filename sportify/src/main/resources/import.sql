@@ -19,16 +19,16 @@ INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id, mul
 INSERT INTO noticia (id, titular, slug, cuerpo, fecha_publicacion, autor_id, multimedia) VALUES (gen_random_uuid(), 'Titular de la noticia 10', 'titular-de-la-noticia-10', 'Cuerpo de la noticia 10. Este es el contenido de la noticia.', NOW() - INTERVAL '10 days', (SELECT id FROM users WHERE username = 'writer_user'), ARRAY['https://images.unsplash.com/photo-1465101046530-73398c7f28ca','https://images.unsplash.com/photo-1519125323398-675f0ddb6308']);
 
 INSERT INTO deporte (id, nombre,nombre_no_espacio,  descripcion, imagen) VALUES (gen_random_uuid(), 'Fútbol','futbol', 'Deporte de equipo jugado entre dos equipos de once jugadores cada uno, con una pelota esférica.', 'https://universidadeuropea.com/resources/media/images/scouting-futbol-1200x630.2e16d0ba.fill-767x384.jpg');
-INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Baloncesto', 'Deporte de equipo en el que dos equipos de cinco jugadores compiten por anotar puntos lanzando una pelota a través de un aro.');
-INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Tenis', 'Deporte de raqueta jugado entre dos jugadores (individuales) o dos parejas (dobles), en una cancha rectangular dividida por una red.');
-INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Atletismo', 'Conjunto de disciplinas deportivas que incluyen carreras, saltos, lanzamientos y pruebas combinadas.');
-INSERT INTO deporte (id, nombre, descripcion) VALUES (gen_random_uuid(), 'Natación', 'Deporte acuático que consiste en recorrer una distancia en el agua en el menor tiempo posible, utilizando diferentes estilos.');
+INSERT INTO deporte (id, nombre,nombre_no_espacio, descripcion) VALUES (gen_random_uuid(), 'Baloncesto', 'baloncesto','Deporte de equipo en el que dos equipos de cinco jugadores compiten por anotar puntos lanzando una pelota a través de un aro.');
+INSERT INTO deporte (id, nombre,nombre_no_espacio, descripcion) VALUES (gen_random_uuid(), 'Tenis', 'tenis','Deporte de raqueta jugado entre dos jugadores (individuales) o dos parejas (dobles), en una cancha rectangular dividida por una red.');
+INSERT INTO deporte (id, nombre,nombre_no_espacio, descripcion) VALUES (gen_random_uuid(), 'Atletismo','atletismo', 'Conjunto de disciplinas deportivas que incluyen carreras, saltos, lanzamientos y pruebas combinadas.');
+INSERT INTO deporte (id, nombre,nombre_no_espacio, descripcion) VALUES (gen_random_uuid(), 'Natación','natacion', 'Deporte acuático que consiste en recorrer una distancia en el agua en el menor tiempo posible, utilizando diferentes estilos.');
 
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio, imagen) VALUES (gen_random_uuid(), 'LaLiga EaSports', 'Primera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'laliga-easports', 'https://brandemia.org/sites/default/files/sites/default/files/logotipos4.jpg');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 2', 'Segunda liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-2');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 3', 'Tercera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-3');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 4', 'Cuarta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-4');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 5', 'Quinta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Futbol'), 'liga-futbol-5');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio, imagen) VALUES (gen_random_uuid(), 'LaLiga EaSports', 'Primera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Fútbol'), 'laliga-easports', 'https://brandemia.org/sites/default/files/sites/default/files/logotipos4.jpg');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 2', 'Segunda liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Fútbol'), 'liga-futbol-2');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 3', 'Tercera liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Fútbol'), 'liga-futbol-3');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 4', 'Cuarta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Fútbol'), 'liga-futbol-4');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Futbol 5', 'Quinta liga de Futbol.', (SELECT id FROM deporte WHERE nombre = 'Fútbol'), 'liga-futbol-5');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Baloncesto 1', 'Primera liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'), 'liga-baloncesto-1');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Baloncesto 2', 'Segunda liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'), 'liga-baloncesto-2');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Baloncesto 3', 'Tercera liga de Baloncesto.', (SELECT id FROM deporte WHERE nombre = 'Baloncesto'), 'liga-baloncesto-3');
@@ -44,11 +44,11 @@ INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Atletismo 3', 'Tercera liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'), 'liga-atletismo-3');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Atletismo 4', 'Cuarta liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'), 'liga-atletismo-4');
 INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Atletismo 5', 'Quinta liga de Atletismo.', (SELECT id FROM deporte WHERE nombre = 'Atletismo'), 'liga-atletismo-5');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 1', 'Primera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'), 'liga-natacion-1');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 2', 'Segunda liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'), 'liga-natacion-2');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 3', 'Tercera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'), 'liga-natacion-3');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 4', 'Cuarta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'), 'liga-natacion-4');
-INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 5', 'Quinta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natacion'), 'liga-natacion-5');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 1', 'Primera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natación'), 'liga-natacion-1');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 2', 'Segunda liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natación'), 'liga-natacion-2');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 3', 'Tercera liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natación'), 'liga-natacion-3');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 4', 'Cuarta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natación'), 'liga-natacion-4');
+INSERT INTO liga (id, nombre, descripcion, deporte_id, nombre_no_espacio) VALUES (gen_random_uuid(), 'Liga Natacion 5', 'Quinta liga de Natacion.', (SELECT id FROM deporte WHERE nombre = 'Natación'), 'liga-natacion-5');
 
 INSERT INTO equipo (id, nombre, nombre_no_espacio, ciudad, pais, escudo, fecha_creacion, liga_id) VALUES (gen_random_uuid(), 'Real Madrid', 'real-madrid', 'Madrid', 'España', 'real_madrid.png', '1902-03-06', (SELECT id FROM liga WHERE nombre = 'LaLiga EaSports'));
 INSERT INTO equipo (id, nombre, nombre_no_espacio, ciudad, pais, escudo, fecha_creacion, liga_id) VALUES (gen_random_uuid(), 'FC Barcelona', 'fc-barcelona', 'Barcelona', 'España', 'fc_barcelona.png', '1899-11-29', (SELECT id FROM liga WHERE nombre = 'LaLiga EaSports'));
@@ -86,11 +86,11 @@ INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users
 INSERT INTO usuario_equipo (usuario_id, equipo_id) VALUES ((SELECT id FROM users WHERE username = 'user5'), (SELECT id FROM equipo WHERE nombre = 'Golden State Warriors'));
 
 -- Asociaciones entre usuarios y deportes seguidos
-INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM deporte WHERE nombre = 'Futbol'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM deporte WHERE nombre = 'Fútbol'));
 INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'regular_user'), (SELECT id FROM deporte WHERE nombre = 'Baloncesto'));
 INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'writer_user'), (SELECT id FROM deporte WHERE nombre = 'Tenis'));
 INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM deporte WHERE nombre = 'Atletismo'));
-INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM deporte WHERE nombre = 'Natacion'));
+INSERT INTO usuario_deporte (usuario_id, deporte_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM deporte WHERE nombre = 'Natación'));
 
 -- Asociaciones entre usuarios y ligas seguidas
 INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'admin_user'), (SELECT id FROM liga WHERE nombre = 'LaLiga EaSports'));
@@ -100,11 +100,11 @@ INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHE
 INSERT INTO usuario_liga (usuario_id, liga_id) VALUES ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM liga WHERE nombre = 'Liga Natacion 1'));
 
 -- Asociaciones entre noticias y deportes
-UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Futbol') WHERE titular = 'Titular de la noticia 1';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Fútbol') WHERE titular = 'Titular de la noticia 1';
 UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Baloncesto') WHERE titular = 'Titular de la noticia 2';
 UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Tenis') WHERE titular = 'Titular de la noticia 3';
 UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Atletismo') WHERE titular = 'Titular de la noticia 4';
-UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Natacion') WHERE titular = 'Titular de la noticia 5';
+UPDATE noticia SET deporte_id = (SELECT id FROM deporte WHERE nombre = 'Natación') WHERE titular = 'Titular de la noticia 5';
 
 -- Asociaciones entre noticias y equipos
 UPDATE noticia SET equipo_id = (SELECT id FROM equipo WHERE nombre = 'Real Madrid') WHERE titular = 'Titular de la noticia 1';

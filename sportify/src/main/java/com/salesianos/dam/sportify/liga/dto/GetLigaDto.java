@@ -18,7 +18,7 @@ public record GetLigaDto(
                 l.getId(),
                 l.getNombre(),
                 l.getDescripcion(),
-                l.getDeporte().getNombre(),
+                l.getDeporte().getNombreNoEspacio(),
                 l.getNombreNoEspacio(),
                 l.getImagen()
         );
