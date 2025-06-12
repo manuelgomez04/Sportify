@@ -15,6 +15,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
 import { MeComponent } from './components/me/me.component';
 import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
+import { LigasSeguidasComponent } from './components/ligas-seguidas/ligas-seguidas.component';
+import { SeguidosComponent } from './components/seguidos/seguidos.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.
     RegisterComponent,
     VerifyAccountComponent,
     MeComponent,
-    EditarCuentaComponent
+    EditarCuentaComponent,
+    LigasSeguidasComponent,
+    SeguidosComponent
   ],
   imports: [
     BrowserModule,

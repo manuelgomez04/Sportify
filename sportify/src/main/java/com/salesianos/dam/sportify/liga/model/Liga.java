@@ -27,6 +27,8 @@ public class Liga {
     private String nombre;
     private String descripcion;
 
+    private String imagen;
+
     @ManyToOne
     @JoinColumn(name = "deporte_id", foreignKey = @ForeignKey(name = "fk_liga_deporte"))
     private Deporte deporte;

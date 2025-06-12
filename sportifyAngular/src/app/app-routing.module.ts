@@ -7,6 +7,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
 import { MeComponent } from './components/me/me.component';
 import { EditarCuentaComponent } from './components/editar-cuenta/editar-cuenta.component';
+import { LigasSeguidasComponent } from './components/ligas-seguidas/ligas-seguidas.component';
+import { SeguidosComponent } from './components/seguidos/seguidos.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'verify-account', component: VerifyAccountComponent },
   { path: 'me', component: MeComponent },
   { path: 'editar-cuenta', component: EditarCuentaComponent },
+  { path: 'ligas-seguidas', component: LigasSeguidasComponent },
+  { path: 'seguidos', component: SeguidosComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
