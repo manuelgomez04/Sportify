@@ -133,30 +133,36 @@ public class UserController {
 
         @PostMapping("/auth/login")
         public ResponseEntity<UserResponse> login(
-                        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Cuerpo del usuario", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginRequest.class), examples = @ExampleObject(value = """
-                                            {
-                                                      "username":"admin_user",
-                                                      "password":"admin"
-                                                  }
-                                        """))) @RequestBody LoginRequest loginRequest) {
+                @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Cuerpo del usuario", required = true,
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginRequest.class),
+                    examples = @ExampleObject(value = """
+                {
+                      "username":"admin_user",
+                      "password":"admin"
+                  }
+            """))) @RequestBody LoginRequest loginRequest) {
 
-                Authentication authentication = authenticationManager.authenticate(
-                                new UsernamePasswordAuthenticationToken(
-                                                loginRequest.username(),
-                                                loginRequest.password()));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.username(),
+                            loginRequest.password()));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                User user = (User) authentication.getPrincipal();
-                // userService.isDeleted(user);
+            User user = (User) authentication.getPrincipal();
 
-                String accessToken = jwtService.generateAccessToken(user);
+            
+            if (Boolean.TRUE.equals(user.getDeleted())) {
+                throw new org.springframework.security.authentication.BadCredentialsException("La cuenta ha sido eliminada");
+            }
 
-                RefreshToken refreshToken = refreshTokenService.create(user);
+            String accessToken = jwtService.generateAccessToken(user);
 
-                return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(UserResponse.of(user, accessToken, refreshToken.getToken()));
+            RefreshToken refreshToken = refreshTokenService.create(user);
 
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(UserResponse.of(user, accessToken, refreshToken.getToken()));
         }
 
         @Operation(summary = "Genera el token de refresco")
