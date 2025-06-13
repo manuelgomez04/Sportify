@@ -8,38 +8,42 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DeportesSeguidosComponent implements OnInit {
   deportes: any[] = [];
-  visibleCards = 4;
-  currentIndex = 0;
+  page = 0;
+  size = 4;
+  totalPages = 0;
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.http.get<any>('/deportesFavoritos?page=0&size=10').subscribe({
+    this.cargarDeportes(0);
+  }
+
+  cargarDeportes(page: number) {
+    this.http.get<any>(`/deportesFavoritos?page=${page}&size=${this.size}`).subscribe({
       next: resp => {
         this.deportes = resp.deportesFavoritos?.content || [];
+        this.page = resp.deportesFavoritos?.number || 0;
+        this.totalPages = resp.deportesFavoritos?.totalPages || 0;
       }
     });
   }
 
-  get visibleDeportes() {
-    return this.deportes.slice(this.currentIndex, this.currentIndex + this.visibleCards);
-  }
   scrollLeft() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
+    if (this.page > 0) {
+      this.cargarDeportes(this.page - 1);
     }
   }
   scrollRight() {
-    if (this.currentIndex < this.deportes.length - this.visibleCards) {
-      this.currentIndex++;
+    if (this.page < this.totalPages - 1) {
+      this.cargarDeportes(this.page + 1);
     }
   }
+  get visibleDeportes() {
+    return this.deportes;
+  }
   get atStart() {
-    return this.currentIndex === 0;
+    return this.page === 0;
   }
   get atEnd() {
-    return this.currentIndex >= this.deportes.length - this.visibleCards || this.deportes.length <= this.visibleCards;
-  }
-  getTransform() {
-    return `translateX(-${this.currentIndex * 196}px)`; 
+    return this.page >= this.totalPages - 1 || this.totalPages === 0;
   }
 }
