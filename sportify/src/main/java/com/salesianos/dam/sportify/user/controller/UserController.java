@@ -30,6 +30,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -67,8 +68,9 @@ public class UserController {
                                                "fechaNacimiento": "2000-01-01",
                                                "nombre": "Manuel"
                                              }
-                                        """))) @RequestBody @Valid CreateUserRequest createUserRequest) {
-                User user = userService.createUser(createUserRequest);
+                                        """))) @RequestPart("createUserRequest") @Valid CreateUserRequest createUserRequest,
+                        @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile) {
+                User user = userService.createUser(createUserRequest, profileImageFile);
 
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(UserResponse.of(user));
@@ -92,8 +94,9 @@ public class UserController {
                                                "fechaNacimiento": "2000-01-01",
                                                "nombre": "Manuel"
                                              }
-                                        """))) @RequestBody @Valid CreateUserRequest createUserRequest) {
-                User user = userService.createWriter(createUserRequest);
+                                        """))) @RequestPart("createUserRequest") @Valid CreateUserRequest createUserRequest,
+                        @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile) {
+                User user = userService.createWriter(createUserRequest, profileImageFile);
 
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(UserResponse.of(user));
@@ -117,8 +120,9 @@ public class UserController {
                                                "fechaNacimiento": "2000-01-01",
                                                "nombre": "Manuel"
                                              }
-                                        """))) @RequestBody @Valid CreateUserRequest createUserRequest) {
-                User user = userService.createAdmin(createUserRequest);
+                                        """))) @RequestPart("createUserRequest") @Valid CreateUserRequest createUserRequest,
+                        @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile) {
+                User user = userService.createAdmin(createUserRequest, profileImageFile);
 
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(UserResponse.of(user));
@@ -209,18 +213,10 @@ public class UserController {
         })
         @PutMapping("/edit/me")
         public GetUsuarioDto updateMe(@AuthenticationPrincipal User user,
-                        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Cuerpo de la petición", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = EditUserDto.class), examples = @ExampleObject(value = """
-                                            {
-                                              "password": "Password1234.",
-                                              "verifyPassword": "Password1234.",
-                                              "email": "gomez.maman24@triana.salesianos.eduaz",
-                                              "verifyEmail": "gomez.maman24@triana.salesianos.eduaz",
-                                              "fechaNacimiento": "2000-06-01",
-                                              "nombre": "Manuelillo adsjkfhaksljdhfklasjhdklfjhasdlkjhflaksjdhflkasj"
-                                            }
-                                        """))) @RequestBody @Valid EditUserDto createUserRequest) {
+                        @RequestPart("editUserDto") @Valid EditUserDto createUserRequest,
+                        @RequestPart(value = "profileImage", required = false) MultipartFile profileImageFile) {
 
-                User updatedUser = userService.editMe(user, createUserRequest);
+                User updatedUser = userService.editMe(user, createUserRequest, profileImageFile);
                 return GetUsuarioDto.of(updatedUser);
         }
 
@@ -600,3 +596,4 @@ public class UserController {
                 return ResponseEntity.noContent().build();
         }
 }
+     
