@@ -23,7 +23,8 @@ public record GetUsuarioDto(
         List<GetEquipoDto> equiposSeguidos,
         List<GetDeporteDto> deportesSeguidos,
         List<GetLigaDto> ligasSeguidas,
-        String nombre
+        String nombre,
+        String profileImage
 ) {
     public static GetUsuarioDto of(User user) {
         Hibernate.initialize(user.getEquiposSeguidos());
@@ -37,7 +38,8 @@ public record GetUsuarioDto(
                 user.getEquiposSeguidos().stream().map(GetEquipoDto::of).toList(),
                 user.getDeportesSeguidos().stream().map(GetDeporteDto::of).toList(),
                 user.getLigasSeguidas().stream().map(GetLigaDto::of).toList(),
-                user.getEmail()
+                user.getEmail(),
+                user.getProfileImage()
 
         );
     }

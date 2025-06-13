@@ -7,6 +7,8 @@ import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
 import com.salesianos.dam.sportify.error.*;
+import com.salesianos.dam.sportify.files.model.FileMetadata;
+import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
@@ -28,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -46,11 +49,16 @@ public class UserService {
     private final EquipoRepository equipoRepository;
     private final DeporteRepository deporteRepository;
     private final LigaRepository ligaRepository;
+    private final StorageService storageService;
 
     @Value("${activation.duration}")
     private int activationDuration;
 
-    public User createUser(CreateUserRequest createUserRequest) {
+    public User createUser(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+
+        FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
@@ -60,6 +68,7 @@ public class UserService {
                 .fechaNacimiento(createUserRequest.fechaNacimiento())
                 .deleted(false)
                 .activationToken(generateRandomActivationCode())
+                .profileImage(imageUrl)
                 .build();
 
         try {
@@ -73,7 +82,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User createWriter(CreateUserRequest createUserRequest) {
+    public User createWriter(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+        FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
@@ -82,6 +94,7 @@ public class UserService {
                 .activationToken(generateRandomActivationCode())
                 .nombre(createUserRequest.nombre())
                 .fechaNacimiento(createUserRequest.fechaNacimiento())
+                .profileImage(imageUrl)
                 .build();
 
         try {
@@ -94,13 +107,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User createAdmin(CreateUserRequest createUserRequest) {
+    public User createAdmin(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+          FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.ADMIN, Role.USER, Role.WRITER))
                 .activationToken(generateRandomActivationCode())
+                .nombre(createUserRequest.nombre()).
+                fechaNacimiento(createUserRequest.fechaNacimiento())
+                .profileImage(imageUrl)
                 .build();
 
         try {
@@ -114,7 +133,12 @@ public class UserService {
     }
 
     @Transactional
-    public User editMe(User username, EditUserDto updatedUser) {
+    public User editMe(User username, EditUserDto updatedUser, MultipartFile profileImage) {
+        if (profileImage != null && !profileImage.isEmpty()) {
+            FileMetadata fileMetadata = storageService.store(profileImage);
+            String imageUrl = fileMetadata.getFilename();
+            username.setProfileImage(imageUrl);
+        }
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
                     if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
