@@ -1,0 +1,37 @@
+<app-navbar></app-navbar>
+<div class="container py-4">
+  <h2 class="fw-bold mb-4">Mis Comentarios</h2>
+  <h5 class="mb-3">Comentarios Recientes</h5>
+  <div *ngIf="comentarios.length > 0">
+    <div *ngFor="let c of comentarios" class="d-flex align-items-start mb-4">
+      <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar" class="rounded-circle me-3" width="56" height="56">
+      <div class="flex-grow-1">
+        <div class="fw-bold">{{ c.usuario.username }}</div>
+        <div class="text-muted small mb-1">{{ c.fecha | date:'mediumDate' }}</div>
+        <div class="mb-1"><strong>{{ c.titular }}</strong></div>
+        <div>{{ c.comentario }}</div>
+      </div>
+      <button class="btn btn-link ms-2" title="Editar">
+        <i class="bi bi-pencil"></i>
+      </button>
+    </div>
+    <nav *ngIf="totalPages > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page === 0">
+          <button class="page-link" (click)="cambiarPagina(page - 1)" [disabled]="page === 0">Anterior</button>
+        </li>
+        <li class="page-item"
+            *ngFor="let p of [].constructor(totalPages); let i = index"
+            [class.active]="i === page">
+          <button class="page-link" (click)="cambiarPagina(i)" [disabled]="i === page">{{ i + 1 }}</button>
+        </li>
+        <li class="page-item" [class.disabled]="page >= totalPages - 1">
+          <button class="page-link" (click)="cambiarPagina(page + 1)" [disabled]="page >= totalPages - 1">Siguiente</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div *ngIf="comentarios.length === 0" class="text-muted text-center py-5">
+    No tienes comentarios.
+  </div>
+</div>

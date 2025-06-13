@@ -136,4 +136,8 @@ public class ComentarioService {
     public Page<Comentario> findComentariosByNoticiaSlug(String slug, Pageable pageable) {
         return comentarioRepository.findByNoticiaSlug(slug, pageable);
     }
+
+    public Page<Comentario> findComentariosByUsuario(String username, Pageable pageable) {
+        return comentarioRepository.findByUsuarioUsernamePaged(username, pageable);
+    }
 }

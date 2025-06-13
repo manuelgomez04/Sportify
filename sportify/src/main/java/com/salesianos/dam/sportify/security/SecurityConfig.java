@@ -122,6 +122,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/noticias/filtradas").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
+                                .requestMatchers(HttpMethod.GET, "comentarios/username/**").hasRole("ADMIN")
                                 .anyRequest().authenticated());
 
                 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

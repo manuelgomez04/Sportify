@@ -1,0 +1,19 @@
+export interface ComentarioUsuario {
+  usuario: { username: string };
+  noticia: { titular: string };
+  comentario: string;
+  titular: string;
+  fecha: string;
+}
+
+export interface ComentariosUsuarioPage {
+  content: ComentarioUsuario[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}

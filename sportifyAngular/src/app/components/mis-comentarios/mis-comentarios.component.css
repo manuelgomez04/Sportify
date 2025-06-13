@@ -1,0 +1,10 @@
+.container {
+  max-width: 800px;
+}
+img.rounded-circle {
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+.fw-bold {
+  font-size: 1.1rem;
+}
