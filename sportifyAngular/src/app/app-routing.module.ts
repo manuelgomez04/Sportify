@@ -17,6 +17,7 @@ import { NuevaNoticiaComponent } from './components/nueva-noticia/nueva-noticia.
 import { WriterAdminGuard } from './guards/writer-admin.guard'; // crea este guard
 import { AuthGuard } from './guards/auth.guard';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
+import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -27,7 +28,7 @@ const routes: Routes = [
   {
     path: 'me',
     component: MeComponent,
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
   { path: 'editar-cuenta', component: EditarCuentaComponent, canActivate: [AuthGuard] },
   { path: 'ligas-seguidas', component: LigasSeguidasComponent },
@@ -41,7 +42,9 @@ const routes: Routes = [
     component: NuevaNoticiaComponent,
     canActivate: [WriterAdminGuard] // solo writers y admin pueden acceder
   },
-  {path: 'mis-noticias', component: MisNoticiasComponent, canActivate: [WriterAdminGuard] },
+  { path: 'mis-noticias', component: MisNoticiasComponent, canActivate: [WriterAdminGuard] },
+  { path: 'noticias/:slug', component: DetalleNoticiaComponent },
+
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 

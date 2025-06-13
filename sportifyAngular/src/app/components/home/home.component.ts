@@ -60,4 +60,8 @@ export class HomeComponent implements OnInit {
     this.cargarNoticias(page);
   }
 
+  verDetalle(slug: string) {
+    this.router.navigate(['/noticias', slug]);
+  }
+
 }

@@ -29,6 +29,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthRedirectInterceptor } from './interceptors/auth-redirect.interceptor';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
+import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
+import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { environment } from '../environments/environment.development';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,8 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
     NoticiasFavoritasComponent,
     MisComentariosComponent,
     NuevaNoticiaComponent,
-    MisNoticiasComponent
+    MisNoticiasComponent,
+    DetalleNoticiaComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +68,8 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
       provide: HTTP_INTERCEPTORS,
       useClass: AuthRedirectInterceptor,
       multi: true
-    }
+    },
+    { provide: LocationStrategy, useClass: environment.useHash ? HashLocationStrategy : PathLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })

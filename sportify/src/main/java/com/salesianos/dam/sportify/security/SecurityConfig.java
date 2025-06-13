@@ -3,9 +3,6 @@ package com.salesianos.dam.sportify.security;
 import com.salesianos.dam.sportify.security.exceptionhandling.JwtAccessDeniedHandler;
 import com.salesianos.dam.sportify.security.exceptionhandling.JwtAuthenticationEntryPoint;
 import com.salesianos.dam.sportify.security.jwt.access.JwtAuthenticationFilter;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
@@ -24,7 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -75,7 +71,7 @@ public class SecurityConfig {
                 http.sessionManagement((session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
                 http.exceptionHandling(excepz -> excepz
-                                .authenticationEntryPoint(customAuthenticationEntryPoint())
+                                .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(accessDeniedHandler));
                 http.authorizeHttpRequests(authz -> authz
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -100,7 +96,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/admin/delete/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/noticias").hasAnyRole("WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/noticias/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/noticias/delete/**").hasAnyRole("WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/deporte").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/deporte/**").hasRole("ADMIN")
@@ -126,12 +122,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/noticias/filtradas").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/noticias/me").hasAnyRole("WRITER", "ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/noticias/{username}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "comentarios/username/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/deporte").hasAnyRole("ADMIN", "WRITER")
-                                .requestMatchers(HttpMethod.GET, "/liga/por-deporte/**").hasAnyRole("ADMIN", "WRITER")
-                                .requestMatchers(HttpMethod.GET, "/equipo/por-liga/**").hasAnyRole("ADMIN", "WRITER")
                                 .anyRequest().authenticated());
 
                 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -139,14 +130,6 @@ public class SecurityConfig {
                 http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
                 return http.build();
-        }
-
-        @Bean
-        public AuthenticationEntryPoint customAuthenticationEntryPoint() {
-                return (HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) -> {
-                        // Redirige siempre al home del frontend
-                        response.sendRedirect("http://localhost:4200/home");
-                };
         }
 
         @Bean
@@ -166,4 +149,3 @@ public class SecurityConfig {
         }
 
 }
-
