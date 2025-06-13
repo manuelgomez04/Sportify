@@ -98,7 +98,7 @@ public class NoticiaService {
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
                 .cuerpo(createNoticiaRequest.cuerpo())
-                .fechaPublicacion(createNoticiaRequest.fechaPublicacion())
+                .fechaPublicacion(LocalDate.now()) // <-- fecha automática
                 .multimedia(imageUrls)
                 .deporteNoticia(d)
                 .equipoNoticia(e)

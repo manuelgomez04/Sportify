@@ -23,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/liga")
 @RequiredArgsConstructor
@@ -74,6 +76,13 @@ public class LigaController {
     public ResponseEntity<?> deleteLiga(@PathVariable String nombre) {
         ligaService.deleteLiga(nombre);
         return ResponseEntity.noContent().build();
+    }
+
+
+
+    @GetMapping("/por-deporte/{nombreDeporte}")
+    public List<GetLigaDto> getLigasPorDeporte(@PathVariable String nombreDeporte) {
+        return ligaService.getLigasPorDeporte(nombreDeporte).stream().map(GetLigaDto::of).toList();
     }
 
 }
