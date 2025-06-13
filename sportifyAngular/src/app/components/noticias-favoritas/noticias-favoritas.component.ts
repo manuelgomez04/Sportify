@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Noticia } from '../../models/noticia/noticia.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-noticias-favoritas',
@@ -13,7 +14,10 @@ export class NoticiasFavoritasComponent implements OnInit {
   size = 4;
   totalPages = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.cargarNoticias(0);
@@ -43,5 +47,9 @@ export class NoticiasFavoritasComponent implements OnInit {
     }
     return '/download/' + cleanUrl;
   }
+
+  verDetalle(slug: string) {
+    this.router.navigate(['/noticias', slug]);
+  }
 }
-  
+
