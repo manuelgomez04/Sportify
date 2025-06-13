@@ -259,4 +259,7 @@ public class NoticiaService {
         return noticiaRepository.findAll(spec, pageable);
     }
 
+    public Page<Noticia> findNoticiasByUsername(String username, Pageable pageable) {
+        return noticiaRepository.findByAutor_Username(username, pageable);
+    }
 }

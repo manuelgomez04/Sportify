@@ -24,5 +24,6 @@ public interface NoticiaRepository extends JpaRepository<Noticia, UUID>, JpaSpec
     @Query("SELECT n FROM Noticia n LEFT JOIN FETCH n.comentarios c WHERE n.slug = :slug")
     Page<Noticia> findNoticiaWithComentariosPaginadosBySlug(@Param("slug") String slug, Pageable pageable);
 
-
+    Page<Noticia> findByAutor_Username(String username, Pageable pageable);
 }
+

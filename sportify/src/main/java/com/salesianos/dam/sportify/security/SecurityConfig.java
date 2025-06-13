@@ -126,6 +126,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/noticias/filtradas").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/noticias/me").hasAnyRole("WRITER", "ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/noticias/{username}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "comentarios/username/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/deporte").hasAnyRole("ADMIN", "WRITER")
                                 .requestMatchers(HttpMethod.GET, "/liga/por-deporte/**").hasAnyRole("ADMIN", "WRITER")
