@@ -8,46 +8,47 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LigasSeguidasComponent implements OnInit {
   ligas: any[] = [];
-  visibleCards = 4;
-  currentIndex = 0;
+  page = 0;
+  size = 4;
+  totalPages = 0;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<any>('/ligasFavoritas?page=0&size=10').subscribe({
+    this.cargarLigas(0);
+  }
+
+  cargarLigas(page: number) {
+    this.http.get<any>(`/ligasFavoritas?page=${page}&size=${this.size}`).subscribe({
       next: resp => {
         this.ligas = resp.ligasFavoritas?.content || [];
+        this.page = resp.ligasFavoritas?.number || 0;
+        this.totalPages = resp.ligasFavoritas?.totalPages || 0;
       }
     });
   }
 
-  
-
-  get visibleLigas() {
-    return this.ligas.slice(this.currentIndex, this.currentIndex + this.visibleCards);
-  }
-
   scrollLeft() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
+    if (this.page > 0) {
+      this.cargarLigas(this.page - 1);
     }
   }
 
   scrollRight() {
-    if (this.currentIndex < this.ligas.length - this.visibleCards) {
-      this.currentIndex++;
+    if (this.page < this.totalPages - 1) {
+      this.cargarLigas(this.page + 1);
     }
   }
 
+  get visibleLigas() {
+    return this.ligas;
+  }
+
   get atStart() {
-    return this.currentIndex === 0;
+    return this.page === 0;
   }
 
   get atEnd() {
-    return this.currentIndex >= this.ligas.length - this.visibleCards || this.ligas.length <= this.visibleCards;
-  }
-
-  getTransform() {
-    return `translateX(-${this.currentIndex * 196}px)`; // 180px card + 16px gap
+    return this.page >= this.totalPages - 1 || this.totalPages === 0;
   }
 }

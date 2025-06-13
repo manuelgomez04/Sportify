@@ -9,39 +9,42 @@ import { Component, OnInit } from '@angular/core';
 export class EquiposSeguidosComponent implements OnInit {
 
   equipos: any[] = [];
-  visibleCards = 4;
-  currentIndex = 0;
+  page = 0;
+  size = 4;
+  totalPages = 0;
 
   constructor(private http: HttpClient) { }
-   ngOnInit() {
-    this.http.get<any>('/equiposFavoritos?page=0&size=10').subscribe({
+  ngOnInit() {
+    this.cargarEquipos(0);
+  }
+
+  cargarEquipos(page: number) {
+    this.http.get<any>(`/equiposFavoritos?page=${page}&size=${this.size}`).subscribe({
       next: resp => {
         this.equipos = resp.equiposFavoritos?.content || [];
+        this.page = resp.equiposFavoritos?.number || 0;
+        this.totalPages = resp.equiposFavoritos?.totalPages || 0;
       }
     });
   }
 
-  get visibleEquipos() {
-    return this.equipos.slice(this.currentIndex, this.currentIndex + this.visibleCards);
-  }
   scrollLeft() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
+    if (this.page > 0) {
+      this.cargarEquipos(this.page - 1);
     }
   }
   scrollRight() {
-    if (this.currentIndex < this.equipos.length - this.visibleCards) {
-      this.currentIndex++;
+    if (this.page < this.totalPages - 1) {
+      this.cargarEquipos(this.page + 1);
     }
   }
+  get visibleEquipos() {
+    return this.equipos;
+  }
   get atStart() {
-    return this.currentIndex === 0;
+    return this.page === 0;
   }
   get atEnd() {
-    return this.currentIndex >= this.equipos.length - this.visibleCards || this.equipos.length <= this.visibleCards;
+    return this.page >= this.totalPages - 1 || this.totalPages === 0;
   }
-  getTransform() {
-    return `translateX(-${this.currentIndex * 196}px)`; 
-  }
-
 }

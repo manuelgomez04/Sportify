@@ -11,6 +11,7 @@ import { LigasSeguidasComponent } from './components/ligas-seguidas/ligas-seguid
 import { SeguidosComponent } from './components/seguidos/seguidos.component';
 import { DeportesSeguidosComponent } from './components/deportes-seguidos/deportes-seguidos.component';
 import { EquiposSeguidosComponent } from './components/equipos-seguidos/equipos-seguidos.component';
+import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noticias-favoritas.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'seguidos', component: SeguidosComponent },
   { path: 'deportes-seguidos', component: DeportesSeguidosComponent },
   { path: 'equipos-seguidos', component: EquiposSeguidosComponent },
+  { path: 'noticias-favoritas', component: NoticiasFavoritasComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
