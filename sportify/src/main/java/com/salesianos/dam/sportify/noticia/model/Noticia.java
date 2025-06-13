@@ -79,6 +79,8 @@ public class Noticia {
     @JsonManagedReference
     private Set<Like> likes = new HashSet<>();
 
+  
+
     @Override
     public final boolean equals(Object o) {
         if (this == o)
