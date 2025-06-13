@@ -13,7 +13,7 @@ export class MeComponent implements OnInit {
   error: boolean = false;
 
   constructor(
-    private authService: AuthService,
+    protected authService: AuthService,
     private router: Router,
     private http: HttpClient
   ) {}

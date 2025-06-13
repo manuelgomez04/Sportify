@@ -38,8 +38,9 @@
             </div>
           </div>
           <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small></p>
-          <div class="mt-2">
+          <div class="mt-2 d-flex gap-2">
             <button class="btn btn-sm btn-primary" (click)="abrirEditar(noticia)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="abrirEliminar(noticia)">Eliminar</button>
           </div>
         </div>
         <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
@@ -101,5 +102,23 @@
         <button type="submit" class="btn btn-primary" [disabled]="editLoading">Guardar</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal de confirmación de borrado -->
+<div *ngIf="noticiaAEliminar" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">Eliminar Noticia</h5>
+      <button type="button" class="btn-close" (click)="cerrarEliminar()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>¿Seguro que quieres eliminar la noticia <strong>{{ noticiaAEliminar.titular }}</strong>?</p>
+      <div *ngIf="deleteError" class="alert alert-danger">{{ deleteError }}</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="cerrarEliminar()">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="eliminarNoticia()" [disabled]="deleteLoading">Eliminar</button>
+    </div>
   </div>
 </div>

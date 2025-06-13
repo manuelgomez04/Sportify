@@ -262,4 +262,9 @@ public class NoticiaService {
     public Page<Noticia> findNoticiasByUsername(String username, Pageable pageable) {
         return noticiaRepository.findByAutor_Username(username, pageable);
     }
+
+    public boolean esAutorDeNoticiaSlug(String username, String slug) {
+        Noticia noticia = noticiaRepository.findBySlug(slug).orElse(null);
+        return noticia != null && noticia.getAutor() != null && noticia.getAutor().getUsername().equals(username);
+    }
 }

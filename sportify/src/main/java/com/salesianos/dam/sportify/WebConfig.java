@@ -15,10 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Solo redirige rutas que NO contienen punto y NO empiezan por tus APIs
-        registry.addViewController("/{spring:[a-zA-Z0-9-]+}")
+        // Solo redirige rutas que NO sean de API ni recursos estáticos
+        registry.addViewController("/{spring:(?!api|noticias|auth|deporte|liga|equipo|user|writer|admin|comentario|download|uploads|assets|swagger-ui|webjars|v3|swagger-resources|api-docs)[a-zA-Z0-9-]+}")
                 .setViewName("forward:/index.html");
-        registry.addViewController("/{spring:[a-zA-Z0-9-]+}/**")
+        registry.addViewController("/{spring:(?!api|noticias|auth|deporte|liga|equipo|user|writer|admin|comentario|download|uploads|assets|swagger-ui|webjars|v3|swagger-resources|api-docs)[a-zA-Z0-9-]+}/**")
                 .setViewName("forward:/index.html");
     }
 }
