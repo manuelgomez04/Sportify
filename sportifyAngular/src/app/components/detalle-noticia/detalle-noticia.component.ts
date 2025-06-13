@@ -5,13 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComentarioDetalle, ComentariosDetallePage, NoticiaDetalle } from '../../models/noticia/noticia-detalle.model';
 import { AuthService } from '../../services/auth.service';
 
-export interface UsuarioDetalle {
-  username: string;
-  fotoPerfil: string | null;
-}
-
-
-
 @Component({
   selector: 'app-detalle-noticia',
   templateUrl: './detalle-noticia.component.html',
@@ -24,6 +17,7 @@ export class DetalleNoticiaComponent implements OnInit {
   comentariosPage: ComentariosDetallePage | null = null;
   page = 0;
   size = 10;
+  totalPages = 0;
   comentarioForm: FormGroup;
   comentarioError: string | null = null;
   comentarioSuccess: string | null = null;
@@ -44,6 +38,7 @@ export class DetalleNoticiaComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.slug = params.get('slug') || '';
+      this.comentarios = [];
       this.cargarNoticiaYComentarios(0);
     });
     this.isLoggedIn = this.authService.isAuthenticated();
@@ -52,15 +47,20 @@ export class DetalleNoticiaComponent implements OnInit {
   cargarNoticiaYComentarios(page: number) {
     this.http.get<NoticiaDetalle>(`/noticias/${this.slug}/comentarios?page=${page}&size=${this.size}`).subscribe(resp => {
       this.noticia = resp;
-      this.comentarios = resp.comentarios?.content || [];
+      if (page === 0) {
+        this.comentarios = resp.comentarios?.content || [];
+      } else {
+        this.comentarios = this.comentarios.concat(resp.comentarios?.content || []);
+      }
       this.comentariosPage = resp.comentarios;
       this.page = this.comentariosPage?.number || 0;
+      this.totalPages = this.comentariosPage?.totalPages || 0;
     });
   }
 
-  cambiarPaginaComentarios(p: number) {
-    if (this.comentariosPage && p >= 0 && p < this.comentariosPage.totalPages) {
-      this.cargarNoticiaYComentarios(p);
+  cargarMasComentarios() {
+    if (this.page + 1 < this.totalPages) {
+      this.cargarNoticiaYComentarios(this.page + 1);
     }
   }
 
@@ -80,11 +80,11 @@ export class DetalleNoticiaComponent implements OnInit {
       next: () => {
         this.comentarioSuccess = 'Comentario enviado correctamente';
         this.comentarioForm.reset();
-        this.cargarNoticiaYComentarios(this.page);
+        this.comentarios = [];
+        this.cargarNoticiaYComentarios(0);
         setTimeout(() => this.comentarioSuccess = null, 2000);
       },
       error: (err) => {
-        // Manejo de error de validación del backend
         if (
           err.error &&
           err.error['invalid-params'] &&

@@ -1,6 +1,6 @@
 export interface ComentarioUsuario {
   usuario: { username: string , fotoPerfil: string};
-  noticia: { titular: string };
+  noticia: { titular: string, slug: string };
   comentario: string;
   titular: string;
   fecha: string;
