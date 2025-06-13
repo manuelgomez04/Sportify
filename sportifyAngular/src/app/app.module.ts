@@ -20,6 +20,7 @@ import { SeguidosComponent } from './components/seguidos/seguidos.component';
 import { DeportesSeguidosComponent } from './components/deportes-seguidos/deportes-seguidos.component';
 import { EquiposSeguidosComponent } from './components/equipos-seguidos/equipos-seguidos.component';
 import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noticias-favoritas.component';
+import { MisComentariosComponent } from './components/mis-comentarios/mis-comentarios.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noti
     SeguidosComponent,
     DeportesSeguidosComponent,
     EquiposSeguidosComponent,
-    NoticiasFavoritasComponent
+    NoticiasFavoritasComponent,
+    MisComentariosComponent
   ],
   imports: [
     BrowserModule,

@@ -23,4 +23,8 @@ public interface ComentarioRepository extends JpaRepository<Comentario, Comentar
 
     @Query("SELECT c FROM Comentario c JOIN c.noticia_comentario n WHERE n.slug = :slug")
     Page<Comentario> findByNoticiaSlug(@Param("slug") String slug, Pageable pageable);
+
+    @Query("SELECT c FROM Comentario c WHERE c.usuario.username = :username")
+    Page<Comentario> findByUsuarioUsernamePaged(@Param("username") String username, Pageable pageable);
+
 }
