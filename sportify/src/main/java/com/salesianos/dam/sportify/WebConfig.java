@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Solo patrones válidos para PathPatternParser
+        // Solo redirige rutas que NO contienen punto y NO empiezan por tus APIs
         registry.addViewController("/{spring:[a-zA-Z0-9-]+}")
                 .setViewName("forward:/index.html");
         registry.addViewController("/{spring:[a-zA-Z0-9-]+}/**")

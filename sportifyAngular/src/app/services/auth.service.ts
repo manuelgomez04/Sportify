@@ -32,9 +32,9 @@ export class AuthService {
 
     register(data: any, userType: string) {
         let url = userType === 'writer' ? '/writer/auth/register' : '/user/auth/register';
-        // Si es FormData, no pongas Content-Type
+       
         if (data instanceof FormData) {
-            return this.http.post(url, data); // NO pongas headers aquí
+            return this.http.post(url, data); 
         } else {
             return this.http.post(url, data, { headers: { 'Content-Type': 'application/json' } });
         }
@@ -53,7 +53,6 @@ export class AuthService {
 
     }
 
-    // Añade este método para obtener los roles del usuario autenticado desde el token o el usuario guardado
     getRoles(): string[] {
         const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
         if (userStr) {
@@ -61,10 +60,7 @@ export class AuthService {
                 const user = JSON.parse(userStr);
                 if (user.token) {
                     const decoded: any = jwtDecode(user.token);
-                    // DEBUG: muestra el payload y los roles
-                    console.log('JWT payload:', decoded);
                     if (decoded.roles && Array.isArray(decoded.roles)) {
-                        console.log('Roles detectados:', decoded.roles);
                         return decoded.roles;
                     }
                 }
@@ -80,7 +76,6 @@ export class AuthService {
     isWriterOrAdmin(): boolean {
         const roles = this.getRoles();
         const result = roles.includes('WRITER') || roles.includes('ADMIN');
-        console.log('¿Writer o Admin?', result);
         return result;
     }
 

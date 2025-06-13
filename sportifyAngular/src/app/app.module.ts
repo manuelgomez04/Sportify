@@ -28,6 +28,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthRedirectInterceptor } from './interceptors/auth-redirect.interceptor';
+import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { AuthRedirectInterceptor } from './interceptors/auth-redirect.intercepto
     EquiposSeguidosComponent,
     NoticiasFavoritasComponent,
     MisComentariosComponent,
-    NuevaNoticiaComponent
+    NuevaNoticiaComponent,
+    MisNoticiasComponent
   ],
   imports: [
     BrowserModule,
