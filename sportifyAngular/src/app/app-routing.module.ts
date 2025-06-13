@@ -13,6 +13,10 @@ import { DeportesSeguidosComponent } from './components/deportes-seguidos/deport
 import { EquiposSeguidosComponent } from './components/equipos-seguidos/equipos-seguidos.component';
 import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noticias-favoritas.component';
 import { MisComentariosComponent } from './components/mis-comentarios/mis-comentarios.component';
+import { NuevaNoticiaComponent } from './components/nueva-noticia/nueva-noticia.component';
+import { WriterAdminGuard } from './guards/writer-admin.guard'; // crea este guard
+import { AuthGuard } from './guards/auth.guard';
+import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,15 +24,24 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify-account', component: VerifyAccountComponent },
-  { path: 'me', component: MeComponent },
-  { path: 'editar-cuenta', component: EditarCuentaComponent },
+  {
+    path: 'me',
+    component: MeComponent,
+    canActivate: [AuthGuard] 
+  },
+  { path: 'editar-cuenta', component: EditarCuentaComponent, canActivate: [AuthGuard] },
   { path: 'ligas-seguidas', component: LigasSeguidasComponent },
   { path: 'seguidos', component: SeguidosComponent },
   { path: 'deportes-seguidos', component: DeportesSeguidosComponent },
   { path: 'equipos-seguidos', component: EquiposSeguidosComponent },
   { path: 'noticias-favoritas', component: NoticiasFavoritasComponent },
   { path: 'mis-comentarios', component: MisComentariosComponent },
-
+  {
+    path: 'nueva-noticia',
+    component: NuevaNoticiaComponent,
+    canActivate: [WriterAdminGuard] // solo writers y admin pueden acceder
+  },
+  {path: 'mis-noticias', component: MisNoticiasComponent, canActivate: [WriterAdminGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 

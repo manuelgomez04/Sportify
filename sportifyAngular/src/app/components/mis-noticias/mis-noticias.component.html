@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+<section class="bg-white py-5">
+  <div class="container">
+    <h2 class="fw-bold mb-4">Mis noticias</h2>
+    <div *ngIf="noticias.length > 0">
+      <div *ngFor="let noticia of noticias" class="card flex-row shadow-sm border-0 mb-4 w-100" style="min-height:180px;">
+        <div class="card-body d-flex flex-column justify-content-between" style="min-width:0;">
+          <div>
+            <h4 class="card-title fw-bold">{{ noticia.titular }}</h4>
+            <p class="card-text text-muted mb-2">
+              {{ noticia.cuerpo.length > 120 ? (noticia.cuerpo | slice:0:120) + '...' : noticia.cuerpo }}
+            </p>
+            <p class="card-text mb-1">
+              <small class="text-secondary">Por {{ noticia.usuario?.username }}</small>
+            </p>
+            <div class="row g-2 mt-2">
+              <div class="col-auto">
+                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                  <small>
+                    {{ noticia.equipo?.nombreEquipo || 'Sin equipo' }}
+                  </small>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                  <small>
+                    {{ noticia.liga?.nombreLiga || 'Sin liga' }}
+                  </small>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
+                  <small>
+                    {{ noticia.deporte?.nombreDeporte || 'Sin deporte' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small></p>
+          <div class="mt-2 d-flex gap-2">
+            <button class="btn btn-sm btn-primary" (click)="abrirEditar(noticia)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="abrirEliminar(noticia)">Eliminar</button>
+          </div>
+        </div>
+        <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
+          [src]="noticia.multimedia[0]" class="d-none d-md-block rounded-end"
+          style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
+      </div>
+      <!-- Paginación -->
+      <nav *ngIf="totalPages > 1" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="page === 0">
+            <button class="page-link" (click)="cambiarPagina(page - 1)" [disabled]="page === 0">Anterior</button>
+          </li>
+          <li class="page-item"
+              *ngFor="let p of [].constructor(totalPages); let i = index"
+              [class.active]="i === page">
+            <button class="page-link" (click)="cambiarPagina(i)" [disabled]="i === page">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="page >= totalPages - 1">
+            <button class="page-link" (click)="cambiarPagina(page + 1)" [disabled]="page >= totalPages - 1">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div *ngIf="noticias.length === 0" class="text-center text-muted py-5">
+      No tienes noticias publicadas.
+    </div>
+  </div>
+</section>
+
+<!-- Modal de edición -->
+<div *ngIf="editandoNoticia" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <form (ngSubmit)="guardarEdicion()">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Noticia</h5>
+        <button type="button" class="btn-close" (click)="cerrarEditar()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Titular</label>
+          <input [(ngModel)]="editTitular" name="titular" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Cuerpo</label>
+          <textarea [(ngModel)]="editCuerpo" name="cuerpo" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Archivos multimedia (opcional)</label>
+          <input type="file" (change)="onEditFilesSelected($event)" multiple class="form-control">
+          <div *ngIf="editArchivos.length > 0" class="mt-2">
+            <div *ngFor="let file of editArchivos">{{ file.name }}</div>
+          </div>
+        </div>
+        <div *ngIf="editError" class="alert alert-danger">{{ editError }}</div>
+        <div *ngIf="editSuccess" class="alert alert-success">¡Noticia editada correctamente!</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarEditar()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="editLoading">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de confirmación de borrado -->
+<div *ngIf="noticiaAEliminar" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">Eliminar Noticia</h5>
+      <button type="button" class="btn-close" (click)="cerrarEliminar()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>¿Seguro que quieres eliminar la noticia <strong>{{ noticiaAEliminar.titular }}</strong>?</p>
+      <div *ngIf="deleteError" class="alert alert-danger">{{ deleteError }}</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="cerrarEliminar()">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="eliminarNoticia()" [disabled]="deleteLoading">Eliminar</button>
+    </div>
+  </div>
+</div>

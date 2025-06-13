@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,5 +73,13 @@ public class EquipoService {
             throw new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    public List<Equipo> getAllEquipos() {
+        return equipoRepository.findAll();
+    }
+
+    public List<Equipo> getEquiposPorLiga(String nombreLiga) {
+        return equipoRepository.findByLiga_NombreNoEspacio(nombreLiga);
     }
 }

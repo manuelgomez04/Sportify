@@ -4,7 +4,7 @@
   <h5 class="mb-3">Comentarios Recientes</h5>
   <div *ngIf="comentarios.length > 0">
     <div *ngFor="let c of comentarios" class="d-flex align-items-start mb-4">
-      <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar" class="rounded-circle me-3" width="56" height="56">
+      <img [src]="c.usuario.fotoPerfil ? '/download/' + c.usuario.fotoPerfil : 'assets/default-profile.png'" alt="avatar" class="rounded-circle me-3" width="56" height="56">
       <div class="flex-grow-1">
         <div class="fw-bold">{{ c.usuario.username }}</div>
         <div class="text-muted small mb-1">{{ c.fecha | date:'mediumDate' }}</div>

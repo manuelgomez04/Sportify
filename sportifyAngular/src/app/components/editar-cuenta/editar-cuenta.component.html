@@ -48,6 +48,10 @@
         Las contraseñas no coinciden.
       </div>
     </div>
+    <div class="mb-3">
+      <label class="form-label">Foto de perfil</label>
+      <input type="file" (change)="onProfileImageChange($event)" accept="image/*" class="form-control" />
+    </div>
     <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Guardar</button>
     <a routerLink="/me" class="btn btn-secondary ms-2">Cancelar</a>
     <div *ngIf="success" class="alert alert-success mt-3">Cuenta actualizada correctamente</div>

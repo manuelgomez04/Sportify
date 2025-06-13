@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -8,12 +8,19 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './me.component.html',
   styleUrls: ['./me.component.css']
 })
-export class MeComponent {
+export class MeComponent implements OnInit {
+  userData: any = null;
+  error: boolean = false;
+
   constructor(
-    private authService: AuthService,
+    protected authService: AuthService,
     private router: Router,
     private http: HttpClient
   ) {}
+
+  ngOnInit() {
+    // El guard ya protege la ruta, aquí puedes cargar datos si quieres
+  }
 
   logout() {
     this.authService.logout();
@@ -34,3 +41,4 @@ export class MeComponent {
     }
   }
 }
+

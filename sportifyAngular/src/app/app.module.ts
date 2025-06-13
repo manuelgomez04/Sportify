@@ -21,7 +21,14 @@ import { DeportesSeguidosComponent } from './components/deportes-seguidos/deport
 import { EquiposSeguidosComponent } from './components/equipos-seguidos/equipos-seguidos.component';
 import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noticias-favoritas.component';
 import { MisComentariosComponent } from './components/mis-comentarios/mis-comentarios.component';
-
+import { NuevaNoticiaComponent } from './components/nueva-noticia/nueva-noticia.component';
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthRedirectInterceptor } from './interceptors/auth-redirect.interceptor';
+import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +46,9 @@ import { MisComentariosComponent } from './components/mis-comentarios/mis-coment
     DeportesSeguidosComponent,
     EquiposSeguidosComponent,
     NoticiasFavoritasComponent,
-    MisComentariosComponent
+    MisComentariosComponent,
+    NuevaNoticiaComponent,
+    MisNoticiasComponent
   ],
   imports: [
     BrowserModule,
@@ -50,9 +59,12 @@ import { MisComentariosComponent } from './components/mis-comentarios/mis-coment
     HttpClientModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-
-
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthRedirectInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

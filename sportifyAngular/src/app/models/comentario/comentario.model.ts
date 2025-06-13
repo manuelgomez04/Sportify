@@ -1,9 +1,10 @@
 export interface ComentarioUsuario {
-  usuario: { username: string };
+  usuario: { username: string , fotoPerfil: string};
   noticia: { titular: string };
   comentario: string;
   titular: string;
   fecha: string;
+  
 }
 
 export interface ComentariosUsuarioPage {

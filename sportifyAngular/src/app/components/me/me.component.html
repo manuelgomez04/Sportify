@@ -61,6 +61,19 @@
     </button>
   </div>
 
+  <div class="config-section" *ngIf="authService.isWriterOrAdmin()">
+    <h2 class="config-section-title">Mis Noticias</h2>
+    <button type="button" class="config-item" [routerLink]="['/mis-noticias']">
+      <div class="config-icon">
+        <i class="bi bi-newspaper"></i>
+      </div>
+      <div>
+        <div class="config-item-title">Mis Noticias</div>
+        <div class="config-item-desc">Ver tus noticias publicadas</div>
+      </div>
+    </button>
+  </div>
+
   <div class="config-section">
     <h2 class="config-section-title">Equipos Seguidos</h2>
     <button type="button" class="config-item" [routerLink]="['/seguidos']">

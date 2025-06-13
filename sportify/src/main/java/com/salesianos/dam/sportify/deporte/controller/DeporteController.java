@@ -24,6 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/deporte")
 @RequiredArgsConstructor
@@ -75,5 +77,10 @@ public class DeporteController {
     public ResponseEntity<?> deleteDeporte(@PathVariable String name) {
         deporteService.deleteDeporte(name);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public List<GetDeporteDto> getAllDeportes() {
+        return deporteService.getAllDeportes().stream().map(GetDeporteDto::of).toList();
     }
 }

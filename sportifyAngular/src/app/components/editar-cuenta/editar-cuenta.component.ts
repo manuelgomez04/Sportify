@@ -15,6 +15,7 @@ export class EditarCuentaComponent implements OnInit {
   success = false;
   error = '';
   fieldErrors: { [key: string]: string } = {};
+  selectedProfileImage: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -27,20 +28,33 @@ export class EditarCuentaComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       verifyEmail: ['', [Validators.required, Validators.email]],
       password: [''],
-      verifyPassword: ['']
+      verifyPassword: [''],
+      profileImage: [null]
     });
   }
 
   ngOnInit() {
     this.authService.getUsuario('').subscribe({
       next: (user) => {
+        
         this.editForm.patchValue({
           nombre: user.email || '',
           email: user.nombre || '',
           verifyEmail: user.nombre || ''
         });
+        this.editForm.get('nombre')?.markAsTouched();
+        this.editForm.get('email')?.markAsTouched();
+        this.editForm.get('verifyEmail')?.markAsTouched();
       }
     });
+  }
+
+  onProfileImageChange(event: any) {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      this.selectedProfileImage = file;
+      this.editForm.patchValue({ profileImage: file });
+    }
   }
 
   submit() {
@@ -52,14 +66,21 @@ export class EditarCuentaComponent implements OnInit {
       (this.editForm.value.password && this.editForm.value.password !== this.editForm.value.verifyPassword)
     ) return;
 
-    const body: any = { ...this.editForm.value };
-
-    if (!body.password) {
-      delete body.password;
-      delete body.verifyPassword;
+    const formData = new FormData();
+    // Construye el objeto de usuario (sin el archivo)
+    const userObj: any = { ...this.editForm.value };
+    delete userObj.profileImage;
+    // Añade el objeto como JSON en el campo que espera el backend, usando Blob para el tipo correcto
+    formData.append(
+      'editUserDto',
+      new Blob([JSON.stringify(userObj)], { type: 'application/json' })
+    );
+    // Añade el archivo si existe
+    if (this.editForm.value.profileImage instanceof File) {
+      formData.append('profileImage', this.editForm.value.profileImage);
     }
 
-    this.http.put('/edit/me', body).subscribe({
+    this.http.put('/edit/me', formData).subscribe({
       next: () => {
         this.success = true;
         setTimeout(() => this.router.navigate(['/me']), 1500);
