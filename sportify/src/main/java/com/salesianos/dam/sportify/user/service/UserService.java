@@ -108,7 +108,7 @@ public class UserService {
     }
 
     public User createAdmin(CreateUserRequest createUserRequest, MultipartFile profileImage) {
-          FileMetadata fileMetadata = storageService.store(profileImage);
+        FileMetadata fileMetadata = storageService.store(profileImage);
         String imageUrl = fileMetadata.getFilename();
 
         User user = User.builder()
@@ -117,8 +117,7 @@ public class UserService {
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.ADMIN, Role.USER, Role.WRITER))
                 .activationToken(generateRandomActivationCode())
-                .nombre(createUserRequest.nombre()).
-                fechaNacimiento(createUserRequest.fechaNacimiento())
+                .nombre(createUserRequest.nombre()).fechaNacimiento(createUserRequest.fechaNacimiento())
                 .profileImage(imageUrl)
                 .build();
 
@@ -134,13 +133,15 @@ public class UserService {
 
     @Transactional
     public User editMe(User username, EditUserDto updatedUser, MultipartFile profileImage) {
-        if (profileImage != null && !profileImage.isEmpty()) {
-            FileMetadata fileMetadata = storageService.store(profileImage);
-            String imageUrl = fileMetadata.getFilename();
-            username.setProfileImage(imageUrl);
-        }
+
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
+                    // Guardar la imagen solo si se ha subido una nueva
+                    if (profileImage != null && !profileImage.isEmpty()) {
+                        FileMetadata fileMetadata = storageService.store(profileImage);
+                        String imageUrl = fileMetadata.getFilename();
+                        user.setProfileImage(imageUrl);
+                    }
                     if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
                         // Comprobar si el email ya existe en otro usuario
                         if (userRepository.existsByEmail(updatedUser.email())) {

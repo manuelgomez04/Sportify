@@ -14,6 +14,7 @@ export class RegisterComponent {
   error: string | null = null;
   userType: 'user' | 'writer' = 'user';
   fieldErrors: { [key: string]: string } = {};
+  selectedProfileImage: File | null = null;
 
 
   constructor(
@@ -28,15 +29,38 @@ export class RegisterComponent {
       verifyEmail: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       verifyPassword: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required]
+      fechaNacimiento: ['', Validators.required],
+      profileImage: [null]
     });
+  }
+
+  onProfileImageChange(event: any) {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      this.selectedProfileImage = file;
+      this.registerForm.patchValue({ profileImage: file });
+    }
   }
 
   onSubmit() {
     this.error = null;
     this.fieldErrors = {};
     if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value, this.userType).subscribe({
+      const formData = new FormData();
+      // Construye el objeto de usuario (sin el archivo)
+      const userObj: any = { ...this.registerForm.value };
+      delete userObj.profileImage;
+      // Añade el objeto como JSON en el campo que espera el backend, usando Blob para el tipo correcto
+      formData.append(
+        'createUserRequest',
+        new Blob([JSON.stringify(userObj)], { type: 'application/json' })
+      );
+      // Añade el archivo si existe, usando el nombre original del archivo
+      if (this.registerForm.value.profileImage instanceof File) {
+        const file: File = this.registerForm.value.profileImage;
+        formData.append('profileImage', file, file.name || 'profileImage.jpg');
+      }
+      this.authService.register(formData, this.userType).subscribe({
         next: () => this.router.navigate(['/verify-account']),
         error: err => {
           this.fieldErrors = {};
@@ -114,3 +138,4 @@ export class RegisterComponent {
     }
   }
 }
+

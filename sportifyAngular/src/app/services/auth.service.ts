@@ -30,9 +30,14 @@ export class AuthService {
         });
     }
 
-    register(userData: UserRegister, type: 'user' | 'writer') {
-        const url = type === 'writer' ? '/writer/auth/register' : '/user/auth/register';
-        return this.http.post(url, userData);
+    register(data: any, userType: string) {
+        let url = userType === 'writer' ? '/writer/auth/register' : '/user/auth/register';
+        // Si es FormData, no pongas Content-Type
+        if (data instanceof FormData) {
+            return this.http.post(url, data); // NO pongas headers aquí
+        } else {
+            return this.http.post(url, data, { headers: { 'Content-Type': 'application/json' } });
+        }
     }
 
     isAuthenticated(): boolean {
