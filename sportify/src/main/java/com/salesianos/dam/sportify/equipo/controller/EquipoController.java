@@ -21,6 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/equipo")
 @RequiredArgsConstructor
@@ -58,6 +60,14 @@ public class EquipoController {
                             """))) @RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest, @RequestPart("escudo") MultipartFile escudo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(GetEquipoDto.of(equipoService.createEquipo(createEquipoRequest, escudo)));
     }
+
+   
+
+    @GetMapping("/por-liga/{nombreLiga}")
+    public List<GetEquipoDto> getEquiposPorLiga(@PathVariable String nombreLiga) {
+        return equipoService.getEquiposPorLiga(nombreLiga).stream().map(GetEquipoDto::of).toList();
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<?> deleteEquipo(@PathVariable String nombre) {

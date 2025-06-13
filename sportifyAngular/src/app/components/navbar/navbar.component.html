@@ -37,6 +37,12 @@
         </button>
         <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
         <button *ngIf="!isLoggedIn" class="btn btn-primary" routerLink="/register" style="margin-left: 0.5rem;">Registrarse</button>
+        <button
+          *ngIf="isLoggedIn && authService.isWriterOrAdmin()"
+          routerLink="/nueva-noticia"
+          class="btn btn-primary me-2">
+          Nueva noticia
+        </button>
       </div>
     </div>
   </div>

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,6 +17,8 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
     boolean existsByNombreEqualsIgnoreCaseAndIgnoreWhitespace(@Param("nombre") String nombre);
 
     Optional<Liga> findByNombreNoEspacio(String nombre);
+
+    List<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio);
 
     @Query(value = "SELECT l.* FROM liga l " +
             "JOIN usuario_liga ul ON l.id = ul.liga_id " +

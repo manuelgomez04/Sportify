@@ -80,4 +80,12 @@ public class LigaService {
                 .path(filename)
                 .toUriString();
     }
+
+    public List<Liga> getAllLigas() {
+        return ligaRepository.findAll();
+    }
+
+    public List<Liga> getLigasPorDeporte(String nombreDeporte) {
+        return ligaRepository.findByDeporte_NombreNoEspacio(nombreDeporte);
+    }
 }

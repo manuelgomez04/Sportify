@@ -36,7 +36,7 @@ export class EditarCuentaComponent implements OnInit {
   ngOnInit() {
     this.authService.getUsuario('').subscribe({
       next: (user) => {
-        // Corrige el intercambio: en nombre pon user.email, en email pon user.nombre
+        
         this.editForm.patchValue({
           nombre: user.email || '',
           email: user.nombre || '',
