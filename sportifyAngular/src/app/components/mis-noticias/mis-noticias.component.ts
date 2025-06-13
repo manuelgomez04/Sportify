@@ -22,6 +22,11 @@ export class MisNoticiasComponent implements OnInit {
   editError: string | null = null;
   editSuccess = false;
 
+  // Eliminación
+  noticiaAEliminar: Noticia | null = null;
+  deleteLoading = false;
+  deleteError: string | null = null;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -91,6 +96,34 @@ export class MisNoticiasComponent implements OnInit {
       },
       complete: () => {
         this.editLoading = false;
+      }
+    });
+  }
+
+  abrirEliminar(noticia: Noticia) {
+    this.noticiaAEliminar = noticia;
+    this.deleteError = null;
+  }
+
+  cerrarEliminar() {
+    this.noticiaAEliminar = null;
+    this.deleteError = null;
+  }
+
+  eliminarNoticia() {
+    if (!this.noticiaAEliminar) return;
+    this.deleteLoading = true;
+    this.deleteError = null;
+    this.http.delete(`/noticias/delete/${this.noticiaAEliminar.slug}`).subscribe({
+      next: () => {
+        this.cerrarEliminar();
+        this.cargarNoticias(this.page);
+      },
+      error: () => {
+        this.deleteError = 'Error al eliminar la noticia';
+      },
+      complete: () => {
+        this.deleteLoading = false;
       }
     });
   }
