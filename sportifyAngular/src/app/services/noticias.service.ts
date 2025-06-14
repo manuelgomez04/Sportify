@@ -25,7 +25,11 @@ export class NoticiasService {
     );
   }
 
-  likeNoticia(titular: string): Observable<any> {
-    return this.http.post('/like', { titular });
+  likeNoticia(slug: string): Observable<any> {
+    return this.http.post('/like', { titular: slug });
+  }
+
+  unlikeNoticia(slug: string): Observable<any> {
+    return this.http.delete(`/like/${slug}`);
   }
 }
