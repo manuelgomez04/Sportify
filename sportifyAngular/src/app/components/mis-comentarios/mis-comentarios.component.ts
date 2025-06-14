@@ -18,6 +18,9 @@ export class MisComentariosComponent implements OnInit {
   editLoading = false;
   editError: string | null = null;
   editSuccess: boolean = false;
+  eliminandoComentario: ComentarioUsuario | null = null;
+  deleteLoading = false;
+  deleteError: string | null = null;
 
   constructor(private http: HttpClient, private fb: FormBuilder) {
     this.editComentarioForm = this.fb.group({
@@ -107,6 +110,37 @@ export class MisComentariosComponent implements OnInit {
       },
       complete: () => {
         this.editLoading = false;
+      }
+    });
+  }
+
+  abrirEliminar(comentario: ComentarioUsuario) {
+    this.eliminandoComentario = comentario;
+    this.deleteError = null;
+  }
+
+  cerrarEliminar() {
+    this.eliminandoComentario = null;
+    this.deleteError = null;
+  }
+
+  eliminarComentarioConfirmado() {
+    if (!this.eliminandoComentario) return;
+    this.deleteLoading = true;
+    this.deleteError = null;
+    const slug = this.eliminandoComentario.noticia.slug || this.eliminandoComentario.noticia.slug || this.eliminandoComentario.titular;
+    this.http.delete(`/comentario/${slug}`).subscribe({
+      next: () => {
+        this.cerrarEliminar();
+        this.comentarios = [];
+        this.page = 0;
+        this.cargarComentarios(0);
+      },
+      error: (err) => {
+        this.deleteError = 'Error al eliminar el comentario';
+      },
+      complete: () => {
+        this.deleteLoading = false;
       }
     });
   }
