@@ -26,9 +26,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -69,7 +66,7 @@ public class SecurityConfig {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
-                                .cors(Customizer.withDefaults())
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .csrf(csrf -> csrf.disable());
                 http.sessionManagement((session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -138,16 +135,19 @@ public class SecurityConfig {
         }
 
         @Bean
-        public CorsFilter corsFilter() {
-                CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.addAllowedOrigin("http://localhost:4200");
-                corsConfiguration.addAllowedMethod("");
-                corsConfiguration.addAllowedHeader("");
-                corsConfiguration.setAllowCredentials(true);
+        CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOriginPatterns(
+                                List.of("http://localhost:4200", "http://host.docker.internal:4200"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedHeaders(
+                                List.of("Authorization", "Content-Type", "content-type", "Accept", "X-Requested-With"));
+                configuration.setAllowCredentials(true);
+                configuration.setMaxAge(3600L);
 
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", corsConfiguration);
-
-                return new CorsFilter(source);
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
         }
+
 }

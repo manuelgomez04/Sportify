@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private noticiasService: NoticiasService,
-    private http: HttpClient // Necesario para la petición de likes
+    private http: HttpClient 
   ) { }
 
   ngOnInit() {
