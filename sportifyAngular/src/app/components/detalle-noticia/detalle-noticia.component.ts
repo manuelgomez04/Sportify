@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComentarioDetalle, ComentariosDetallePage, NoticiaDetalle } from '../../models/noticia/noticia-detalle.model';
 import { AuthService } from '../../services/auth.service';
@@ -27,7 +26,6 @@ export class DetalleNoticiaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
     private fb: FormBuilder,
     private authService: AuthService,
     private noticiasService: NoticiasService
@@ -50,7 +48,7 @@ export class DetalleNoticiaComponent implements OnInit {
 
   cargarLikesDetalle() {
     if (this.isLoggedIn) {
-      this.http.get<any>('/noticiasLiked').subscribe({
+      this.noticiasService.getNoticiasLiked().subscribe({
         next: resp => {
           const likedNoticias = resp.noticiasLiked?.content || [];
           this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
@@ -65,7 +63,7 @@ export class DetalleNoticiaComponent implements OnInit {
   }
 
   cargarNoticiaYComentarios(page: number) {
-    this.http.get<NoticiaDetalle>(`/noticias/${this.slug}/comentarios?page=${page}&size=${this.size}`).subscribe(resp => {
+    this.noticiasService.getNoticiaDetalleConComentarios(this.slug, page, this.size).subscribe(resp => {
       this.noticia = resp;
       if (page === 0) {
         this.comentarios = resp.comentarios?.content || [];
@@ -96,7 +94,7 @@ export class DetalleNoticiaComponent implements OnInit {
       titulo: this.comentarioForm.value.tituloComentario,
       comentario: this.comentarioForm.value.comentario
     };
-    this.http.post('/comentario', body).subscribe({
+    this.noticiasService.enviarComentario(body).subscribe({
       next: () => {
         this.comentarioSuccess = 'Comentario enviado correctamente';
         this.comentarioForm.reset();

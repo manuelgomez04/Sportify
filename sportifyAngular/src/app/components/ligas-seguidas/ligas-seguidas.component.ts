@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { LigasService } from '../../services/ligas.service';
 
 @Component({
   selector: 'app-ligas-seguidas',
@@ -12,14 +12,14 @@ export class LigasSeguidasComponent implements OnInit {
   size = 4;
   totalPages = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private ligasService: LigasService) {}
 
   ngOnInit() {
     this.cargarLigas(0);
   }
 
   cargarLigas(page: number) {
-    this.http.get<any>(`/ligasFavoritas?page=${page}&size=${this.size}`).subscribe({
+    this.ligasService.getLigasFavoritas(page, this.size).subscribe({
       next: resp => {
         this.ligas = resp.ligasFavoritas?.content || [];
         this.page = resp.ligasFavoritas?.number || 0;

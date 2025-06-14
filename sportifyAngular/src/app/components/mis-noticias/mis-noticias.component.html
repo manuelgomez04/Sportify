@@ -14,27 +14,27 @@
               {{ noticia.cuerpo.length > 120 ? (noticia.cuerpo | slice:0:120) + '...' : noticia.cuerpo }}
             </p>
             <p class="card-text mb-1">
-              <small class="text-secondary">Por {{ noticia.usuario?.username }}</small>
+              <small class="text-secondary">Por {{ noticia.usuario.username }}</small>
             </p>
             <div class="row g-2 mt-2">
               <div class="col-auto">
                 <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
                   <small>
-                    {{ noticia.equipo?.nombreEquipo || 'Sin equipo' }}
+                    {{ noticia.equipo.nombreEquipo || 'Sin equipo' }}
                   </small>
                 </div>
               </div>
               <div class="col-auto">
                 <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
                   <small>
-                    {{ noticia.liga?.nombreLiga || 'Sin liga' }}
+                    {{ noticia.liga.nombreLiga || 'Sin liga' }}
                   </small>
                 </div>
               </div>
               <div class="col-auto">
                 <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
                   <small>
-                    {{ noticia.deporte?.nombreDeporte || 'Sin deporte' }}
+                    {{ noticia.deporte.nombreDeporte || 'Sin deporte' }}
                   </small>
                 </div>
               </div>

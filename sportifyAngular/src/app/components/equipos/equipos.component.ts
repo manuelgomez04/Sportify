@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Equipo, EquipoPage } from '../../models/equipo/equipo.model';
-
-
+import { EquiposService } from '../../services/equipos.service';
 
 @Component({
   selector: 'app-equipos',
@@ -19,7 +17,7 @@ export class EquiposComponent implements OnInit {
   equipoLikedIds: Set<string> = new Set();
   isLoggedIn = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(private equiposService: EquiposService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.isLoggedIn = !!localStorage.getItem('accessToken');
@@ -31,7 +29,7 @@ export class EquiposComponent implements OnInit {
 
   cargarEquiposYLikes(page: number) {
     if (this.isLoggedIn) {
-      this.http.get<any>('/me').subscribe({
+      this.equiposService.getEquiposSeguidos().subscribe({
         next: resp => {
           const equiposSeguidos = resp.equiposSeguidos || [];
           this.equipoLikedIds = new Set(equiposSeguidos.map((e: any) => e.id));
@@ -50,7 +48,7 @@ export class EquiposComponent implements OnInit {
 
   cargarEquipos(page: number) {
     if (this.ligaFiltro) {
-      this.http.get<EquipoPage>(`/equipo/${this.ligaFiltro}?page=${page}&size=${this.size}`).subscribe(resp => {
+      this.equiposService.getEquiposPorLiga(this.ligaFiltro, page, this.size).subscribe(resp => {
         this.equipos = resp.content || [];
         this.page = resp.number;
         this.totalPages = resp.totalPages;
@@ -63,8 +61,7 @@ export class EquiposComponent implements OnInit {
     const isLiked = this.equipoLikedIds.has(equipo.id);
 
     if (isLiked) {
-      // Eliminar like
-      this.http.put('/unfollowEquipo',{ nombreEquipo: equipo.nombreNoEspacio }).subscribe({
+      this.equiposService.unfollowEquipo(equipo.nombreNoEspacio).subscribe({
         next: () => {
           this.equipoLikedIds.delete(equipo.id);
         },
@@ -73,8 +70,7 @@ export class EquiposComponent implements OnInit {
         }
       });
     } else {
-      // Dar like
-      this.http.put('/seguirEquipo', { nombreEquipo: equipo.nombreNoEspacio }).subscribe({
+      this.equiposService.seguirEquipo(equipo.nombreNoEspacio).subscribe({
         next: () => {
           this.equipoLikedIds.add(equipo.id);
         },
@@ -91,3 +87,4 @@ export class EquiposComponent implements OnInit {
     }
   }
 }
+

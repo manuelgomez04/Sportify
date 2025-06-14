@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { EditUser } from '../../models/user/edit-user.model';
 import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-editar-cuenta',
@@ -19,9 +19,9 @@ export class EditarCuentaComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private usuarioService: UsuarioService
   ) {
     this.editForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -34,9 +34,8 @@ export class EditarCuentaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getUsuario('').subscribe({
+    this.usuarioService.getUsuario('').subscribe({
       next: (user) => {
-        
         this.editForm.patchValue({
           nombre: user.email || '',
           email: user.nombre || '',
@@ -67,27 +66,23 @@ export class EditarCuentaComponent implements OnInit {
     ) return;
 
     const formData = new FormData();
-    // Construye el objeto de usuario (sin el archivo)
     const userObj: any = { ...this.editForm.value };
     delete userObj.profileImage;
-    // Añade el objeto como JSON en el campo que espera el backend, usando Blob para el tipo correcto
     formData.append(
       'editUserDto',
       new Blob([JSON.stringify(userObj)], { type: 'application/json' })
     );
-    // Añade el archivo si existe
     if (this.editForm.value.profileImage instanceof File) {
       formData.append('profileImage', this.editForm.value.profileImage);
     }
 
-    this.http.put('/edit/me', formData).subscribe({
+    this.usuarioService.editarUsuario(formData).subscribe({
       next: () => {
         this.success = true;
         setTimeout(() => this.router.navigate(['/me']), 1500);
       },
       error: err => {
         this.fieldErrors = {};
-        // Passay: errores de contraseña en inglés, suelen contener "Password must"
         const isPassayError = (msg: string) =>
           msg && (
             msg.includes('Password must') ||
@@ -96,7 +91,6 @@ export class EditarCuentaComponent implements OnInit {
           );
 
         if (err.error) {
-          // invalid-params (RFC 7807)
           if (err.error['invalid-params'] && Array.isArray(err.error['invalid-params'])) {
             err.error['invalid-params'].forEach((e: any) => {
               if (e.field) {
@@ -107,7 +101,6 @@ export class EditarCuentaComponent implements OnInit {
               }
             });
           }
-          // Spring Validation: errors: [{field: "...", defaultMessage: "..."}]
           else if (err.error.errors && Array.isArray(err.error.errors)) {
             err.error.errors.forEach((e: any) => {
               if (e.field) {
@@ -118,7 +111,6 @@ export class EditarCuentaComponent implements OnInit {
               }
             });
           }
-          // Array de errores
           else if (Array.isArray(err.error)) {
             err.error.forEach((e: any) => {
               if (e.field) {
@@ -129,15 +121,12 @@ export class EditarCuentaComponent implements OnInit {
               }
             });
           }
-          // Mensaje simple (string)
           else if (typeof err.error === 'string' && isPassayError(err.error)) {
             this.fieldErrors['password'] = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
           }
-          // Mensaje en 'message'
           else if (err.error.message && isPassayError(err.error.message)) {
             this.fieldErrors['password'] = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
           }
-          // Email duplicado
           else if (err.status === 409 || (err.error.message && err.error.message.includes('email'))) {
             this.fieldErrors['email'] = 'El correo electrónico ya está en uso por otro usuario.';
           }

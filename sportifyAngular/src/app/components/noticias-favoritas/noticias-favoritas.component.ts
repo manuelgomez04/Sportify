@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Noticia } from '../../models/noticia/noticia.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +18,6 @@ export class NoticiasFavoritasComponent implements OnInit {
   likedTitulares: Set<string> = new Set();
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private authService: AuthService,
     private noticiasService: NoticiasService
@@ -33,7 +31,7 @@ export class NoticiasFavoritasComponent implements OnInit {
 
   cargarLikesFavoritas() {
     if (this.isLoggedIn) {
-      this.http.get<any>('/noticiasLiked').subscribe({
+      this.noticiasService.getNoticiasLiked().subscribe({
         next: resp => {
           const likedNoticias = resp.noticiasLiked?.content || [];
           this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
@@ -48,7 +46,7 @@ export class NoticiasFavoritasComponent implements OnInit {
   }
 
   cargarNoticias(page: number) {
-    this.http.get<any>(`/noticiasLiked?page=${page}&size=${this.size}`).subscribe({
+    this.noticiasService.getNoticiasLikedPage(page, this.size).subscribe({
       next: resp => {
         this.noticias = resp.noticiasLiked?.content || [];
         this.page = resp.noticiasLiked?.number || 0;
@@ -59,11 +57,7 @@ export class NoticiasFavoritasComponent implements OnInit {
 
   toggleLike(noticia: any, event: Event) {
     event.stopPropagation();
-    // El checkbox cambia su estado ANTES de que se dispare (change)
-    // Por eso, para saber el estado ANTES del cambio, hay que comprobar el set antes de modificarlo
     const wasLiked = this.likedTitulares.has(noticia.slug);
-    console.log('wasLiked:', wasLiked, 'slug:', noticia.slug);
-    // Si estaba likeado antes del click, ahora hay que hacer DELETE
     if (wasLiked) {
       this.noticiasService.unlikeNoticia(noticia.slug).subscribe({
         next: () => {
@@ -71,19 +65,16 @@ export class NoticiasFavoritasComponent implements OnInit {
           noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
         },
         error: () => {
-          // Si hay error, vuelve a marcar el checkbox visualmente
           (event.target as HTMLInputElement).checked = true;
         }
       });
     } else {
-      // Si no estaba likeado antes del click, ahora hay que hacer POST
       this.noticiasService.likeNoticia(noticia.slug).subscribe({
         next: () => {
           this.likedTitulares.add(noticia.slug);
           noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
         },
         error: () => {
-          // Si hay error, desmarca el checkbox visualmente
           (event.target as HTMLInputElement).checked = false;
         }
       });
@@ -95,6 +86,7 @@ export class NoticiasFavoritasComponent implements OnInit {
       this.cargarNoticias(p);
     }
   }
+
   getMultimediaUrl(url: string): string {
     if (!url) return '';
     const cleanUrl = url.trim();
@@ -108,4 +100,5 @@ export class NoticiasFavoritasComponent implements OnInit {
     this.router.navigate(['/noticias', slug]);
   }
 }
+   
 

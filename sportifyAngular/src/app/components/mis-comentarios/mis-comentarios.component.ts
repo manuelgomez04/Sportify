@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComentarioUsuario, ComentariosUsuarioPage } from '../../models/comentario/comentario.model';
+import { ComentariosService } from '../../services/comentarios.service';
 
 @Component({
   selector: 'app-mis-comentarios',
@@ -22,7 +22,10 @@ export class MisComentariosComponent implements OnInit {
   deleteLoading = false;
   deleteError: string | null = null;
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private comentariosService: ComentariosService
+  ) {
     this.editComentarioForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(100)]],
       comentario: ['', [Validators.required, Validators.maxLength(500)]]
@@ -35,9 +38,8 @@ export class MisComentariosComponent implements OnInit {
   }
 
   cargarComentarios(page: number) {
-    this.http.get<ComentariosUsuarioPage>(`/comentario/me?page=${page}&size=${this.size}`).subscribe({
+    this.comentariosService.getMisComentarios(page, this.size).subscribe({
       next: resp => {
-        // Si es la primera página, reemplaza. Si no, acumula.
         if (page === 0) {
           this.comentarios = resp.content || [];
         } else {
@@ -77,13 +79,12 @@ export class MisComentariosComponent implements OnInit {
     this.editLoading = true;
     this.editError = null;
     this.editSuccess = false;
-    // Usa el campo correcto para el slug de la noticia asociada
     const slug = this.editandoComentario.noticia.slug || this.editandoComentario.noticia.slug || this.editandoComentario.titular;
     const body = {
       titulo: this.editComentarioForm.value.titulo,
       comentario: this.editComentarioForm.value.comentario
     };
-    this.http.put(`/comentario/${slug}`, body).subscribe({
+    this.comentariosService.editarComentario(slug, body).subscribe({
       next: () => {
         this.editSuccess = true;
         this.cargarComentarios(this.page);
@@ -129,7 +130,7 @@ export class MisComentariosComponent implements OnInit {
     this.deleteLoading = true;
     this.deleteError = null;
     const slug = this.eliminandoComentario.noticia.slug || this.eliminandoComentario.noticia.slug || this.eliminandoComentario.titular;
-    this.http.delete(`/comentario/${slug}`).subscribe({
+    this.comentariosService.eliminarComentario(slug).subscribe({
       next: () => {
         this.cerrarEliminar();
         this.comentarios = [];

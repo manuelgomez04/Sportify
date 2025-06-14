@@ -3,17 +3,17 @@
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">Noticias</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ noticia.deporte?.nombreDeporte }}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ noticia.deporte.nombreDeporte }}</li>
     </ol>
   </nav>
   <h2 class="fw-bold mb-2">{{ noticia.titular }}</h2>
   <div class="mb-2 text-muted">
-    Por {{ noticia.usuario?.username }} · {{ noticia.fechaCreacion }}
+    Por {{ noticia.usuario.username }} · {{ noticia.fechaCreacion }}
   </div>
   <div class="mb-3 d-flex gap-2 flex-wrap">
-    <span class="badge bg-light border text-dark">{{ noticia.deporte?.nombreDeporte }}</span>
-    <span class="badge bg-light border text-dark">{{ noticia.liga?.nombreLiga }}</span>
-    <span class="badge bg-light border text-dark">{{ noticia.equipo?.nombreEquipo }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.deporte.nombreDeporte }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.liga.nombreLiga }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.equipo.nombreEquipo }}</span>
   </div>
   <div class="mb-4 text-center">
     <!-- Carrusel solo si hay más de una imagen -->
@@ -97,7 +97,7 @@
     <div class="d-flex align-items-center mb-1">
       <img *ngIf="c.usuario?.fotoPerfil" [src]="'/download/'+c.usuario.fotoPerfil" class="rounded-circle me-2"
         width="36" height="36">
-      <div class="fw-semibold">{{ c.usuario?.username }}</div>
+      <div class="fw-semibold">{{ c.usuario.username }}</div>
       <div class="text-muted ms-2 small">{{ c.fecha }}</div>
     </div>
     <div class="ms-5">

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { DeportesService } from '../../services/deportes.service';
+import { LigasService } from '../../services/ligas.service';
+import { EquiposService } from '../../services/equipos.service';
 
 @Component({
   selector: 'app-nueva-noticia',
@@ -21,8 +23,10 @@ export class NuevaNoticiaComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private deportesService: DeportesService,
+    private ligasService: LigasService,
+    private equiposService: EquiposService
   ) {
     this.noticiaForm = this.fb.group({
       titular: ['', Validators.required],
@@ -34,20 +38,20 @@ export class NuevaNoticiaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<any[]>('/deporte').subscribe(data => this.deportes = data);
+    this.deportesService.getDeportes(0, 100).subscribe(resp => {
+      this.deportes = resp.content || [];
+    });
   }
 
   onDeporteChange() {
-    // Busca el objeto deporte seleccionado para obtener su nombreNoEspacio
-    const selectedNombreNoEspacio = this.deportes.find(
-      d => d.nombreNoEspacio === this.noticiaForm.value.deporte
-    )?.nombreNoEspacio || this.noticiaForm.value.deporte;
-
+    const selectedNombreNoEspacio = this.noticiaForm.value.deporte;
     this.ligas = [];
     this.equipos = [];
     this.noticiaForm.patchValue({ liga: '', equipo: '' });
     if (selectedNombreNoEspacio) {
-      this.http.get<any[]>(`/liga/por-deporte/${selectedNombreNoEspacio}`).subscribe(data => this.ligas = data);
+      this.ligasService.getLigasPorDeporte(selectedNombreNoEspacio, 0, 100).subscribe(resp => {
+        this.ligas = resp.content || [];
+      });
     }
   }
 
@@ -56,7 +60,9 @@ export class NuevaNoticiaComponent implements OnInit {
     this.equipos = [];
     this.noticiaForm.patchValue({ equipo: '' });
     if (nombreLiga) {
-      this.http.get<any[]>(`/equipo/por-liga/${nombreLiga}`).subscribe(data => this.equipos = data);
+      this.equiposService.getEquiposPorLiga(nombreLiga, 0, 100).subscribe(resp => {
+        this.equipos = resp.content || [];
+      });
     }
   }
 
@@ -89,7 +95,6 @@ export class NuevaNoticiaComponent implements OnInit {
   }
 
   async onSubmit() {
-    // Validación manual de selects dependientes
     const value = this.noticiaForm.value;
     if (
       this.noticiaForm.invalid ||
@@ -116,7 +121,11 @@ export class NuevaNoticiaComponent implements OnInit {
       formData.append('createNoticiaRequest', new Blob([JSON.stringify(noticiaDto)], { type: 'application/json' }));
       this.archivos.forEach(file => formData.append('files', file));
 
-      const noticiaResp: any = await this.http.post('/noticias', formData).toPromise();
+      // Puedes mover esto a un servicio si lo prefieres
+      const noticiaResp: any = await fetch('/noticias', {
+        method: 'POST',
+        body: formData
+      }).then(r => r.json());
       this.success = true;
       this.noticiaForm.reset();
       this.archivos = [];
@@ -128,3 +137,4 @@ export class NuevaNoticiaComponent implements OnInit {
     }
   }
 }
+

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Liga, LigaPage } from '../../models/liga/liga.model';
+import { LigasService } from '../../services/ligas.service';
 
 @Component({
   selector: 'app-ligas',
@@ -17,7 +17,11 @@ export class LigasComponent implements OnInit {
   deporteFiltro: string | null = null;
   isLoggedIn = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private ligasService: LigasService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.isLoggedIn = !!localStorage.getItem('accessToken');
@@ -29,9 +33,8 @@ export class LigasComponent implements OnInit {
 
   cargarLigasYLikes(page: number) {
     if (this.isLoggedIn) {
-      this.http.get<any>('/me').subscribe({
+      this.ligasService.getLigasSeguidas().subscribe({
         next: resp => {
-          // Busca ligas seguidas en el array ligasSeguidas de /me
           const ligasSeguidas = resp.ligasSeguidas || [];
           this.ligaLikedIds = new Set(ligasSeguidas.map((l: any) => l.id));
           this.cargarLigas(page);
@@ -49,13 +52,13 @@ export class LigasComponent implements OnInit {
 
   cargarLigas(page: number) {
     if (this.deporteFiltro) {
-      this.http.get<LigaPage>(`/liga/${this.deporteFiltro}?page=${page}&size=${this.size}`).subscribe(resp => {
+      this.ligasService.getLigasPorDeporte(this.deporteFiltro, page, this.size).subscribe(resp => {
         this.ligas = resp.content || [];
         this.page = resp.number;
         this.totalPages = resp.totalPages;
       });
     } else {
-      this.http.get<LigaPage>(`/liga?page=${page}&size=${this.size}`).subscribe(resp => {
+      this.ligasService.getLigas(page, this.size).subscribe(resp => {
         this.ligas = resp.content || [];
         this.page = resp.number;
         this.totalPages = resp.totalPages;
@@ -68,8 +71,7 @@ export class LigasComponent implements OnInit {
     const isLiked = this.ligaLikedIds.has(liga.id);
 
     if (isLiked) {
-      // Eliminar like
-      this.http.put('/unfollowLiga', { nombreLiga: liga.nombreSinEspacio }).subscribe({
+      this.ligasService.unfollowLiga(liga.nombreSinEspacio).subscribe({
         next: () => {
           this.ligaLikedIds.delete(liga.id);
         },
@@ -78,8 +80,7 @@ export class LigasComponent implements OnInit {
         }
       });
     } else {
-      // Dar like
-      this.http.put('/seguirLiga', { nombreLiga: liga.nombreSinEspacio }).subscribe({
+      this.ligasService.seguirLiga(liga.nombreSinEspacio).subscribe({
         next: () => {
           this.ligaLikedIds.add(liga.id);
         },

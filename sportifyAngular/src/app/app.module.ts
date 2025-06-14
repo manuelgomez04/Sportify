@@ -7,7 +7,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NoticiasComponent } from './components/noticias/noticias.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -40,7 +39,6 @@ import { EquiposComponent } from './components/equipos/equipos.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    NoticiasComponent,
     HomeComponent,
     NavbarComponent,
     RegisterComponent,
@@ -58,7 +56,8 @@ import { EquiposComponent } from './components/equipos/equipos.component';
     DetalleNoticiaComponent,
     DeportesComponent,
     LigasComponent,
-    EquiposComponent
+    EquiposComponent,
+    
   ],
   imports: [
     BrowserModule,

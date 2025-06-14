@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Deporte, DeportePage } from '../../models/deporte/deporte.model';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-
-
+import { DeportesService } from '../../services/deportes.service';
 
 @Component({
     selector: 'app-deportes',
@@ -19,7 +17,11 @@ export class DeportesComponent implements OnInit {
     isLoggedIn = false;
     seguidoIds: Set<string> = new Set();
 
-    constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
+    constructor(
+        private deportesService: DeportesService,
+        private authService: AuthService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.isLoggedIn = this.authService.isAuthenticated();
@@ -28,8 +30,7 @@ export class DeportesComponent implements OnInit {
 
     cargarDeportesYSeguidos(page: number) {
         if (this.isLoggedIn) {
-            // Usa /me para obtener los deportes seguidos antes de cargar los deportes
-            this.http.get<any>('/me').subscribe({
+            this.deportesService.getDeportesSeguidos().subscribe({
                 next: resp => {
                     const deportesSeguidos = resp.deportesSeguidos || [];
                     this.seguidoIds = new Set(deportesSeguidos.map((d: any) => d.id));
@@ -47,30 +48,28 @@ export class DeportesComponent implements OnInit {
     }
 
     cargarDeportes(page: number) {
-        this.http.get<DeportePage>(`/deporte?page=${page}&size=${this.size}`).subscribe(resp => {
+        this.deportesService.getDeportes(page, this.size).subscribe(resp => {
             this.deportes = resp.content || [];
             this.page = resp.number;
             this.totalPages = resp.totalPages;
-            // Si tienes la info de seguidos en el usuario autenticado, actualiza seguidoIds aquí
-            // Por ejemplo, si tu backend devuelve los deportes seguidos en /me o similar, haz una petición aquí y actualiza seguidoIds
         });
     }
 
     toggleFollow(deporte: Deporte, event: Event) {
         event.stopPropagation();
-
         const estabaSeguido = this.seguidoIds.has(deporte.id);
-        const endpoint = estabaSeguido ? '/unfollowDeporte' : '/seguirDeporte';
+        const obs = estabaSeguido
+            ? this.deportesService.unfollowDeporte(deporte.nombreNoEspacio)
+            : this.deportesService.seguirDeporte(deporte.nombreNoEspacio);
 
-        this.http.put(endpoint, { nombreDeporte: deporte.nombreNoEspacio }).subscribe({
+        obs.subscribe({
             next: (resp: any) => {
                 const deportesSeguidos = resp.deportesSeguidos || [];
                 this.seguidoIds = new Set(deportesSeguidos.map((d: any) => d.id));
             },
             error: () => {
-                // En caso de error, revertir el checkbox
                 const checkbox = event.target as HTMLInputElement;
-                checkbox.checked = estabaSeguido; // Vuelve al estado anterior
+                checkbox.checked = estabaSeguido;
             }
         });
     }
