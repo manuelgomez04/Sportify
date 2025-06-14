@@ -9,7 +9,6 @@ export interface NoticiasPage {
   totalPages: number;
   number: number;
   size: number;
-
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,5 +23,9 @@ export class NoticiasService {
       `/noticias?page=${page}&size=${size}&sort=fechaPublicacion,DESC`,
       options
     );
+  }
+
+  likeNoticia(titular: string): Observable<any> {
+    return this.http.post('/like', { titular });
   }
 }

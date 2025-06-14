@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Noticia } from '../../models/noticia/noticia.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { NoticiasService } from '../../services/noticias.service';
 
 @Component({
   selector: 'app-noticias-favoritas',
@@ -13,14 +15,36 @@ export class NoticiasFavoritasComponent implements OnInit {
   page = 0;
   size = 4;
   totalPages = 0;
+  isLoggedIn = false;
+  likedTitulares: Set<string> = new Set();
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private noticiasService: NoticiasService
   ) {}
 
   ngOnInit() {
+    this.isLoggedIn = this.authService.isAuthenticated();
+    this.cargarLikesFavoritas();
     this.cargarNoticias(0);
+  }
+
+  cargarLikesFavoritas() {
+    if (this.isLoggedIn) {
+      this.http.get<any>('/noticiasLiked').subscribe({
+        next: resp => {
+          const likedNoticias = resp.noticiasLiked?.content || [];
+          this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
+        },
+        error: () => {
+          this.likedTitulares = new Set();
+        }
+      });
+    } else {
+      this.likedTitulares = new Set();
+    }
   }
 
   cargarNoticias(page: number) {
@@ -33,12 +57,28 @@ export class NoticiasFavoritasComponent implements OnInit {
     });
   }
 
+  toggleLike(noticia: any) {
+    this.noticiasService.likeNoticia(noticia.slug).subscribe({
+      next: () => {
+        if (this.likedTitulares.has(noticia.slug)) {
+          this.likedTitulares.delete(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
+        } else {
+          this.likedTitulares.add(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+        }
+      },
+      error: () => {
+        // Opcional: mostrar error
+      }
+    });
+  }
+
   cambiarPagina(p: number) {
     if (p >= 0 && p < this.totalPages) {
       this.cargarNoticias(p);
     }
   }
-
   getMultimediaUrl(url: string): string {
     if (!url) return '';
     const cleanUrl = url.trim();

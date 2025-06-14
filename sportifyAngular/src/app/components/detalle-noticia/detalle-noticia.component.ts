@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComentarioDetalle, ComentariosDetallePage, NoticiaDetalle } from '../../models/noticia/noticia-detalle.model';
 import { AuthService } from '../../services/auth.service';
+import { NoticiasService } from '../../services/noticias.service';
 
 @Component({
   selector: 'app-detalle-noticia',
@@ -22,12 +23,14 @@ export class DetalleNoticiaComponent implements OnInit {
   comentarioError: string | null = null;
   comentarioSuccess: string | null = null;
   isLoggedIn = false;
+  likedTitulares: Set<string> = new Set();
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private noticiasService: NoticiasService
   ) {
     this.comentarioForm = this.fb.group({
       tituloComentario: ['', [Validators.required, Validators.maxLength(100)]],
@@ -36,12 +39,29 @@ export class DetalleNoticiaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isLoggedIn = this.authService.isAuthenticated();
+    this.cargarLikesDetalle();
     this.route.paramMap.subscribe(params => {
       this.slug = params.get('slug') || '';
       this.comentarios = [];
       this.cargarNoticiaYComentarios(0);
     });
-    this.isLoggedIn = this.authService.isAuthenticated();
+  }
+
+  cargarLikesDetalle() {
+    if (this.isLoggedIn) {
+      this.http.get<any>('/noticiasLiked').subscribe({
+        next: resp => {
+          const likedNoticias = resp.noticiasLiked?.content || [];
+          this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
+        },
+        error: () => {
+          this.likedTitulares = new Set();
+        }
+      });
+    } else {
+      this.likedTitulares = new Set();
+    }
   }
 
   cargarNoticiaYComentarios(page: number) {
@@ -99,6 +119,23 @@ export class DetalleNoticiaComponent implements OnInit {
           this.comentarioError = 'Error al enviar el comentario';
         }
         setTimeout(() => this.comentarioError = null, 3000);
+      }
+    });
+  }
+
+  toggleLikeDetalle(noticia: any) {
+    this.noticiasService.likeNoticia(noticia.slug).subscribe({
+      next: () => {
+        if (this.likedTitulares.has(noticia.slug)) {
+          this.likedTitulares.delete(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
+        } else {
+          this.likedTitulares.add(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+        }
+      },
+      error: () => {
+        // Opcional: mostrar error
       }
     });
   }
