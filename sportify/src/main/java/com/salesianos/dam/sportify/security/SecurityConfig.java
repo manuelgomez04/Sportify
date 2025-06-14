@@ -26,6 +26,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -66,7 +69,7 @@ public class SecurityConfig {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .cors(Customizer.withDefaults())
                                 .csrf(csrf -> csrf.disable());
                 http.sessionManagement((session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -92,11 +95,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/me/writer").hasRole("WRITER")
                                 .requestMatchers(HttpMethod.PUT, "/edit/me").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/edit/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/liga/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/delete/me").hasAnyRole("USER", "WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/admin/delete/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/noticias").hasAnyRole("WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/noticias/edit/**").hasAnyRole("WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/noticias/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/equipo/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/noticias/delete/**").hasAnyRole("WRITER", "ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/deporte").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/deporte/**").hasRole("ADMIN")
@@ -133,19 +138,16 @@ public class SecurityConfig {
         }
 
         @Bean
-        CorsConfigurationSource corsConfigurationSource() {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOriginPatterns(
-                                List.of("http://localhost:4200", "http://host.docker.internal:4200"));
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                configuration.setAllowedHeaders(
-                                List.of("Authorization", "Content-Type", "content-type", "Accept", "X-Requested-With"));
-                configuration.setAllowCredentials(true);
-                configuration.setMaxAge(3600L);
+        public CorsFilter corsFilter() {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.addAllowedOrigin("http://localhost:4200");
+                corsConfiguration.addAllowedMethod("");
+                corsConfiguration.addAllowedHeader("");
+                corsConfiguration.setAllowCredentials(true);
 
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
-        }
+                source.registerCorsConfiguration("/**", corsConfiguration);
 
+                return new CorsFilter(source);
+        }
 }

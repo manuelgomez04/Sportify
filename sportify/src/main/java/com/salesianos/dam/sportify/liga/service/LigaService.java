@@ -9,6 +9,9 @@ import com.salesianos.dam.sportify.liga.dto.CreateLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +32,10 @@ public class LigaService {
     @Transactional
     public Liga createLiga(CreateLigaRequest createLigaRequest, MultipartFile imagen) {
 
-      
-
         FileMetadata fileMetadata = storageService.store(imagen);
-
-  
 
         String imageUrl = fileMetadata.getFilename();
         imageUrl = getImageUrl(imageUrl);
-
-        
-
-
 
         Liga l = Liga.builder()
                 .nombre(createLigaRequest.nombre())
@@ -74,7 +69,7 @@ public class LigaService {
         }
     }
 
-      public String getImageUrl(String filename) {
+    public String getImageUrl(String filename) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(filename)
@@ -85,7 +80,15 @@ public class LigaService {
         return ligaRepository.findAll();
     }
 
-    public List<Liga> getLigasPorDeporte(String nombreDeporte) {
-        return ligaRepository.findByDeporte_NombreNoEspacio(nombreDeporte);
+    public Page<Liga> getLigasPorDeporte(String nombreDeporte, Pageable pageable) {
+        return ligaRepository.findByDeporte_NombreNoEspacio(nombreDeporte, pageable);
+    }
+
+    public Page<Liga> getAllPage(Pageable pageable) {
+        return ligaRepository.findAll(pageable);
+    }
+
+    public Page<Liga> findByDeporteNombreNoEspacio(String deporteNombreNoEspacio, Pageable pageable) {
+        return ligaRepository.findByDeporte_NombreNoEspacio(deporteNombreNoEspacio, pageable);
     }
 }

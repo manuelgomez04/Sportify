@@ -35,7 +35,8 @@ export class HomeComponent implements OnInit {
     if (this.isLoggedIn) {
       this.http.get<any>('/noticiasLiked').subscribe({
         next: resp => {
-          // Usa SLUG para el set, igual que en el resto de la app
+            
+
           const likedNoticias = resp.noticiasLiked?.content || [];
           this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
           this.cargarNoticias(page);
@@ -52,8 +53,11 @@ export class HomeComponent implements OnInit {
   }
 
   cargarNoticias(page: number = 0) {
+    console.log('Llamando a /noticiasLiked...');
+
     this.noticiasService.getNoticias(page, this.size).subscribe({
       next: resp => {
+        console.log('Respuesta de /noticiasLiked:', resp);
         this.noticiasPage = resp;
         this.noticias = (resp.content || []).map(noticia => {
           const noticiaConLike = Object.assign({}, noticia);
@@ -64,6 +68,7 @@ export class HomeComponent implements OnInit {
         this.page = resp.number;
       },
       error: err => {
+        console.error('Error al cargar noticias:', err);
         this.noticias = [];
       }
     });
@@ -120,4 +125,3 @@ export class HomeComponent implements OnInit {
     }
   }
 }
-

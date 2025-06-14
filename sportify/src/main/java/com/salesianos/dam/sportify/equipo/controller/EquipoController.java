@@ -2,6 +2,7 @@ package com.salesianos.dam.sportify.equipo.controller;
 
 import com.salesianos.dam.sportify.equipo.dto.CreateEquipoRequest;
 import com.salesianos.dam.sportify.equipo.dto.GetEquipoDto;
+import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.service.EquipoService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
 import com.salesianos.dam.sportify.noticia.dto.GetNoticiaDto;
@@ -15,8 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,9 +67,9 @@ public class EquipoController {
 
    
 
-    @GetMapping("/por-liga/{nombreLiga}")
-    public List<GetEquipoDto> getEquiposPorLiga(@PathVariable String nombreLiga) {
-        return equipoService.getEquiposPorLiga(nombreLiga).stream().map(GetEquipoDto::of).toList();
+    @GetMapping("/{nombreLiga}")
+    public Page<GetEquipoDto> getEquiposPorLiga(@PathVariable String nombreLiga, Pageable pageable) {
+        return equipoService.getEquiposPorLiga(nombreLiga, pageable).map(GetEquipoDto::of);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -73,5 +77,10 @@ public class EquipoController {
     public ResponseEntity<?> deleteEquipo(@PathVariable String nombre) {
         equipoService.deleteEquipo(nombre);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/paginados-por-liga")
+    public Page<GetEquipoDto> getEquiposPaginadosPorLiga(Pageable pageable) {
+        return equipoService.findAllOrderByLigaNombre(pageable).map(GetEquipoDto::of);
     }
 }

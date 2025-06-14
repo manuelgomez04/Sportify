@@ -30,5 +30,8 @@ public interface EquipoRepository extends JpaRepository<Equipo, UUID> {
             nativeQuery = true)
     Page<Equipo> findByUsuariosSeguidosUsername(@Param("username") String username, Pageable pageable);
 
-    List<Equipo> findByLiga_NombreNoEspacio(String nombreNoEspacio);
+    Page<Equipo> findByLiga_NombreNoEspacio(String nombreNoEspacio, Pageable pageable);
+
+    @Query("SELECT e FROM Equipo e ORDER BY e.liga.nombreNoEspacio ASC, e.nombre ASC")
+    Page<Equipo> findAllOrderByLigaNombre(Pageable pageable);
 }

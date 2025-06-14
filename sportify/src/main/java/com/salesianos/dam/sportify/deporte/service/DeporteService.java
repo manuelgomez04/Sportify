@@ -8,6 +8,9 @@ import com.salesianos.dam.sportify.files.model.FileMetadata;
 import com.salesianos.dam.sportify.files.service.StorageService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +50,7 @@ public class DeporteService {
         deporteRepository.delete(d);
 
     }
+
     public String getImageUrl(String filename) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
@@ -54,7 +58,7 @@ public class DeporteService {
                 .toUriString();
     }
 
-    public List<Deporte> getAllDeportes() {
-        return deporteRepository.findAll();
+    public Page<Deporte> getAllDeportes(Pageable pageable) {
+        return deporteRepository.findAll(pageable);
     }
 }
