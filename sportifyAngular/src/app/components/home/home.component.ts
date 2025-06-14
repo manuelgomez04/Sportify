@@ -35,8 +35,9 @@ export class HomeComponent implements OnInit {
     if (this.isLoggedIn) {
       this.http.get<any>('/noticiasLiked').subscribe({
         next: resp => {
+          // Usa SLUG para el set, igual que en el resto de la app
           const likedNoticias = resp.noticiasLiked?.content || [];
-          this.likedTitulares = new Set(likedNoticias.map((n: any) => n.titular));
+          this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
           this.cargarNoticias(page);
         },
         error: () => {
@@ -54,11 +55,10 @@ export class HomeComponent implements OnInit {
     this.noticiasService.getNoticias(page, this.size).subscribe({
       next: resp => {
         this.noticiasPage = resp;
-        // Crea una copia de cada noticia y añade el campo liked SOLO en el array local
         this.noticias = (resp.content || []).map(noticia => {
           const noticiaConLike = Object.assign({}, noticia);
-          // Añade el campo liked solo en el array local, nunca en el modelo global
-          (noticiaConLike as any).liked = this.likedTitulares.has(noticia.titular);
+          // Usa slug para comprobar el like
+          (noticiaConLike as any).liked = this.likedTitulares.has(noticia.slug);
           return noticiaConLike;
         });
         this.page = resp.number;
@@ -93,21 +93,31 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/noticias', slug]);
   }
 
-  toggleLike(noticia: any) {
-    this.noticiasService.likeNoticia(noticia.slug).subscribe({
-      next: () => {
-        noticia.liked = !noticia.liked;
-        noticia.likesCount = noticia.likesCount ? noticia.likesCount + (noticia.liked ? 1 : -1) : 1;
-        if (noticia.liked) {
-          this.likedTitulares.add(noticia.slug);
-        } else {
+  toggleLike(noticia: any, event: Event) {
+    event.stopPropagation();
+    const wasLiked = this.likedTitulares.has(noticia.slug);
+
+    if (wasLiked) {
+      this.noticiasService.unlikeNoticia(noticia.slug).subscribe({
+        next: () => {
           this.likedTitulares.delete(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
+        },
+        error: () => {
+          (event.target as HTMLInputElement).checked = true;
         }
-      },
-      error: () => {
-        // Opcional: mostrar error
-      }
-    });
+      });
+    } else {
+      this.noticiasService.likeNoticia(noticia.slug).subscribe({
+        next: () => {
+          this.likedTitulares.add(noticia.slug);
+          noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+        },
+        error: () => {
+          (event.target as HTMLInputElement).checked = false;
+        }
+      });
+    }
   }
 }
 

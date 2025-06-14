@@ -57,21 +57,37 @@ export class NoticiasFavoritasComponent implements OnInit {
     });
   }
 
-  toggleLike(noticia: any) {
-    this.noticiasService.likeNoticia(noticia.slug).subscribe({
-      next: () => {
-        if (this.likedTitulares.has(noticia.slug)) {
+  toggleLike(noticia: any, event: Event) {
+    event.stopPropagation();
+    // El checkbox cambia su estado ANTES de que se dispare (change)
+    // Por eso, para saber el estado ANTES del cambio, hay que comprobar el set antes de modificarlo
+    const wasLiked = this.likedTitulares.has(noticia.slug);
+    console.log('wasLiked:', wasLiked, 'slug:', noticia.slug);
+    // Si estaba likeado antes del click, ahora hay que hacer DELETE
+    if (wasLiked) {
+      this.noticiasService.unlikeNoticia(noticia.slug).subscribe({
+        next: () => {
           this.likedTitulares.delete(noticia.slug);
           noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
-        } else {
+        },
+        error: () => {
+          // Si hay error, vuelve a marcar el checkbox visualmente
+          (event.target as HTMLInputElement).checked = true;
+        }
+      });
+    } else {
+      // Si no estaba likeado antes del click, ahora hay que hacer POST
+      this.noticiasService.likeNoticia(noticia.slug).subscribe({
+        next: () => {
           this.likedTitulares.add(noticia.slug);
           noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+        },
+        error: () => {
+          // Si hay error, desmarca el checkbox visualmente
+          (event.target as HTMLInputElement).checked = false;
         }
-      },
-      error: () => {
-        // Opcional: mostrar error
-      }
-    });
+      });
+    }
   }
 
   cambiarPagina(p: number) {

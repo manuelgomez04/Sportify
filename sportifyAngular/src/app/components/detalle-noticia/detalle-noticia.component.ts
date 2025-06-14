@@ -123,20 +123,30 @@ export class DetalleNoticiaComponent implements OnInit {
     });
   }
 
-  toggleLikeDetalle(noticia: any) {
-    this.noticiasService.likeNoticia(noticia.slug).subscribe({
-      next: () => {
-        if (this.likedTitulares.has(noticia.slug)) {
+  toggleLikeDetalle(noticia: any, event: Event) {
+    event.stopPropagation();
+    const wasLiked = this.likedTitulares.has(noticia.slug);
+
+    if (wasLiked) {
+      this.noticiasService.unlikeNoticia(noticia.slug).subscribe({
+        next: () => {
           this.likedTitulares.delete(noticia.slug);
           noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
-        } else {
+        },
+        error: () => {
+          (event.target as HTMLInputElement).checked = true;
+        }
+      });
+    } else {
+      this.noticiasService.likeNoticia(noticia.slug).subscribe({
+        next: () => {
           this.likedTitulares.add(noticia.slug);
           noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+        },
+        error: () => {
+          (event.target as HTMLInputElement).checked = false;
         }
-      },
-      error: () => {
-        // Opcional: mostrar error
-      }
-    });
+      });
+    }
   }
 }
