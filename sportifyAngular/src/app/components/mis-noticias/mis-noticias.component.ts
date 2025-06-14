@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Noticia } from '../../models/noticia/noticia.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mis-noticias',
@@ -27,7 +28,10 @@ export class MisNoticiasComponent implements OnInit {
   deleteLoading = false;
   deleteError: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.cargarNoticias(0);
@@ -126,5 +130,9 @@ export class MisNoticiasComponent implements OnInit {
         this.deleteLoading = false;
       }
     });
+  }
+
+  verDetalle(slug: string) {
+    this.router.navigate(['/noticias', slug]);
   }
 }
