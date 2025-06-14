@@ -54,10 +54,8 @@
                     <div class="d-flex align-items-center gap-3 mt-2">
                         <div *ngIf="isLoggedIn" (click)="$event.stopPropagation()">
                             <div class="heart-container" title="Like">
-                                <input type="checkbox" class="checkbox"
-                                    [id]="'like-' + noticia.slug"
-                                    [checked]="likedTitulares.has(noticia.slug)"
-                                    (change)="toggleLike(noticia, $event)">
+                                <input type="checkbox" class="checkbox" [id]="'like-' + noticia.slug"
+                                    [checked]="likedTitulares.has(noticia.slug)" (change)="toggleLike(noticia, $event)">
                                 <div class="svg-container">
                                     <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
                                         <path

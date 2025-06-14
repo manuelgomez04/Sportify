@@ -32,6 +32,9 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
 import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
 import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { environment } from '../environments/environment.development';
+import { DeportesComponent } from './components/deportes/deportes.component';
+import { LigasComponent } from './components/ligas/ligas.component';
+import { EquiposComponent } from './components/equipos/equipos.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +55,10 @@ import { environment } from '../environments/environment.development';
     MisComentariosComponent,
     NuevaNoticiaComponent,
     MisNoticiasComponent,
-    DetalleNoticiaComponent
+    DetalleNoticiaComponent,
+    DeportesComponent,
+    LigasComponent,
+    EquiposComponent
   ],
   imports: [
     BrowserModule,

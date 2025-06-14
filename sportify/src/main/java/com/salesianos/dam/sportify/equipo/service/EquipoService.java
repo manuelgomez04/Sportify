@@ -10,6 +10,8 @@ import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.Metadata;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +81,11 @@ public class EquipoService {
         return equipoRepository.findAll();
     }
 
-    public List<Equipo> getEquiposPorLiga(String nombreLiga) {
-        return equipoRepository.findByLiga_NombreNoEspacio(nombreLiga);
+    public Page<Equipo> getEquiposPorLiga(String nombreLiga, Pageable pageable) {
+        return equipoRepository.findByLiga_NombreNoEspacio(nombreLiga, pageable);
+    }
+
+    public Page<Equipo> findAllOrderByLigaNombre(Pageable pageable) {
+        return equipoRepository.findAllOrderByLigaNombre(pageable);
     }
 }

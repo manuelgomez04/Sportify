@@ -18,6 +18,10 @@ import { WriterAdminGuard } from './guards/writer-admin.guard'; // crea este gua
 import { AuthGuard } from './guards/auth.guard';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
+import { DeportesComponent } from './components/deportes/deportes.component';
+import { LigasComponent } from './components/ligas/ligas.component';
+import { EquiposComponent } from './components/equipos/equipos.component';
+
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -44,6 +48,9 @@ const routes: Routes = [
   },
   { path: 'mis-noticias', component: MisNoticiasComponent, canActivate: [WriterAdminGuard] },
   { path: 'noticias/:slug', component: DetalleNoticiaComponent },
+  { path: 'deportes', component: DeportesComponent },
+  { path: 'ligas', component: LigasComponent },
+  { path: 'equipos', component: EquiposComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
