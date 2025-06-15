@@ -77,4 +77,11 @@ public class LigaController {
                 return ligaService.findByDeporteNombreNoEspacio(deporteNombreNoEspacio, pageable).map(GetLigaDto::of);
         }
 
+        @GetMapping
+        public List<GetLigaDto> getAllLigas() {
+                return ligaService.getAllLigas().stream()
+                                .map(GetLigaDto::of)
+                                .toList();
+        }
+
 }

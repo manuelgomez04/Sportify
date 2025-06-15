@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { userLogin } from '../models/user/model-login';
 import { miUsuario } from '../models/user/miUsuario';
@@ -10,6 +10,9 @@ import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    private authStateSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
+    authState$ = this.authStateSubject.asObservable();
+
     constructor(private http: HttpClient) { }
 
     userLogin(body: { username: string; password: string }): Observable<userLogin> {
@@ -19,15 +22,24 @@ export class AuthService {
         return this.http.get<miUsuario>(`/me`);
     }
     logout() {
-        return this.http.post('/auth/logout', {}).subscribe({
-            next: () => {
-                localStorage.clear();
-
-            },
-            error: () => {
-                localStorage.clear();
-            }
-        });
+        if (localStorage.getItem('accessToken')) {
+            this.http.post('/auth/logout', {}).subscribe({
+                next: () => {
+                    localStorage.clear();
+                    this.authStateSubject.next(false);
+                    window.location.reload(); // Refresca la página tras logout
+                },
+                error: () => {
+                    localStorage.clear();
+                    this.authStateSubject.next(false);
+                    window.location.reload(); // Refresca la página tras logout
+                }
+            });
+        } else {
+            localStorage.clear();
+            this.authStateSubject.next(false);
+            window.location.reload(); // Refresca la página tras logout
+        }
     }
 
     register(data: any, userType: string) {
@@ -41,7 +53,8 @@ export class AuthService {
     }
 
     isAuthenticated(): boolean {
-        return !!localStorage.getItem('user');
+        // Mejor comprobar el token o el usuario real
+        return !!localStorage.getItem('accessToken') || !!localStorage.getItem('user');
     }
 
     getAuthorizationHeader(): string {
@@ -84,4 +97,7 @@ export class AuthService {
         return roles.includes('ADMIN');
     }
 
+    loginSuccess() {
+        this.authStateSubject.next(true);
+    }
 }

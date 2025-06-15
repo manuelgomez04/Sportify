@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Asegura que los overlays de Angular Material (select, paginator, etc.) estén por encima de todo */
+.cdk-overlay-container {
+  position: unset !important;
+  inset: unset !important;
+  z-index: 3000 !important;
+  pointer-events: auto;
+}
+
+/* Asegura que los overlays se posicionen relativos a la pantalla y no a la ventana */
+.cdk-global-overlay-wrapper,
+.cdk-overlay-pane {
+  display: block !important;
+  justify-content: unset !important;
+  pointer-events: auto;
+}
+
+/* Opcional: Si usas Bootstrap, asegúrate de que el z-index de los overlays de Angular Material sea mayor que el de los modales */

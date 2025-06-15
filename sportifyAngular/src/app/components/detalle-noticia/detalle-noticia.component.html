@@ -3,7 +3,7 @@
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">Noticias</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ noticia.deporte.nombreDeporte }}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ noticia.deporte?.nombreDeporte }}</li>
     </ol>
   </nav>
   <h2 class="fw-bold mb-2">{{ noticia.titular }}</h2>
@@ -11,9 +11,9 @@
     Por {{ noticia.usuario.username }} · {{ noticia.fechaCreacion }}
   </div>
   <div class="mb-3 d-flex gap-2 flex-wrap">
-    <span class="badge bg-light border text-dark">{{ noticia.deporte.nombreDeporte }}</span>
-    <span class="badge bg-light border text-dark">{{ noticia.liga.nombreLiga }}</span>
-    <span class="badge bg-light border text-dark">{{ noticia.equipo.nombreEquipo }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.deporte?.nombreDeporte }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.liga?.nombreLiga }}</span>
+    <span class="badge bg-light border text-dark">{{ noticia.equipo?.nombreEquipo }}</span>
   </div>
   <div class="mb-4 text-center">
     <!-- Carrusel solo si hay más de una imagen -->
