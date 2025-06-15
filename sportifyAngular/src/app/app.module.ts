@@ -78,7 +78,6 @@ import { AdminUsuariosComponent } from './components/admin-usuarios/admin-usuari
     EquipoNombreFilterPipe,
     AdminEquiposComponent,
     AdminUsuariosComponent
-    
   ],
   imports: [
     BrowserModule,
