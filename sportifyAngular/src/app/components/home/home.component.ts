@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NoticiasService, NoticiasPage } from '../../services/noticias.service';
+import { MisNoticiasComponent } from '../mis-noticias/mis-noticias.component';
 import { Noticia } from '../../models/noticia/noticia.model';
 import { HttpClient } from '@angular/common/http';
+import { MisNoticiasService } from '../../services/mis-noticias.service';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +19,7 @@ export class HomeComponent implements OnInit {
   size = 6;
   nombre: string | null = null;
   isLoggedIn = false;
+  isAdmin = false;
   likedTitulares: Set<string> = new Set();
   totalNoticias = 0;
 
@@ -29,15 +32,26 @@ export class HomeComponent implements OnInit {
     username: ''
   };
 
+  editandoNoticia: Noticia | null = null;
+  editTitular = '';
+  editCuerpo = '';
+  editArchivos: File[] = [];
+  editLoading = false;
+  editError: string | null = null;
+  editSuccess = false;
+  showEditModal = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private noticiasService: NoticiasService,
-    private http: HttpClient 
+    private http: HttpClient,
+    private misNoticiasService: MisNoticiasService
   ) { }
 
   ngOnInit() {
     this.isLoggedIn = this.authService.isAuthenticated();
+    this.isAdmin = this.authService.isAdmin();
     this.cargarNoticiasYLikes();
   }
 
@@ -172,5 +186,72 @@ export class HomeComponent implements OnInit {
 
   getPagesArray() {
     return Array(Math.ceil(this.totalNoticias / this.size)).fill(0);
+  }
+
+  editarNoticia(noticia: Noticia, event: Event) {
+    event.stopPropagation();
+    this.router.navigate(['/noticias', noticia.slug, 'editar']);
+  }
+
+  borrarNoticia(noticia: Noticia, event: Event) {
+    event.stopPropagation();
+    if (confirm('¿Seguro que quieres borrar esta noticia?')) {
+      this.misNoticiasService.eliminarNoticia(noticia.slug).subscribe({
+        next: () => this.cargarNoticias(),
+        error: () => alert('Error al borrar la noticia')
+      });
+    }
+  }
+
+  abrirEditar(noticia: Noticia, event: Event) {
+    event.stopPropagation();
+    this.editandoNoticia = noticia;
+    this.editTitular = noticia.titular;
+    this.editCuerpo = noticia.cuerpo;
+    this.editArchivos = [];
+    this.editError = null;
+    this.editSuccess = false;
+  }
+
+  cerrarEditar() {
+    this.editandoNoticia = null;
+    this.editTitular = '';
+    this.editCuerpo = '';
+    this.editArchivos = [];
+    this.editError = null;
+    this.editSuccess = false;
+  }
+
+  onEditFilesSelected(event: any) {
+    this.editArchivos = Array.from(event.target.files);
+  }
+
+  guardarEdicion() {
+    if (!this.editandoNoticia) return;
+    this.editLoading = true;
+    this.editError = null;
+    this.editSuccess = false;
+
+    const formData = new FormData();
+    const editDto = {
+      titular: this.editTitular,
+      cuerpo: this.editCuerpo
+    };
+    formData.append('editNoticiaDto', new Blob([JSON.stringify(editDto)], { type: 'application/json' }));
+    this.editArchivos.forEach(file => formData.append('files', file));
+
+    this.misNoticiasService.editarNoticia(this.editandoNoticia.slug, formData).subscribe({
+      next: () => {
+        this.editSuccess = true;
+        this.cargarNoticias(this.page);
+        setTimeout(() => this.cerrarEditar(), 1200);
+      },
+      error: () => {
+        this.editError = 'Error al editar la noticia';
+      },
+      complete: () => {
+        this.editLoading = false;
+      }
+    });
   }
 }

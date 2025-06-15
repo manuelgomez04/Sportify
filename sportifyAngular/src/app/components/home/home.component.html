@@ -113,6 +113,16 @@
 
                         </span>
                     </div>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <ng-container *ngIf="isAdmin">
+                            <button class="btn btn-sm btn-outline-primary me-2" (click)="abrirEditar(noticia, $event)">
+                                Editar
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" (click)="borrarNoticia(noticia, $event)">
+                                Borrar
+                            </button>
+                        </ng-container>
+                    </div>
                 </div>
                 <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
                     [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
@@ -141,3 +151,38 @@
         </nav>
     </div>
 </section>
+
+<!-- Modal de edición de noticia -->
+<div *ngIf="editandoNoticia" class="custom-modal-backdrop">
+  <div class="custom-modal">
+    <form (ngSubmit)="guardarEdicion()">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Noticia</h5>
+        <button type="button" class="btn-close" (click)="cerrarEditar()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Titular</label>
+          <input [(ngModel)]="editTitular" name="titular" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Cuerpo</label>
+          <textarea [(ngModel)]="editCuerpo" name="cuerpo" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Archivos multimedia (opcional)</label>
+          <input type="file" (change)="onEditFilesSelected($event)" multiple class="form-control">
+          <div *ngIf="editArchivos.length > 0" class="mt-2">
+            <div *ngFor="let file of editArchivos">{{ file.name }}</div>
+          </div>
+        </div>
+        <div *ngIf="editError" class="alert alert-danger">{{ editError }}</div>
+        <div *ngIf="editSuccess" class="alert alert-success">¡Noticia editada correctamente!</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarEditar()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="editLoading">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
