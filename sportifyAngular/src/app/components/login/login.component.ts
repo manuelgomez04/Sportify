@@ -23,15 +23,26 @@ export class LoginComponent {
 
       this.userService.userLogin(body).subscribe({
         next: (response) => {
-          console.log('Login exitoso:', response);
+          
 
+          localStorage.setItem('user', JSON.stringify(response));
           localStorage.setItem('accessToken', response.token);
           localStorage.setItem('refreshToken', response.refreshToken);
-          this.router.navigate(['/home']); 
+
+          
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           if (error.status === 401) {
             alert('Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.');
+            this.router.navigate(['/home']);
+          } else if (
+            error.error &&
+            typeof error.error === 'string' &&
+            error.error.toLowerCase().includes('full authentication')
+          ) {
+            alert('Debes iniciar sesión para acceder.');
+            this.router.navigate(['/home']);
           } else {
             console.error('Error inesperado:', error);
           }

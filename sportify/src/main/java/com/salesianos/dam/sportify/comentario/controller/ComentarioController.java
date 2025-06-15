@@ -19,8 +19,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -114,6 +118,45 @@ public class ComentarioController {
     public ResponseEntity<?> deleteComentario(@AuthenticationPrincipal User user, @PathVariable String slug) {
         comentarioService.deleteComentarioMe(user.getUsername(), slug);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Obtiene todos los comentarios de un usuario paginados (solo admin)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Se han encontrado los comentarios",
+            content = {@Content(mediaType = "application/json",
+                array = @ArraySchema(schema = @Schema(implementation = GetComentarioDto.class))
+            )}),
+        @ApiResponse(responseCode = "404",
+            description = "No se ha encontrado el usuario",
+            content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/usuario/{username}")
+    public Page<GetComentarioDto> getComentariosByUsuario(
+            @PathVariable String username,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return comentarioService.findComentariosByUsuario(username, pageable)
+                .map(GetComentarioDto::of);
+    }
+
+    @Operation(summary = "Obtiene todos los comentarios del usuario autenticado paginados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Se han encontrado los comentarios",
+            content = {@Content(mediaType = "application/json",
+                array = @ArraySchema(schema = @Schema(implementation = GetComentarioDto.class))
+            )}),
+        @ApiResponse(responseCode = "404",
+            description = "No se ha encontrado el usuario",
+            content = @Content)
+    })
+    @GetMapping("/me")
+    public Page<GetComentarioDto> getMisComentarios(
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return comentarioService.findComentariosByUsuario(user.getUsername(), pageable)
+                .map(GetComentarioDto::of);
     }
 
 }

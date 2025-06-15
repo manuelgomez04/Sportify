@@ -15,7 +15,7 @@ public record CreateComentarioRequest(
         @NotNull
         @Size(min = 1, max = 255)
         String titulo,
-        @Size(min = 20, max = 500)
+        @Size(min = 20, max = 500, message = "{createComentarioRequest.comentario.size}")
         String comentario
 ) {
 }

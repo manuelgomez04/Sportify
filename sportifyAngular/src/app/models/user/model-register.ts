@@ -6,4 +6,5 @@ export interface UserRegister {
   verifyEmail: string;
   fechaNacimiento: string;
   nombre: string;
+  profileImage?: File | null;
 }

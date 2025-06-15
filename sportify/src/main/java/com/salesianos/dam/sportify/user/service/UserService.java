@@ -7,6 +7,8 @@ import com.salesianos.dam.sportify.equipo.dto.FollowEquipoRequest;
 import com.salesianos.dam.sportify.equipo.model.Equipo;
 import com.salesianos.dam.sportify.equipo.repo.EquipoRepository;
 import com.salesianos.dam.sportify.error.*;
+import com.salesianos.dam.sportify.files.model.FileMetadata;
+import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
@@ -28,10 +30,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -46,11 +50,16 @@ public class UserService {
     private final EquipoRepository equipoRepository;
     private final DeporteRepository deporteRepository;
     private final LigaRepository ligaRepository;
+    private final StorageService storageService;
 
     @Value("${activation.duration}")
     private int activationDuration;
 
-    public User createUser(CreateUserRequest createUserRequest) {
+    public User createUser(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+
+        FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
@@ -60,12 +69,13 @@ public class UserService {
                 .fechaNacimiento(createUserRequest.fechaNacimiento())
                 .deleted(false)
                 .activationToken(generateRandomActivationCode())
+                .profileImage(imageUrl)
                 .build();
 
         try {
             emailService.sendVerificationEmail(createUserRequest.email(), user.getActivationToken());
         } catch (Exception e) {
-           
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al enviar el correo de activación");
         }
@@ -73,7 +83,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User createWriter(CreateUserRequest createUserRequest) {
+    public User createWriter(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+        FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
@@ -82,6 +95,7 @@ public class UserService {
                 .activationToken(generateRandomActivationCode())
                 .nombre(createUserRequest.nombre())
                 .fechaNacimiento(createUserRequest.fechaNacimiento())
+                .profileImage(imageUrl)
                 .build();
 
         try {
@@ -94,13 +108,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User createAdmin(CreateUserRequest createUserRequest) {
+    public User createAdmin(CreateUserRequest createUserRequest, MultipartFile profileImage) {
+        FileMetadata fileMetadata = storageService.store(profileImage);
+        String imageUrl = fileMetadata.getFilename();
+
         User user = User.builder()
                 .username(createUserRequest.username())
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .email(createUserRequest.email())
                 .roles(Set.of(Role.ADMIN, Role.USER, Role.WRITER))
                 .activationToken(generateRandomActivationCode())
+                .nombre(createUserRequest.nombre()).fechaNacimiento(createUserRequest.fechaNacimiento())
+                .profileImage(imageUrl)
                 .build();
 
         try {
@@ -114,14 +133,25 @@ public class UserService {
     }
 
     @Transactional
-    public User editMe(User username, EditUserDto updatedUser) {
+    public User editMe(User username, EditUserDto updatedUser, MultipartFile profileImage) {
+
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
+                    // Guardar la imagen solo si se ha subido una nueva
+                    if (profileImage != null && !profileImage.isEmpty()) {
+                        FileMetadata fileMetadata = storageService.store(profileImage);
+                        String imageUrl = fileMetadata.getFilename();
+                        user.setProfileImage(imageUrl);
+                    }
+                    if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
+                        // Comprobar si el email ya existe en otro usuario
+                        if (userRepository.existsByEmail(updatedUser.email())) {
+                            throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en uso");
+                        }
+                        user.setEmail(updatedUser.email());
+                    }
                     if (updatedUser.password() != null) {
                         user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    }
-                    if (updatedUser.email() != null) {
-                        user.setEmail(updatedUser.email());
                     }
                     if (updatedUser.nombre() != null) {
                         user.setNombre(updatedUser.nombre());
@@ -167,11 +197,24 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(GetUserNoAsociacionesDto user) {
-        Optional<User> u = userRepository.findFirstByUsername(user.username());
+    public void deleteUser(String user) {
+        Optional<User> u = userRepository.findFirstByUsername(user);
 
         if (u.isPresent()) {
             u.get().setDeleted(true);
+            u.get().setEmail(null);
+            userRepository.save(u.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
+    }
+
+    @Transactional
+    public void deleteMe(GetUserNoAsociacionesDto user) {
+        Optional<User> u = userRepository.findFirstByUsername(user.username());
+        if (u.isPresent()) {
+            u.get().setDeleted(true);
+            u.get().setEmail(null);
             userRepository.save(u.get());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
@@ -243,7 +286,7 @@ public class UserService {
         User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
-        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+        Deporte deporte = deporteRepository.findByNombreNoEspacio(nombreDeporte.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getEquiposSeguidos());
@@ -259,7 +302,7 @@ public class UserService {
         User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
-        Deporte deporte = deporteRepository.findByNombreEqualsIgnoreCase(nombreDeporte.nombreDeporte())
+        Deporte deporte = deporteRepository.findByNombreNoEspacio(nombreDeporte.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("Deporte no encontrado", HttpStatus.NOT_FOUND));
 
         Hibernate.initialize(user.getEquiposSeguidos());
@@ -311,6 +354,29 @@ public class UserService {
 
     public Page<Equipo> findEquiposFavoritosByUsername(String username, Pageable pageable) {
         return equipoRepository.findByUsuariosSeguidosUsername(username, pageable);
+    }
+
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        return user;
+    }
+
+    @Transactional
+    public List<User> findAllWithEquiposAndDeportesSeguidos() {
+        return userRepository.findAllWithEquiposAndDeportesSeguidos();
+    }
+
+    @Transactional
+    public List<User> findAllUsers() {
+        List<User> users = userRepository.findAllWithEquiposSeguidos();
+        return users;
+    }
+
+    @Transactional
+    public List<User> findAllWithAllSeguidos() {
+        return userRepository.findAllWithAllSeguidos();
     }
 
 }

@@ -24,8 +24,9 @@ public record GetNoticiaComentarioDto(
         GetNombreDeporteDto deporte,
         GetNombreLiga liga,
         String slug,
-        Page<GetComentarioDto> comentarios
-) {
+        Page<GetComentarioDto> comentarios,
+        int likesCount,
+        int comentariosCount) {
 
     public static GetNoticiaComentarioDto of(Noticia n, Page<Comentario> comentarios) {
         return new GetNoticiaComentarioDto(
@@ -39,7 +40,8 @@ public record GetNoticiaComentarioDto(
                 n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null,
                 n.getLigaNoticia() != null ? GetNombreLiga.of(n.getLigaNoticia()) : null,
                 n.getSlug(),
-                comentarios.map(GetComentarioDto::of)
-        );
+                comentarios.map(GetComentarioDto::of),
+                n.getLikes() != null ? n.getLikes().size() : 0,
+                n.getComentarios() != null ? n.getComentarios().size() : 0);
     }
 }

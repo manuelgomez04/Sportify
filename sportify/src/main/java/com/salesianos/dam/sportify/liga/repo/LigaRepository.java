@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,6 +17,10 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
     boolean existsByNombreEqualsIgnoreCaseAndIgnoreWhitespace(@Param("nombre") String nombre);
 
     Optional<Liga> findByNombreNoEspacio(String nombre);
+
+    Page<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio, Pageable pageable);
+
+    Page<Liga> findAll(Pageable pageable);
 
     @Query(value = "SELECT l.* FROM liga l " +
             "JOIN usuario_liga ul ON l.id = ul.liga_id " +
@@ -27,4 +32,7 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
                     "WHERE u.username = :username",
             nativeQuery = true)
     Page<Liga> findLigasFavoritasByUsername(@Param("username") String username, Pageable pageable);
+
+    List<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio);
+
 }

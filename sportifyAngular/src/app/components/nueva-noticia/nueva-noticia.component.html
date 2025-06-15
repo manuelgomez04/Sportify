@@ -1,0 +1,63 @@
+<app-navbar></app-navbar>
+<div class="container mt-5" style="max-width: 700px;">
+  <h2 class="mb-4 text-center">Crear una nueva publicación</h2>
+  <form [formGroup]="noticiaForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label class="form-label">Título</label>
+      <input formControlName="titular" type="text" class="form-control" placeholder="Añade un título">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Cuerpo</label>
+      <textarea formControlName="cuerpo" class="form-control" rows="5" placeholder="Escribe el contenido..."></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Deporte</label>
+      <select formControlName="deporte" class="form-select" (change)="onDeporteChange()">
+        <option value="">Selecciona un deporte</option>
+        <option *ngFor="let d of deportes" [value]="d.nombreNoEspacio">{{ d.nombre }}</option>
+      </select>
+    </div>
+    <div class="mb-3" *ngIf="ligas && ligas.length > 0">
+      <label class="form-label">Liga</label>
+      <select formControlName="liga" class="form-select" (change)="onLigaChange()">
+        <option value="">Selecciona una liga</option>
+        <option *ngFor="let l of ligas" [value]="l.nombreSinEspacio">{{ l.nombre }}</option>
+      </select>
+    </div>
+    <div class="mb-3" *ngIf="equipos && equipos.length > 0">
+      <label class="form-label">Equipo</label>
+      <select formControlName="equipo" class="form-select">
+        <option value="">Selecciona un equipo</option>
+        <option *ngFor="let e of equipos" [value]="e.nombreNoEspacio">{{ e.nombre }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Archivos multimedia</label>
+      <div
+        class="border rounded p-3 text-center"
+        style="background: #f8f9fa; cursor: pointer;"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        [class.bg-light]="isDragOver"
+        (click)="fileInput.click()"
+      >
+        <div *ngIf="archivos.length === 0">Arrastra archivos aquí o haz clic para seleccionar</div>
+        <div *ngIf="archivos.length > 0">
+          <div *ngFor="let file of archivos; let i = index" class="d-flex align-items-center justify-content-between mb-1">
+            <span>{{ file.name }}</span>
+            <button type="button" class="btn btn-sm btn-danger ms-2" (click)="eliminarArchivo(i)">
+              Eliminar
+            </button>
+          </div>
+        </div>
+        <input #fileInput type="file" (change)="onFilesSelected($event)" multiple style="display: none;">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+      {{ loading ? 'Publicando...' : 'Publicar' }}
+    </button>
+    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+    <div *ngIf="success" class="alert alert-success mt-3">¡Noticia publicada correctamente!</div>
+  </form>
+</div>

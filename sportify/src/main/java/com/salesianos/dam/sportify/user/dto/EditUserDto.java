@@ -37,6 +37,8 @@ public record EditUserDto(
         LocalDate fechaNacimiento,
 
         @NotBlank(message = "{createUserRequest.nombre.notBlank}")
-        String nombre
+        String nombre,
+
+        String profileImage
 ) {
 }

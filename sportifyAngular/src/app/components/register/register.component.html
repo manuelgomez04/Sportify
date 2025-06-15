@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="container mt-4" style="max-width: 500px;">
   <h2 class="mb-4 text-center">Registro</h2>
   <div class="mb-3">
@@ -42,6 +44,10 @@
       <label class="form-label">Fecha de nacimiento</label>
       <input formControlName="fechaNacimiento" type="date" class="form-control" />
       <div *ngIf="fieldErrors['fechaNacimiento']" class="text-danger small mt-1">{{ fieldErrors['fechaNacimiento'] }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Foto de perfil</label>
+      <input type="file" (change)="onProfileImageChange($event)" accept="image/*" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary w-100">Registrarse</button>
     <div *ngIf="error" class="alert alert-danger mt-3" [innerHTML]="error"></div>

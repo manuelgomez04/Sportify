@@ -11,6 +11,8 @@ public record CreateDeporteRequest(
 
         String nombre,
 
-        String descripcion
+        String descripcion,
+
+        String imagen
 ) {
 }

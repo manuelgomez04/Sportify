@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,4 +29,12 @@ public interface EquipoRepository extends JpaRepository<Equipo, UUID> {
                     "WHERE u.username = :username",
             nativeQuery = true)
     Page<Equipo> findByUsuariosSeguidosUsername(@Param("username") String username, Pageable pageable);
+
+    Page<Equipo> findByLiga_NombreNoEspacio(String nombreNoEspacio, Pageable pageable);
+
+    @Query("SELECT e FROM Equipo e ORDER BY e.liga.nombreNoEspacio ASC, e.nombre ASC")
+    Page<Equipo> findAllOrderByLigaNombre(Pageable pageable);
+
+    List<Equipo> findByLiga_NombreNoEspacio(String nombreNoEspacio);
+
 }

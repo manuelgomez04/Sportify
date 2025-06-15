@@ -14,6 +14,7 @@ export class RegisterComponent {
   error: string | null = null;
   userType: 'user' | 'writer' = 'user';
   fieldErrors: { [key: string]: string } = {};
+  selectedProfileImage: File | null = null;
 
 
   constructor(
@@ -28,26 +29,46 @@ export class RegisterComponent {
       verifyEmail: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       verifyPassword: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required]
+      fechaNacimiento: ['', Validators.required],
+      profileImage: [null]
     });
+  }
+
+  onProfileImageChange(event: any) {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      this.selectedProfileImage = file;
+      this.registerForm.patchValue({ profileImage: file });
+    }
   }
 
   onSubmit() {
     this.error = null;
     this.fieldErrors = {};
     if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value, this.userType).subscribe({
+      const formData = new FormData();
+      
+      const userObj: any = { ...this.registerForm.value };
+      delete userObj.profileImage;
+      
+      formData.append(
+        'createUserRequest',
+        new Blob([JSON.stringify(userObj)], { type: 'application/json' })
+      );
+      if (this.registerForm.value.profileImage instanceof File) {
+        const file: File = this.registerForm.value.profileImage;
+        formData.append('profileImage', file, file.name || 'profileImage.jpg');
+      }
+      this.authService.register(formData, this.userType).subscribe({
         next: () => this.router.navigate(['/verify-account']),
         error: err => {
           this.fieldErrors = {};
           if (err.error) {
-            // Passay: errores de contraseña en inglés, suelen contener "Password must"
             const isPassayError = (msg: string) =>
               msg.includes('Password must') ||
               msg.includes('Password must be') ||
               msg.includes('Password must contain');
 
-            // invalid-params (RFC 7807)
             if (err.error['invalid-params'] && Array.isArray(err.error['invalid-params'])) {
               err.error['invalid-params'].forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.message)) {
@@ -61,7 +82,6 @@ export class RegisterComponent {
                 }
               });
             }
-            // Spring Validation: errors: [{field: "...", defaultMessage: "..."}]
             else if (err.error.errors && Array.isArray(err.error.errors)) {
               err.error.errors.forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.defaultMessage || e.message || '')) {
@@ -75,7 +95,6 @@ export class RegisterComponent {
                 }
               });
             }
-            // Array de errores
             else if (Array.isArray(err.error)) {
               err.error.forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.defaultMessage || e.message || '')) {
@@ -89,11 +108,11 @@ export class RegisterComponent {
                 }
               });
             }
-            // Mensaje simple (string)
+      
             else if (typeof err.error === 'string' && isPassayError(err.error)) {
               this.error = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
             }
-            // Mensaje en 'message'
+         
             else if (err.error.message && isPassayError(err.error.message)) {
               this.error = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
             }
@@ -114,3 +133,4 @@ export class RegisterComponent {
     }
   }
 }
+
