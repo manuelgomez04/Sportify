@@ -34,6 +34,8 @@ import { environment } from '../environments/environment.development';
 import { DeportesComponent } from './components/deportes/deportes.component';
 import { LigasComponent } from './components/ligas/ligas.component';
 import { EquiposComponent } from './components/equipos/equipos.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminDeportesComponent } from './components/admin-deportes/admin-deportes.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { EquiposComponent } from './components/equipos/equipos.component';
     DeportesComponent,
     LigasComponent,
     EquiposComponent,
+    AdminComponent,
+    AdminDeportesComponent,
     
   ],
   imports: [

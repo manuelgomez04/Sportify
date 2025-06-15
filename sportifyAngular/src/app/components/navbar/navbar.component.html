@@ -43,6 +43,12 @@
           class="btn btn-primary me-2">
           Nueva noticia
         </button>
+        <button
+          *ngIf="isLoggedIn && authService.getRoles().includes('ADMIN')"
+          class="btn btn-dark me-2"
+          routerLink="/admin">
+          Admin
+        </button>
       </div>
     </div>
   </div>
