@@ -10,6 +10,9 @@ import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import com.salesianos.dam.sportify.noticia.model.Noticia;
 import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
+import com.salesianos.dam.sportify.user.model.User;
+import com.salesianos.dam.sportify.user.repo.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.Metadata;
 import org.springframework.data.domain.Page;
@@ -29,8 +32,8 @@ public class EquipoService {
     private final EquipoRepository equipoRepository;
     private final LigaRepository ligaRepository;
     private final StorageService storageService;
-    private final NoticiaRepository noticiaRepository; // Añade esta línea
-
+    private final NoticiaRepository noticiaRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Equipo createEquipo(CreateEquipoRequest createEquipoRequest, MultipartFile escudo) {
@@ -69,20 +72,22 @@ public class EquipoService {
 
     @Transactional
     public void deleteEquipo(String nombre) {
-        Optional<Equipo> e = equipoRepository.findByNombreNoEspacio(nombre);
-
-        if (e.isPresent()) {
-            // Poner a null el campo equipo en todas las noticias que lo referencian
-            List<Noticia> noticias = noticiaRepository.findByEquipoNoticia_NombreNoEspacio(nombre);
-            for (Noticia n : noticias) {
-                n.setEquipoNoticia(null);
-                noticiaRepository.save(n);
-            }
-            e.get().getLiga().deleteEquipo(e.get());
-            equipoRepository.delete(e.get());
-        } else {
-            throw new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND);
+        Equipo e = equipoRepository.findByNombreNoEspacio(nombre)
+                .orElseThrow(() -> new EquipoNotFoundException("Equipo no encontrado", HttpStatus.NOT_FOUND));
+        List<User> usuariosEquipo = userRepository.findByEquiposSeguidos_NombreNoEspacio(nombre);
+        for (User user : usuariosEquipo) {
+            user.getEquiposSeguidos().remove(e);
+            userRepository.save(user);
         }
+
+        List<Noticia> noticias = noticiaRepository.findByEquipoNoticia_NombreNoEspacio(nombre);
+        for (Noticia n : noticias) {
+            n.setEquipoNoticia(null);
+            noticiaRepository.save(n);
+        }
+        e.getLiga().deleteEquipo(e);
+
+        equipoRepository.delete(e);
 
     }
 

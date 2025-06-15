@@ -45,6 +45,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { EquipoNombreFilterPipe } from './pipes/equipo-nombre-filter.pipe';
+import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { MatSelectModule } from '@angular/material/select';
     AdminComponent,
     AdminDeportesComponent,
     LigaDeporteFilterPipe,
-    AdminLigasComponent
+    AdminLigasComponent,
+    EquipoNombreFilterPipe,
+    AdminEquiposComponent
 
   ],
   imports: [
