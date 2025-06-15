@@ -33,4 +33,6 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
             nativeQuery = true)
     Page<Liga> findLigasFavoritasByUsername(@Param("username") String username, Pageable pageable);
 
+    List<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio);
+
 }

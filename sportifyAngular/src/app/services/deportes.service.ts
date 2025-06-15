@@ -26,4 +26,12 @@ export class DeportesService {
   getDeportesFavoritos(page: number, size: number) {
     return this.http.get<any>(`/deportesFavoritos?page=${page}&size=${size}`);
   }
+
+  eliminarDeporte(nombreNoEspacio: string) {
+    return this.http.delete(`/deporte/${nombreNoEspacio}`);
+  }
+
+  crearDeporte(formData: FormData) {
+    return this.http.post('/deporte', formData);
+  }
 }

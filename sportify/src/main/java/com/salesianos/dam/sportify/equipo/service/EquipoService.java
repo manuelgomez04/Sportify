@@ -8,6 +8,8 @@ import com.salesianos.dam.sportify.error.LigaNotFoundException;
 import com.salesianos.dam.sportify.files.model.FileMetadata;
 import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
+import com.salesianos.dam.sportify.noticia.model.Noticia;
+import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.Metadata;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class EquipoService {
     private final EquipoRepository equipoRepository;
     private final LigaRepository ligaRepository;
     private final StorageService storageService;
+    private final NoticiaRepository noticiaRepository; // Añade esta línea
 
 
     @Transactional
@@ -69,6 +72,12 @@ public class EquipoService {
         Optional<Equipo> e = equipoRepository.findByNombreNoEspacio(nombre);
 
         if (e.isPresent()) {
+            // Poner a null el campo equipo en todas las noticias que lo referencian
+            List<Noticia> noticias = noticiaRepository.findByEquipoNoticia_NombreNoEspacio(nombre);
+            for (Noticia n : noticias) {
+                n.setEquipoNoticia(null);
+                noticiaRepository.save(n);
+            }
             e.get().getLiga().deleteEquipo(e.get());
             equipoRepository.delete(e.get());
         } else {

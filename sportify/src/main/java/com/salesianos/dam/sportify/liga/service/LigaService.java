@@ -8,6 +8,9 @@ import com.salesianos.dam.sportify.files.service.StorageService;
 import com.salesianos.dam.sportify.liga.dto.CreateLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
+import com.salesianos.dam.sportify.noticia.model.Noticia;
+import com.salesianos.dam.sportify.noticia.repo.NoticiaRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ public class LigaService {
     private final LigaRepository ligaRepository;
     private final DeporteRepository deporteRepository;
     private final StorageService storageService;
+    private final NoticiaRepository noticiaRepository;
 
     @Transactional
     public Liga createLiga(CreateLigaRequest createLigaRequest, MultipartFile imagen) {
@@ -62,6 +66,13 @@ public class LigaService {
         Optional<Liga> liga = ligaRepository.findByNombreNoEspacio(nombre);
 
         if (liga.isPresent()) {
+            List<Noticia> noticias = noticiaRepository.findByLigaNoticia_NombreNoEspacio(nombre);
+            if (!noticias.isEmpty()) {
+                for (Noticia noticia : noticias) {
+                    noticia.setLigaNoticia(null);
+                    noticiaRepository.save(noticia);
+                }
+            }
             liga.get().getDeporte().deleteLiga(liga.get());
             ligaRepository.delete(liga.get());
         } else {

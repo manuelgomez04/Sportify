@@ -13,13 +13,17 @@ import { EquiposSeguidosComponent } from './components/equipos-seguidos/equipos-
 import { NoticiasFavoritasComponent } from './components/noticias-favoritas/noticias-favoritas.component';
 import { MisComentariosComponent } from './components/mis-comentarios/mis-comentarios.component';
 import { NuevaNoticiaComponent } from './components/nueva-noticia/nueva-noticia.component';
-import { WriterAdminGuard } from './guards/writer-admin.guard'; // crea este guard
+import { WriterAdminGuard } from './guards/writer-admin.guard'; 
 import { AuthGuard } from './guards/auth.guard';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
 import { DeportesComponent } from './components/deportes/deportes.component';
 import { LigasComponent } from './components/ligas/ligas.component';
 import { EquiposComponent } from './components/equipos/equipos.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminDeportesComponent } from './components/admin-deportes/admin-deportes.component';
+import { AdminGuard } from './guards/admin.guard';
+
 
 
 const routes: Routes = [
@@ -49,6 +53,8 @@ const routes: Routes = [
   { path: 'deportes', component: DeportesComponent },
   { path: 'ligas', component: LigasComponent },
   { path: 'equipos', component: EquiposComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
+  { path: 'admin/deportes', component: AdminDeportesComponent, canActivate: [AdminGuard] },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];

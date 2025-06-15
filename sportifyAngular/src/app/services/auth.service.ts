@@ -79,5 +79,9 @@ export class AuthService {
         return result;
     }
 
+    isAdmin(): boolean {
+        const roles = this.getRoles();
+        return roles.includes('ADMIN');
+    }
 
 }
