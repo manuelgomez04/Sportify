@@ -36,4 +36,5 @@ public interface EquipoRepository extends JpaRepository<Equipo, UUID> {
     Page<Equipo> findAllOrderByLigaNombre(Pageable pageable);
 
     List<Equipo> findByLiga_NombreNoEspacio(String nombreNoEspacio);
+
 }

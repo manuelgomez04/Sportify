@@ -35,37 +35,28 @@ public class EquipoController {
 
     private final EquipoService equipoService;
 
-
     @Operation(summary = "Crea un nuevo equipo")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Se ha creado el equipo",
-                    content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = GetEquipoDto.class))
-                    )}),
-            @ApiResponse(responseCode = "400",
-                    description = "No se ha creado una noticia",
-                    content = @Content),
+            @ApiResponse(responseCode = "201", description = "Se ha creado el equipo", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GetEquipoDto.class))) }),
+            @ApiResponse(responseCode = "400", description = "No se ha creado una noticia", content = @Content),
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<GetEquipoDto> createEquipo(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Cuerpo de la noticia", required = true,
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CreateNoticiaRequest.class),
-                    examples = @ExampleObject(value = """
-                               {
-                                   "nombre": "Recreativo de Huelva",
-                                   "nombreLiga":"laliga-easports",
-                                   "ciudad": "Huelva",
-                                   "pais": "España",
-                                   "fechaCreacion":"1889-01-01"
-                               }
-                            """))) @RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest, @RequestPart("escudo") MultipartFile escudo) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(GetEquipoDto.of(equipoService.createEquipo(createEquipoRequest, escudo)));
+    public ResponseEntity<GetEquipoDto> createEquipo(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Cuerpo de la noticia", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateNoticiaRequest.class), examples = @ExampleObject(value = """
+                       {
+                           "nombre": "Recreativo de Huelva",
+                           "nombreLiga":"laliga-easports",
+                           "ciudad": "Huelva",
+                           "pais": "España",
+                           "fechaCreacion":"1889-01-01"
+                       }
+                    """))) @RequestPart("equipo") @Valid CreateEquipoRequest createEquipoRequest,
+            @RequestPart("escudo") MultipartFile escudo) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(GetEquipoDto.of(equipoService.createEquipo(createEquipoRequest, escudo)));
     }
-
-   
 
     @GetMapping("/{nombreLiga}")
     public Page<GetEquipoDto> getEquiposPorLiga(@PathVariable String nombreLiga, Pageable pageable) {
@@ -82,5 +73,12 @@ public class EquipoController {
     @GetMapping("/paginados-por-liga")
     public Page<GetEquipoDto> getEquiposPaginadosPorLiga(Pageable pageable) {
         return equipoService.findAllOrderByLigaNombre(pageable).map(GetEquipoDto::of);
+    }
+
+    @GetMapping
+    public List<GetEquipoDto> getAllEquipos() {
+        return equipoService.getAllEquipos().stream()
+                .map(GetEquipoDto::of)
+                .toList();
     }
 }

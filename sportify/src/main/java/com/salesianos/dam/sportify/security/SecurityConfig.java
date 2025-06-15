@@ -87,6 +87,7 @@ public class SecurityConfig {
                                                 "/auth/login", "/auth/refresh/token", "/activate/account/", "/error")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/me/admin").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/equipo").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/admin/auth/register").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/me").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/me/writer").hasRole("WRITER")
