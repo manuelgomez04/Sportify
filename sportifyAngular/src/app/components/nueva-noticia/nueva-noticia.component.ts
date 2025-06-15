@@ -121,7 +121,7 @@ export class NuevaNoticiaComponent implements OnInit {
       formData.append('createNoticiaRequest', new Blob([JSON.stringify(noticiaDto)], { type: 'application/json' }));
       this.archivos.forEach(file => formData.append('files', file));
 
-      // Puedes mover esto a un servicio si lo prefieres
+      
       const noticiaResp: any = await fetch('/noticias', {
         method: 'POST',
         body: formData

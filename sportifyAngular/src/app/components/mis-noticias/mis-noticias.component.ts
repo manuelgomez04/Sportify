@@ -14,7 +14,7 @@ export class MisNoticiasComponent implements OnInit {
   size = 6;
   totalPages = 0;
 
-  // Edición
+
   editandoNoticia: Noticia | null = null;
   editTitular = '';
   editCuerpo = '';
@@ -23,7 +23,7 @@ export class MisNoticiasComponent implements OnInit {
   editError: string | null = null;
   editSuccess = false;
 
-  // Eliminación
+ 
   noticiaAEliminar: Noticia | null = null;
   deleteLoading = false;
   deleteError: string | null = null;

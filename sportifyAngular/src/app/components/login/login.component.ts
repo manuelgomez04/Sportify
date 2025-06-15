@@ -25,12 +25,11 @@ export class LoginComponent {
         next: (response) => {
           console.log('Login exitoso:', response);
 
-          // Guarda el usuario completo (incluyendo el token y roles en el JWT)
           localStorage.setItem('user', JSON.stringify(response));
           localStorage.setItem('accessToken', response.token);
           localStorage.setItem('refreshToken', response.refreshToken);
 
-          // Redirige SIEMPRE a /home tras login exitoso
+          
           this.router.navigate(['/home']);
         },
         error: (error) => {

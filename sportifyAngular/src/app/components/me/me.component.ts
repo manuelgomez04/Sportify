@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './me.component.html',
   styleUrls: ['./me.component.css']
 })
-export class MeComponent implements OnInit {
+export class MeComponent {
   userData: any = null;
   error: boolean = false;
 
@@ -18,9 +18,6 @@ export class MeComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit() {
-    // El guard ya protege la ruta, aquí puedes cargar datos si quieres
-  }
 
   logout() {
     this.authService.logout();
