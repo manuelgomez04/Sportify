@@ -29,14 +29,14 @@
                             <div class="col-auto">
                                 <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
                                     <small>
-                                        {{ noticia.equipo?.nombreEquipo || 'Sin equipo' }}
+                                        {{ noticia.equipo && noticia.equipo.nombreEquipo ? noticia.equipo.nombreEquipo : 'Sin equipo' }}
                                     </small>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="card card-body py-1 px-2 bg-light border-0 shadow-sm">
                                     <small>
-                                        {{ noticia.liga?.nombreLiga || 'Sin liga' }}
+                                        {{ noticia.liga && noticia.liga.nombreLiga ? noticia.liga.nombreLiga : 'Sin liga' }}
                                     </small>
                                 </div>
                             </div>
