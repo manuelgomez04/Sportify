@@ -20,6 +20,21 @@
   margin-left: auto;
   margin-right: auto;
 }
+.deporte-card {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  height: 260px;
+  min-height: 260px;
+  max-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 18px;
+}
 .heart-container {
   --heart-color: rgb(255, 91, 137);
   position: relative;

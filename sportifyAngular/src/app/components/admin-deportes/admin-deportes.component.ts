@@ -9,8 +9,9 @@ import { DeportesService } from '../../services/deportes.service';
 })
 export class AdminDeportesComponent implements OnInit {
   deportes: any[] = [];
+  filtro: string = '';
   page = 0;
-  size = 10;
+  pageSize = 10;
   totalPages = 0;
   deporteAEliminar: any = null;
   showDeleteModal = false;
@@ -22,11 +23,11 @@ export class AdminDeportesComponent implements OnInit {
   addError: string | null = null;
   addSuccess = false;
   imagenFile: File | null = null;
-  MAX_FILE_SIZE_MB = 5; // Tamaño máximo permitido en MB
+  MAX_FILE_SIZE_MB = 5; 
 
   constructor(
     private fb: FormBuilder,
-    private deportesService: DeportesService // Asegúrate de tener este servicio
+    private deportesService: DeportesService 
   ) {
     this.addDeporteForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -40,11 +41,41 @@ export class AdminDeportesComponent implements OnInit {
   }
 
   cargarDeportes(page: number) {
-    this.deportesService.getDeportes(page, this.size).subscribe(resp => {
+    this.page = page;
+    this.deportesService.getDeportes(0, 1000).subscribe(resp => {
       this.deportes = resp.content || [];
-      this.page = resp.number;
-      this.totalPages = resp.totalPages;
+      this.totalPages = Math.ceil(this.deportesFiltrados.length / this.pageSize);
     });
+  }
+
+  get deportesFiltrados() {
+    if (!this.filtro.trim()) return this.deportes;
+    const f = this.filtro.toLowerCase();
+    return this.deportes.filter(d =>
+      d.nombre?.toLowerCase().includes(f) ||
+      d.descripcion?.toLowerCase().includes(f)
+    );
+  }
+
+  get deportesPaginados() {
+    const start = this.page * this.pageSize;
+    return this.deportesFiltrados.slice(start, start + this.pageSize);
+  }
+
+  cambiarPagina(p: number) {
+    if (p >= 0 && p < this.totalPages) {
+      this.page = p;
+    }
+  }
+
+  ngDoCheck() {
+    const newTotalPages = Math.ceil(this.deportesFiltrados.length / this.pageSize);
+    if (this.totalPages !== newTotalPages) {
+      this.totalPages = newTotalPages;
+      if (this.page >= this.totalPages) {
+        this.page = 0;
+      }
+    }
   }
 
   abrirEliminar(deporte: any) {

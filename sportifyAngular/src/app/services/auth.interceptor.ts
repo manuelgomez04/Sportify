@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // No añadir Authorization si es para activar cuenta
     if (req.url.includes('/activate/account/')) {
       return next.handle(req);
     }

@@ -18,6 +18,41 @@
   margin-left: auto;
   margin-right: auto;
 }
+.liga-card {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  height: 260px;
+  min-height: 260px;
+  max-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.liga-card .card-body {
+  width: 100%;
+  padding: 1rem;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.liga-card .card-text {
+  max-height: 3.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
 .heart-container {
   --heart-color: rgb(255, 91, 137);
   position: relative;

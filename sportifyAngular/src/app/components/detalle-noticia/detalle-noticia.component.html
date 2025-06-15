@@ -16,12 +16,11 @@
     <span class="badge bg-light border text-dark">{{ noticia.equipo && noticia.equipo.nombreEquipo ? noticia.equipo.nombreEquipo : '' }}</span>
   </div>
   <div class="mb-4 text-center">
-    <!-- Carrusel solo si hay más de una imagen -->
     <ng-container *ngIf="noticia?.multimedia && noticia.multimedia.length > 1; else unaImagen">
-      <div id="noticiaCarrusel" class="carousel slide" style="max-width: 600px; margin: 0 auto;">
+      <div id="noticiaCarrusel" class="carousel slide" style="max-width: 750px; margin: 0 auto;">
         <div class="carousel-inner">
           <div *ngFor="let img of noticia.multimedia; let i = index" class="carousel-item" [class.active]="i === 0">
-            <img [src]="img" class="d-block w-100 rounded" style="max-height:350px; object-fit:cover;">
+            <img [src]="img" class="d-block w-100 rounded" style="max-height:420px; object-fit:cover;">
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#noticiaCarrusel" data-bs-slide="prev">
@@ -32,10 +31,9 @@
         </button>
       </div>
     </ng-container>
-    <!-- Si solo hay una imagen, muestra solo la imagen sin carrusel ni controles -->
     <ng-template #unaImagen>
       <img *ngIf="noticia?.multimedia && noticia.multimedia.length === 1" [src]="noticia.multimedia[0]"
-        class="img-fluid rounded" style="max-height:350px; object-fit:cover;">
+        class="img-fluid rounded" style="max-height:420px; object-fit:cover;">
     </ng-template>
   </div>
   <div class="mb-4 fs-5" style="white-space: pre-line;">

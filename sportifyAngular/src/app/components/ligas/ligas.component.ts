@@ -16,6 +16,7 @@ export class LigasComponent implements OnInit {
   ligaLikedIds: Set<string> = new Set();
   deporteFiltro: string | null = null;
   isLoggedIn = false;
+  descExpandida: boolean[] = []; 
 
   constructor(
     private ligasService: LigasService,
@@ -56,12 +57,14 @@ export class LigasComponent implements OnInit {
         this.ligas = resp.content || [];
         this.page = resp.number;
         this.totalPages = resp.totalPages;
+        this.descExpandida = new Array(this.ligas.length).fill(false); // reset
       });
     } else {
       this.ligasService.getLigas(page, this.size).subscribe(resp => {
         this.ligas = resp.content || [];
         this.page = resp.number;
         this.totalPages = resp.totalPages;
+        this.descExpandida = new Array(this.ligas.length).fill(false); // reset
       });
     }
   }

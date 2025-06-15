@@ -84,7 +84,6 @@ export class HomeComponent implements OnInit {
       page: this.page,
       size: this.size
     };
-    // Elimina filtros vacíos
     Object.keys(params).forEach(k => (params[k] === '' || params[k] == null) && delete params[k]);
 
     this.noticiasService.getNoticiasFiltradas(params).subscribe({
@@ -93,7 +92,6 @@ export class HomeComponent implements OnInit {
         this.noticiasPage = resp;
         this.noticias = (resp.content || []).map((noticia: { slug: string; }) => {
           const noticiaConLike = Object.assign({}, noticia);
-          // Usa slug para comprobar el like
           (noticiaConLike as any).liked = this.likedTitulares.has(noticia.slug);
           return noticiaConLike;
         });
@@ -178,7 +176,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // Llama a esto cuando cambie algún filtro
   onFiltroChange() {
     this.page = 0;
     this.cargarNoticias();

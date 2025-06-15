@@ -19,4 +19,8 @@ export class UserService {
   deleteUser(username: string) {
     return this.http.delete(`/admin/delete/${username}`);
   }
+
+  registerAdmin(formData: FormData) {
+    return this.http.post('/user/auth/register', formData);
+  }
 }

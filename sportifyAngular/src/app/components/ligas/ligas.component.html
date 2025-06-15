@@ -2,15 +2,30 @@
 <div class="container py-5">
   <h2 class="fw-bold mb-4">Ligas</h2>
   <div class="row g-4">
-    <div class="col-12 col-md-6 col-lg-4" *ngFor="let l of ligas">
-      <div class="card h-100 text-center shadow-sm"
+    <div *ngIf="ligas.length === 0" class="text-muted text-center py-5 w-100">
+      No se encontraron ligas
+    </div>
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let l of ligas; let i = index">
+      <div class="card liga-card h-100 text-center shadow-sm"
            style="cursor:pointer"
            (click)="verEquiposLiga(l.nombreSinEspacio)">
-        <img [src]="l.imagen || 'assets/default-league.png'" class="card-img-top mx-auto mt-3" style="width:80px; height:80px; object-fit:cover;" alt="{{l.nombre}}">
+        <img [src]="l.imagen || 'assets/default-league.png'" class="card-img-top mx-auto mt-3" style="width:120px; height:120px; object-fit:cover;" alt="{{l.nombre}}">
         <div class="card-body d-flex flex-column align-items-center">
           <h5 class="card-title">{{ l.nombre }}</h5>
           <div class="text-muted small mb-2">{{ l.deporteNombre }}</div>
-          <div class="card-text mb-2">{{ l.descripcion }}</div>
+          <div class="card-text mb-2" [ngClass]="{'clamp-text': !descExpandida[i]}">
+            {{ l.descripcion }}
+          </div>
+          <button *ngIf="l.descripcion && l.descripcion.length > 90 && !descExpandida[i]"
+                  class="btn btn-link p-0 mb-2"
+                  (click)="$event.stopPropagation(); descExpandida[i] = true">
+            Ver más
+          </button>
+          <button *ngIf="l.descripcion && l.descripcion.length > 90 && descExpandida[i]"
+                  class="btn btn-link p-0 mb-2"
+                  (click)="$event.stopPropagation(); descExpandida[i] = false">
+            Ver menos
+          </button>
           <div *ngIf="isLoggedIn" (click)="$event.stopPropagation()" class="mt-2">
             <div class="heart-container" title="Me gusta">
               <input type="checkbox" class="checkbox"
