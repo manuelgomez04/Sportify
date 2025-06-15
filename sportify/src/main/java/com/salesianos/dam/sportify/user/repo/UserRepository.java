@@ -28,4 +28,17 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByLigasSeguidas_NombreNoEspacio(String nombreNoEspacio);
     List<User> findByEquiposSeguidos_NombreNoEspacio(String nombreNoEspacio);
 
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.equiposSeguidos")
+    List<User> findAllWithEquiposSeguidos();
+
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.equiposSeguidos LEFT JOIN FETCH u.deportesSeguidos")
+    List<User> findAllWithEquiposAndDeportesSeguidos();
+
+    @Query("""
+        SELECT DISTINCT u FROM User u
+        LEFT JOIN FETCH u.equiposSeguidos
+        LEFT JOIN FETCH u.deportesSeguidos
+        LEFT JOIN FETCH u.ligasSeguidas
+    """)
+    List<User> findAllWithAllSeguidos();
 }

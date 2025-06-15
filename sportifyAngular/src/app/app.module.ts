@@ -47,6 +47,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { EquipoNombreFilterPipe } from './pipes/equipo-nombre-filter.pipe';
 import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.component';
+import { AdminUsuariosComponent } from './components/admin-usuarios/admin-usuarios.component';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -75,8 +77,8 @@ import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.
     LigaDeporteFilterPipe,
     AdminLigasComponent,
     EquipoNombreFilterPipe,
-    AdminEquiposComponent
-
+    AdminEquiposComponent,
+    AdminUsuariosComponent
   ],
   imports: [
     BrowserModule,
@@ -101,7 +103,8 @@ import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.
       multi: true
     },
     { provide: LocationStrategy, useClass: environment.useHash ? HashLocationStrategy : PathLocationStrategy },
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    UserService
   ],
   bootstrap: [AppComponent]
 })

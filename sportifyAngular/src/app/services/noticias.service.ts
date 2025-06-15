@@ -14,6 +14,7 @@ export interface NoticiasPage {
 
 @Injectable({ providedIn: 'root' })
 export class NoticiasService {
+
   constructor(private http: HttpClient) { }
 
   getNoticias(page: number = 0, size: number = 6): Observable<NoticiasPage> {
@@ -46,5 +47,9 @@ export class NoticiasService {
 
   enviarComentario(body: { titular: string; titulo: string; comentario: string }): Observable<any> {
     return this.http.post('/comentario', body);
+  }
+
+  getNoticiasFiltradas(params: any) {
+    return this.http.get<any>(`/noticias/filtradas`, { params });
   }
 }

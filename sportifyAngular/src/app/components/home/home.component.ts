@@ -18,6 +18,16 @@ export class HomeComponent implements OnInit {
   nombre: string | null = null;
   isLoggedIn = false;
   likedTitulares: Set<string> = new Set();
+  totalNoticias = 0;
+
+  filtros: any = {
+    slug: '',
+    fechaInicio: '',
+    fechaFin: '',
+    deporte: '',
+    liga: '',
+    username: ''
+  };
 
   constructor(
     private authService: AuthService,
@@ -55,17 +65,26 @@ export class HomeComponent implements OnInit {
   cargarNoticias(page: number = 0) {
     console.log('Llamando a /noticiasLiked...');
 
-    this.noticiasService.getNoticias(page, this.size).subscribe({
+    const params: any = {
+      ...this.filtros,
+      page: this.page,
+      size: this.size
+    };
+    // Elimina filtros vacíos
+    Object.keys(params).forEach(k => (params[k] === '' || params[k] == null) && delete params[k]);
+
+    this.noticiasService.getNoticiasFiltradas(params).subscribe({
       next: resp => {
         console.log('Respuesta de /noticiasLiked:', resp);
         this.noticiasPage = resp;
-        this.noticias = (resp.content || []).map(noticia => {
+        this.noticias = (resp.content || []).map((noticia: { slug: string; }) => {
           const noticiaConLike = Object.assign({}, noticia);
           // Usa slug para comprobar el like
           (noticiaConLike as any).liked = this.likedTitulares.has(noticia.slug);
           return noticiaConLike;
         });
         this.page = resp.number;
+        this.totalNoticias = resp.totalElements || 0;
       },
       error: err => {
         console.error('Error al cargar noticias:', err);
@@ -92,6 +111,26 @@ export class HomeComponent implements OnInit {
     }
     this.page = page;
     this.cargarNoticias(page);
+  }
+
+  setPage(p: number) {
+    if (p < 0) return;
+    this.page = p;
+    this.cargarNoticias();
+  }
+
+  nextPage() {
+    if ((this.page + 1) * this.size < this.totalNoticias) {
+      this.page++;
+      this.cargarNoticias();
+    }
+  }
+
+  prevPage() {
+    if (this.page > 0) {
+      this.page--;
+      this.cargarNoticias();
+    }
   }
 
   verDetalle(slug: string) {
@@ -123,5 +162,15 @@ export class HomeComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Llama a esto cuando cambie algún filtro
+  onFiltroChange() {
+    this.page = 0;
+    this.cargarNoticias();
+  }
+
+  getPagesArray() {
+    return Array(Math.ceil(this.totalNoticias / this.size)).fill(0);
   }
 }
