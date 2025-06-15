@@ -14,19 +14,16 @@
           <a class="nav-link" routerLink="/home" routerLinkActive="active">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/noticias" routerLinkActive="active">Noticias</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/equipos" routerLinkActive="active">Equipos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/ligas" routerLinkActive="active">Ligas</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/deportes" routerLinkActive="active">Deportes</a>
         </li>
+        <li class="nav-item" *ngIf="isLoggedIn && authService.isWriterOrAdmin()">
+          <a class="btn btn-primary me-2" routerLink="/nueva-noticia" style="margin-left: 1rem;">Nueva noticia</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn && authService.getRoles().includes('ADMIN')">
+          <a class="btn btn-dark me-2" routerLink="/admin">Admin</a>
+        </li>
       </ul>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center ms-auto">
         <button *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" routerLink="/me">Mi perfil</button>
         <button *ngIf="isLoggedIn" class="btn btn-outline-danger d-flex align-items-center" (click)="logout()"
           title="Cerrar sesión" style="padding: 0.375rem 0.75rem;">
@@ -41,14 +38,6 @@
         <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
         <button *ngIf="!isLoggedIn" class="btn btn-primary" routerLink="/register"
           style="margin-left: 0.5rem;">Registrarse</button>
-        <button *ngIf="isLoggedIn && authService.isWriterOrAdmin()" routerLink="/nueva-noticia"
-          class="btn btn-primary me-2">
-          Nueva noticia
-        </button>
-        <button *ngIf="isLoggedIn && authService.getRoles().includes('ADMIN')" class="btn btn-dark me-2"
-          routerLink="/admin">
-          Admin
-        </button>
       </div>
     </div>
   </div>

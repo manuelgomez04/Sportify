@@ -1,19 +1,4 @@
-/* Elimina cualquier regla de min-height, height, flex, overflow, etc. */
-/* No añadas reglas de Bootstrap ni de layout aquí. Deja solo Angular Material. */
 
-/* .mat-table {
-  min-height: 400px;
-} */
-
-/* Opcional: asegura que el contenedor de la tabla y el paginador no cambien de tamaño */
-/* .table-container-fixed {
-  min-height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-} */
-
-/* Elimina scroll y fuerza el ancho completo */
 :host ::ng-deep .mat-table {
   width: 100% !important;
   min-width: 0 !important;
@@ -23,14 +8,12 @@
   display: table;
 }
 
-/* El paginador debe estar siempre visible y no debe provocar scroll */
 :host ::ng-deep .mat-paginator {
   position: static !important;
   width: 100% !important;
   overflow: visible !important;
 }
 
-/* Elimina scroll del contenedor principal si lo hubiera */
 :host ::ng-deep .table-responsive,
 :host ::ng-deep .table-container-fixed {
   overflow: visible !important;
@@ -38,7 +21,6 @@
   min-height: 0 !important;
 }
 
-/* Opcional: elimina margen inferior para evitar saltos */
 :host ::ng-deep .mat-elevation-z8 {
   margin-bottom: 0 !important;
 }

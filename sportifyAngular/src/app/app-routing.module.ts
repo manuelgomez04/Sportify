@@ -49,7 +49,7 @@ const routes: Routes = [
   {
     path: 'nueva-noticia',
     component: NuevaNoticiaComponent,
-    canActivate: [WriterAdminGuard] // solo writers y admin pueden acceder
+    canActivate: [WriterAdminGuard] 
   },
   { path: 'mis-noticias', component: MisNoticiasComponent, canActivate: [WriterAdminGuard] },
   { path: 'noticias/:slug', component: DetalleNoticiaComponent },

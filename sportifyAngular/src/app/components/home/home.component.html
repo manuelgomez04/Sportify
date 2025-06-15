@@ -9,12 +9,10 @@
 
 
 
-<!-- Recent News -->
 <section class="bg-white py-5">
     <div class="container">
         <h2 class="fw-bold mb-4">Noticias recientes</h2>
 
-        <!-- Filtros -->
         <div class="row mb-3">
             <div class="col">
                 <input type="text" class="form-control" placeholder="Buscar por título"
@@ -133,7 +131,6 @@
             No hay noticias para mostrar.
         </div>
 
-        <!-- Paginación -->
         <nav *ngIf="totalNoticias > size" class="d-flex justify-content-center">
             <ul class="pagination">
                 <li class="page-item" [class.disabled]="page === 0">
@@ -152,7 +149,6 @@
     </div>
 </section>
 
-<!-- Modal de edición de noticia -->
 <div *ngIf="editandoNoticia" class="custom-modal-backdrop">
   <div class="custom-modal">
     <form (ngSubmit)="guardarEdicion()">

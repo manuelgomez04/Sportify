@@ -50,7 +50,6 @@
           [src]="noticia.multimedia[0]" class="d-none d-md-block rounded-end"
           style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
       </div>
-      <!-- Paginación -->
       <nav *ngIf="totalPages > 1" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="page === 0">
@@ -73,7 +72,6 @@
   </div>
 </section>
 
-<!-- Modal de edición -->
 <div *ngIf="editandoNoticia" class="custom-modal-backdrop">
   <div class="custom-modal">
     <form (ngSubmit)="guardarEdicion()">
@@ -108,7 +106,6 @@
   </div>
 </div>
 
-<!-- Modal de confirmación de borrado -->
 <div *ngIf="noticiaAEliminar" class="custom-modal-backdrop">
   <div class="custom-modal">
     <div class="modal-header">

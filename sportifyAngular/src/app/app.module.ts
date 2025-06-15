@@ -47,6 +47,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { EquipoNombreFilterPipe } from './pipes/equipo-nombre-filter.pipe';
 import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.component';
+import { AdminUsuariosComponent } from './components/admin-usuarios/admin-usuarios.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.
     LigaDeporteFilterPipe,
     AdminLigasComponent,
     EquipoNombreFilterPipe,
-    AdminEquiposComponent
+    AdminEquiposComponent,
+    AdminUsuariosComponent
     
   ],
   imports: [

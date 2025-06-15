@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
 }
@@ -54,6 +54,7 @@ body {
   overflow: hidden;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Asegura que la tarjeta ocupe todo el ancho disponible */
 }
 
 .card-img-top {
@@ -235,4 +236,9 @@ footer {
   font-size: 1.5rem;
   line-height: 1;
   float: right;
+}
+
+.display-4 {
+  font-size: 2rem !important;
+  font-weight: 600;
 }

@@ -59,4 +59,13 @@ th.mat-header-cell .mat-form-field {
   position: static !important;
 }
 
-/* Si tienes algún z-index alto en modales, navbar, etc, bájalo o ponlo solo en el modal */
+
+.mat-table th.mat-header-cell,
+.mat-table td.mat-cell {
+  vertical-align: middle !important;
+}
+
+.mat-table tr.mat-row,
+.mat-table tr.mat-header-row {
+  height: 56px;
+}

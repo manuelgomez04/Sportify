@@ -27,18 +27,18 @@ export class AuthService {
                 next: () => {
                     localStorage.clear();
                     this.authStateSubject.next(false);
-                    window.location.reload(); // Refresca la página tras logout
+                    window.location.reload(); 
                 },
                 error: () => {
                     localStorage.clear();
                     this.authStateSubject.next(false);
-                    window.location.reload(); // Refresca la página tras logout
+                    window.location.reload(); 
                 }
             });
         } else {
             localStorage.clear();
             this.authStateSubject.next(false);
-            window.location.reload(); // Refresca la página tras logout
+            window.location.reload(); 
         }
     }
 
@@ -53,7 +53,6 @@ export class AuthService {
     }
 
     isAuthenticated(): boolean {
-        // Mejor comprobar el token o el usuario real
         return !!localStorage.getItem('accessToken') || !!localStorage.getItem('user');
     }
 
