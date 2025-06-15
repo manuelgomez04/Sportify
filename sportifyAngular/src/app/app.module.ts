@@ -29,13 +29,22 @@ import { catchError } from 'rxjs/operators';
 import { AuthRedirectInterceptor } from './interceptors/auth-redirect.interceptor';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
 import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { environment } from '../environments/environment.development';
 import { DeportesComponent } from './components/deportes/deportes.component';
 import { LigasComponent } from './components/ligas/ligas.component';
 import { EquiposComponent } from './components/equipos/equipos.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminDeportesComponent } from './components/admin-deportes/admin-deportes.component';
+import { LigaDeporteFilterPipe } from './pipes/liga-deporte-filter.pipe';
+import { AdminLigasComponent } from './components/admin-ligas/admin-ligas.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -61,7 +70,9 @@ import { AdminDeportesComponent } from './components/admin-deportes/admin-deport
     EquiposComponent,
     AdminComponent,
     AdminDeportesComponent,
-    
+    LigaDeporteFilterPipe,
+    AdminLigasComponent
+
   ],
   imports: [
     BrowserModule,
@@ -69,7 +80,14 @@ import { AdminDeportesComponent } from './components/admin-deportes/admin-deport
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSortModule,
+    CommonModule,
+    MatSelectModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -78,7 +96,8 @@ import { AdminDeportesComponent } from './components/admin-deportes/admin-deport
       useClass: AuthRedirectInterceptor,
       multi: true
     },
-    { provide: LocationStrategy, useClass: environment.useHash ? HashLocationStrategy : PathLocationStrategy }
+    { provide: LocationStrategy, useClass: environment.useHash ? HashLocationStrategy : PathLocationStrategy },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

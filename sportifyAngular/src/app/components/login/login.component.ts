@@ -23,7 +23,7 @@ export class LoginComponent {
 
       this.userService.userLogin(body).subscribe({
         next: (response) => {
-          console.log('Login exitoso:', response);
+          
 
           localStorage.setItem('user', JSON.stringify(response));
           localStorage.setItem('accessToken', response.token);

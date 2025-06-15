@@ -1,0 +1,62 @@
+/* Soluciona el problema de posición del mat-select en la cabecera de la tabla */
+.mat-form-field {
+  width: 100%;
+  margin: 0;
+}
+
+.mat-select-panel {
+  z-index: 1050 !important; /* Asegura que el desplegable esté por encima de la tabla y modales */
+}
+
+/* Opcional: mejora el aspecto del filtro en la cabecera */
+th.mat-header-cell .mat-form-field {
+  min-width: 120px;
+  margin-top: 8px;
+}
+
+/* Opcional: corrige el stacking context si hay modales de Bootstrap */
+.cdk-overlay-container {
+  z-index: 2000 !important;
+}
+
+/* Soluciona problemas de clic en el paginator de Angular Material */
+.mat-paginator {
+  /* Elimina cualquier display:flex o justify-content si lo añadiste antes */
+  display: block !important;
+}
+
+.mat-paginator,
+.mat-paginator * {
+  pointer-events: auto !important;
+}
+
+/* Si tienes overlays personalizados, asegúrate de que no bloquean eventos */
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper,
+.cdk-overlay-pane {
+  pointer-events: auto !important;
+}
+
+/* Elimina cualquier overflow en el contenedor padre del paginador y la tabla */
+/* Si necesitas scroll horizontal, ponlo solo en la tabla, nunca en el div padre */
+
+.mat-table {
+  min-width: 700px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Asegura stacking context correcto para overlays de Angular Material */
+.container,
+.mat-table,
+.mat-form-field,
+.mat-select,
+.mat-select-panel,
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper,
+.cdk-overlay-pane {
+  z-index: auto !important;
+  position: static !important;
+}
+
+/* Si tienes algún z-index alto en modales, navbar, etc, bájalo o ponlo solo en el modal */

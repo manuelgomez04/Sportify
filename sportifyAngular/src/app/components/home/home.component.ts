@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { NoticiasService, NoticiasPage } from '../../services/noticias.service';
 import { Noticia } from '../../models/noticia/noticia.model';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private noticiasService: NoticiasService
+    private noticiasService: NoticiasService,
+    private http: HttpClient 
   ) { }
 
   ngOnInit() {
@@ -31,8 +33,10 @@ export class HomeComponent implements OnInit {
 
   cargarNoticiasYLikes(page: number = 0) {
     if (this.isLoggedIn) {
-      this.noticiasService.getNoticiasLiked().subscribe({
+      this.http.get<any>('/noticiasLiked').subscribe({
         next: resp => {
+            
+
           const likedNoticias = resp.noticiasLiked?.content || [];
           this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
           this.cargarNoticias(page);
@@ -49,17 +53,22 @@ export class HomeComponent implements OnInit {
   }
 
   cargarNoticias(page: number = 0) {
+    console.log('Llamando a /noticiasLiked...');
+
     this.noticiasService.getNoticias(page, this.size).subscribe({
       next: resp => {
+        console.log('Respuesta de /noticiasLiked:', resp);
         this.noticiasPage = resp;
         this.noticias = (resp.content || []).map(noticia => {
           const noticiaConLike = Object.assign({}, noticia);
+          // Usa slug para comprobar el like
           (noticiaConLike as any).liked = this.likedTitulares.has(noticia.slug);
           return noticiaConLike;
         });
         this.page = resp.number;
       },
       error: err => {
+        console.error('Error al cargar noticias:', err);
         this.noticias = [];
       }
     });
@@ -67,10 +76,13 @@ export class HomeComponent implements OnInit {
 
   getMultimediaUrl(url: string): string {
     if (!url) return '';
+
     const cleanUrl = url.trim();
+
     if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/download')) {
       return cleanUrl;
     }
+
     return '/download/' + cleanUrl;
   }
 

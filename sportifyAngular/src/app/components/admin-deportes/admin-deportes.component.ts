@@ -22,6 +22,7 @@ export class AdminDeportesComponent implements OnInit {
   addError: string | null = null;
   addSuccess = false;
   imagenFile: File | null = null;
+  MAX_FILE_SIZE_MB = 5; // Tamaño máximo permitido en MB
 
   constructor(
     private fb: FormBuilder,
@@ -101,19 +102,44 @@ export class AdminDeportesComponent implements OnInit {
   onImagenSelected(event: any) {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      this.imagenFile = file;
-      this.addDeporteForm.patchValue({ imagen: file });
+      if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+        this.addError = 'Archivo demasiado pesado';
+        this.imagenFile = null;
+        this.addDeporteForm.get('imagen')?.setErrors({ fileSize: true });
+        this.addLoading = false;
+      } else {
+        this.imagenFile = file;
+        this.addDeporteForm.patchValue({ imagen: file });
+        this.addDeporteForm.get('imagen')?.setErrors(null);
+        this.addError = null;
+        this.addLoading = false;
+      }
+    } else {
+      this.imagenFile = null;
+      this.addDeporteForm.patchValue({ imagen: null });
+      this.addDeporteForm.get('imagen')?.setErrors({ required: true });
+      this.addError = null;
+      this.addLoading = false;
     }
   }
 
   crearDeporte() {
     if (this.addDeporteForm.invalid || !this.imagenFile) {
-      this.addError = 'Completa todos los campos y selecciona una imagen';
+      if (this.addDeporteForm.get('imagen')?.hasError('fileSize')) {
+        this.addError = 'Archivo demasiado pesado';
+      } else {
+        this.addError = 'Completa todos los campos y selecciona una imagen';
+      }
+      this.addLoading = false;
+      return;
+    }
+    if (this.imagenFile.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+      this.addError = 'Archivo demasiado pesado';
+      this.addLoading = false;
       return;
     }
     this.addLoading = true;
     this.addError = null;
-    this.addSuccess = false;
 
     const formData = new FormData();
     const dto = {
@@ -125,12 +151,16 @@ export class AdminDeportesComponent implements OnInit {
 
     this.deportesService.crearDeporte(formData).subscribe({
       next: () => {
-        this.addSuccess = true;
         this.cerrarAddDeporte();
         this.cargarDeportes(this.page);
       },
-      error: () => {
-        this.addError = 'Error al crear el deporte';
+      error: (err) => {
+        if (err.status === 413) {
+          this.addError = 'Archivo demasiado pesado';
+        } else {
+          this.addError = 'Error al crear el deporte';
+        }
+        this.addLoading = false;
       },
       complete: () => {
         this.addLoading = false;

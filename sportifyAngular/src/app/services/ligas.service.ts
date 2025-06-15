@@ -30,4 +30,16 @@ export class LigasService {
   getLigasFavoritas(page: number, size: number) {
     return this.http.get<any>(`/ligasFavoritas?page=${page}&size=${size}`);
   }
+
+  getAllLigas() {
+    return this.http.get<any[]>('/liga');
+  }
+
+  eliminarLiga(nombreSinEspacio: string) {
+    return this.http.delete(`/liga/delete/${nombreSinEspacio}`);
+  }
+
+  crearLiga(formData: FormData) {
+    return this.http.post('/liga', formData);
+  }
 }
