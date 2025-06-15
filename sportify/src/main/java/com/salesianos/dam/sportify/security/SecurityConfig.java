@@ -126,6 +126,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/like/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/noticiasLiked").authenticated()
                                 .requestMatchers(HttpMethod.GET, "comentarios/username/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/users/all").hasRole("ADMIN")
                                 .requestMatchers("/auth/logout").permitAll()
                                 .anyRequest().authenticated());
 

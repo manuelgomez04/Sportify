@@ -25,6 +25,7 @@ import { AdminDeportesComponent } from './components/admin-deportes/admin-deport
 import { AdminGuard } from './guards/admin.guard';
 import { AdminLigasComponent } from './components/admin-ligas/admin-ligas.component';
 import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.component';
+import { AdminUsuariosComponent } from './components/admin-usuarios/admin-usuarios.component';
 
 
 
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'admin/deportes', component: AdminDeportesComponent, canActivate: [AdminGuard] },
   { path: 'admin/ligas', component: AdminLigasComponent, canActivate: [AdminGuard] },
   { path: 'admin/equipos', component: AdminEquiposComponent, canActivate: [AdminGuard] },
+  { path: 'admin/usuarios', component: AdminUsuariosComponent, canActivate: [AdminGuard] },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];

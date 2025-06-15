@@ -122,14 +122,16 @@ export class NuevaNoticiaComponent implements OnInit {
       this.archivos.forEach(file => formData.append('files', file));
 
       
+      const token = localStorage.getItem('accessToken');
       const noticiaResp: any = await fetch('/noticias', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined
       }).then(r => r.json());
       this.success = true;
       this.noticiaForm.reset();
       this.archivos = [];
-      setTimeout(() => this.router.navigate(['/noticias']), 1500);
+      setTimeout(() => this.router.navigate(['/home']), 1500);
     } catch (err: any) {
       this.error = 'Error al publicar la noticia';
     } finally {

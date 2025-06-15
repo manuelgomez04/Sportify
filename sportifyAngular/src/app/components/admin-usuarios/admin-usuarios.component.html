@@ -1,0 +1,88 @@
+<app-navbar></app-navbar>
+<div class="container py-5">
+  <h2 class="fw-bold mb-4">Gestión de usuarios</h2>
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Buscar" [(ngModel)]="filtro">
+  </div>
+  <table class="table table-bordered align-middle table-striped">
+    <thead class="table-light">
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuariosFiltrados">
+        <ng-container *ngIf="editando !== u.username; else editFormRow">
+          <td>{{ u.email }}</td>
+          <td>{{ u.nombre }}</td>
+          <td>
+            <span class="badge bg-secondary">
+              {{ u.roles ? u.roles.join(', ') : (u.username === 'admin_user' ? 'Admin' : 'Usuario') }}
+            </span>
+          </td>
+          <td>
+            <a href="#" (click)="abrirEditar(u); $event.preventDefault()" class="me-2">Modificar</a> |
+            <a href="#" (click)="abrirEliminar(u); $event.preventDefault()">Eliminar</a>
+          </td>
+        </ng-container>
+        <ng-template #editFormRow>
+          <td colspan="4">
+            <form [formGroup]="editForm" (ngSubmit)="guardarEdicion(u)" class="row g-2 align-items-end">
+              <div class="col-md-3">
+                <label class="form-label mb-1">Nombre</label>
+                <input formControlName="nombre" class="form-control" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label mb-1">Email</label>
+                <input formControlName="email" class="form-control" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label mb-1">Verificar Email</label>
+                <input formControlName="verifyEmail" class="form-control" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label mb-1">Contraseña</label>
+                <input formControlName="password" type="password" class="form-control" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label mb-1">Verificar Contraseña</label>
+                <input formControlName="verifyPassword" type="password" class="form-control" />
+              </div>
+              <div class="col-md-3 d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">Guardar</button>
+                <button type="button" class="btn btn-secondary" (click)="cerrarEditar()">Cancelar</button>
+              </div>
+            </form>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade show" tabindex="-1"
+     [ngStyle]="{'display': usuarioAEliminar ? 'block' : 'none', 'background': usuarioAEliminar ? 'rgba(0,0,0,0.5)' : 'none'}"
+     *ngIf="usuarioAEliminar">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar eliminación</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarEliminar()"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que quieres eliminar el usuario <strong>{{ usuarioAEliminar?.username }}</strong>?</p>
+        <div *ngIf="deleteError" class="alert alert-danger">{{ deleteError }}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarEliminar()" [disabled]="deleteLoading">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="eliminarUsuarioConfirmado()" [disabled]="deleteLoading">
+          {{ deleteLoading ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

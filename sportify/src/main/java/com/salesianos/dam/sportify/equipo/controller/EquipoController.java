@@ -82,3 +82,4 @@ public class EquipoController {
                 .toList();
     }
 }
+// No hay problema en este controlador respecto a /noticias, aquí solo gestionas /equipo
