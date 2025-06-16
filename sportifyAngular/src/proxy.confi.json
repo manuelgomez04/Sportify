@@ -1,0 +1,154 @@
+{
+  "/auth": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+
+  "/me": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/noticias": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+
+  "/download/": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/deporte": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/liga": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/equipo": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/user":{
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/writer":{
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/admin": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  
+  "/user/auth": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/writer/auth": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/activate/account/": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/edit/me": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/delete/me": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/comentario": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/like": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/seguirDeporte": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/unfollowDeporte": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/seguirLiga": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/unfollowLiga": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/seguirEquipo": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/unfollowEquipo": {
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/users":{
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/edit":{
+    "target": "http://app:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+  
+}
+

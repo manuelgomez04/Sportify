@@ -38,7 +38,6 @@ public record GetNoticiaDto(
                 n.getEquipoNoticia() != null ? GetNombreEquipoDto.of(n.getEquipoNoticia()) : null,
                 n.getDeporteNoticia() != null ? GetNombreDeporteDto.of(n.getDeporteNoticia()) : null,
                 n.getLigaNoticia() != null ? GetNombreLiga.of(n.getLigaNoticia()) : null,
-
                 n.getSlug()
         );
     }

@@ -1,1 +1,34 @@
-/* Puedes agregar estilos personalizados aquí si lo necesitas */
+.navbar {
+  min-height: 72px;
+  font-size: 1.25rem;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.navbar-brand {
+  font-size: 2rem !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.nav-link {
+  font-size: 1.15rem !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.btn, .btn-outline-primary, .btn-outline-danger, .btn-success, .btn-primary, .btn-dark {
+  font-size: 1.1rem !important;
+  padding: 0.6rem 1.3rem !important;
+}
+
+.navbar-toggler {
+  font-size: 1.5rem;
+  padding: 0.7rem 1.2rem;
+}
+
+img[alt="Sportify Logo"] {
+  height: 48px !important;
+  margin-right: 16px !important;
+}
+

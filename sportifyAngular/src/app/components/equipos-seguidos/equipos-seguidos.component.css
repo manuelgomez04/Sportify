@@ -87,3 +87,14 @@
   color: white;
   fill: white;
 }
+.equipo-card-fixed {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  min-height: 180px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

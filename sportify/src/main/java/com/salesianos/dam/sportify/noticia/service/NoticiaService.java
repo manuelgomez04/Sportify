@@ -223,9 +223,14 @@ public class NoticiaService {
 
     }
 
+
+    @Transactional
     public NoticiaWithComentarios findNoticiaWithComentariosBySlug(String slug, Pageable pageable) {
         Noticia noticia = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        Hibernate.initialize(noticia.getLikes());
+        Hibernate.initialize(noticia.getComentarios());
 
         Page<Comentario> comentarios = comentarioRepository.findByNoticiaSlug(slug, pageable);
         return new NoticiaWithComentarios(noticia, comentarios);

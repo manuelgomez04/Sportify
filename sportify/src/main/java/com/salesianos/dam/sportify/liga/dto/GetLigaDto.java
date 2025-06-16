@@ -10,7 +10,10 @@ public record GetLigaDto(
         String descripcion,
         String nombreDeporte,
         String nombreSinEspacio,
-        String imagen
+        String imagen,
+        String deporteNoEspacio,
+        String deporteNombre
+
 ) {
 
     public static GetLigaDto of(Liga l) {
@@ -20,7 +23,9 @@ public record GetLigaDto(
                 l.getDescripcion(),
                 l.getDeporte().getNombreNoEspacio(),
                 l.getNombreNoEspacio(),
-                l.getImagen()
+                l.getImagen(),
+                l.getDeporte().getNombreNoEspacio(),
+                l.getDeporte().getNombre()
         );
     }
 }

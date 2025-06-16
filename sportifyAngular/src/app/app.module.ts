@@ -7,7 +7,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NoticiasComponent } from './components/noticias/noticias.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -29,12 +28,31 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthRedirectInterceptor } from './interceptors/auth-redirect.interceptor';
 import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.component';
+import { DetalleNoticiaComponent } from './components/detalle-noticia/detalle-noticia.component';
+import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { environment } from '../environments/environment.development';
+import { DeportesComponent } from './components/deportes/deportes.component';
+import { LigasComponent } from './components/ligas/ligas.component';
+import { EquiposComponent } from './components/equipos/equipos.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminDeportesComponent } from './components/admin-deportes/admin-deportes.component';
+import { LigaDeporteFilterPipe } from './pipes/liga-deporte-filter.pipe';
+import { AdminLigasComponent } from './components/admin-ligas/admin-ligas.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
+import { EquipoNombreFilterPipe } from './pipes/equipo-nombre-filter.pipe';
+import { AdminEquiposComponent } from './components/admin-equipos/admin-equipos.component';
+import { AdminUsuariosComponent } from './components/admin-usuarios/admin-usuarios.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    NoticiasComponent,
     HomeComponent,
     NavbarComponent,
     RegisterComponent,
@@ -48,7 +66,18 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
     NoticiasFavoritasComponent,
     MisComentariosComponent,
     NuevaNoticiaComponent,
-    MisNoticiasComponent
+    MisNoticiasComponent,
+    DetalleNoticiaComponent,
+    DeportesComponent,
+    LigasComponent,
+    EquiposComponent,
+    AdminComponent,
+    AdminDeportesComponent,
+    LigaDeporteFilterPipe,
+    AdminLigasComponent,
+    EquipoNombreFilterPipe,
+    AdminEquiposComponent,
+    AdminUsuariosComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +85,14 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSortModule,
+    CommonModule,
+    MatSelectModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -64,7 +100,9 @@ import { MisNoticiasComponent } from './components/mis-noticias/mis-noticias.com
       provide: HTTP_INTERCEPTORS,
       useClass: AuthRedirectInterceptor,
       multi: true
-    }
+    },
+    { provide: LocationStrategy, useClass: environment.useHash ? HashLocationStrategy : PathLocationStrategy },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

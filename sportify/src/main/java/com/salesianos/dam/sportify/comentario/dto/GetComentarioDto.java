@@ -12,6 +12,7 @@ public record GetComentarioDto(
         GetTitularDto noticia,
         String comentario,
         String titular,
+        
         LocalDateTime fecha
 ) {
     public static GetComentarioDto of(Comentario c) {
