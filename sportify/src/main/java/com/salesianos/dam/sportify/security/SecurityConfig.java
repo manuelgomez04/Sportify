@@ -92,6 +92,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/me").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/me/writer").hasRole("WRITER")
                                 .requestMatchers(HttpMethod.PUT, "/edit/me").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/edit/password").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/edit/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/liga/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/delete/me").hasAnyRole("USER", "WRITER", "ADMIN")

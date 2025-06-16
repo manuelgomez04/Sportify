@@ -12,16 +12,10 @@ import java.time.LocalDate;
 
 
 @FieldsValueMatch.List({
-        @FieldsValueMatch(field = "password", fieldMatch = "verifyPassword", message = "Las contraseñas no coinciden"),
         @FieldsValueMatch(field = "email", fieldMatch = "verifyEmail", message = "Los emails no coinciden")
 })
 public record EditUserDto(
-        @StrongPassword(message = "{createUserRequest.password.strongPassword}")
-        @NotBlank(message = "{createUserRequest.password.notBlank}")
-        String password,
-
-        @NotBlank(message = "{createUserRequest.verifyPassword.notBlank}")
-        String verifyPassword,
+     
 
         @NotBlank(message = "{createUserRequest.email.notBlank}")
         @Email(message = "{createUserRequest.email.invalid}")
