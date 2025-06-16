@@ -136,14 +136,12 @@ public class UserService {
 
         return userRepository.findFirstByUsername(username.getUsername())
                 .map(user -> {
-                    // Guardar la imagen solo si se ha subido una nueva
                     if (profileImage != null && !profileImage.isEmpty()) {
                         FileMetadata fileMetadata = storageService.store(profileImage);
                         String imageUrl = fileMetadata.getFilename();
                         user.setProfileImage(imageUrl);
                     }
                     if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
-                        // Comprobar si el email ya existe en otro usuario
                         if (userRepository.existsByEmail(updatedUser.email())) {
                             throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en uso");
                         }
