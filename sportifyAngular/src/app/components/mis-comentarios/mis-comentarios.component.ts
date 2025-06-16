@@ -124,6 +124,11 @@ export class MisComentariosComponent implements OnInit {
     this.eliminandoComentario = null;
     this.deleteError = null;
   }
+  getFotoPerfilUrl(fotoPerfil: string | null): string {
+    if (!fotoPerfil) return 'assets/default-profile.png';
+    if (fotoPerfil.startsWith('http')) return fotoPerfil;
+    return '/download/' + fotoPerfil;
+  }
 
   eliminarComentarioConfirmado() {
     if (!this.eliminandoComentario) return;

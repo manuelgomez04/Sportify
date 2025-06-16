@@ -121,6 +121,11 @@ export class DetalleNoticiaComponent implements OnInit {
     });
   }
 
+  getFotoPerfilUrl(fotoPerfil: string | null): string {
+    if (!fotoPerfil) return 'assets/default-profile.png';
+    if (fotoPerfil.startsWith('http')) return fotoPerfil;
+    return '/download/' + fotoPerfil;
+  }
   toggleLikeDetalle(noticia: any, event: Event) {
     event.stopPropagation();
     const wasLiked = this.likedTitulares.has(noticia.slug);
