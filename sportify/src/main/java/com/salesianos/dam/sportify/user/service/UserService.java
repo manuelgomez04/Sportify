@@ -13,6 +13,7 @@ import com.salesianos.dam.sportify.liga.dto.FollowLigaRequest;
 import com.salesianos.dam.sportify.liga.model.Liga;
 import com.salesianos.dam.sportify.liga.repo.LigaRepository;
 import com.salesianos.dam.sportify.user.dto.CreateUserRequest;
+import com.salesianos.dam.sportify.user.dto.EditPasswordDto;
 import com.salesianos.dam.sportify.user.dto.EditUserDto;
 import com.salesianos.dam.sportify.user.dto.GetUserNoAsociacionesDto;
 import com.salesianos.dam.sportify.user.error.ActivationExpiredException;
@@ -148,9 +149,7 @@ public class UserService {
                         }
                         user.setEmail(updatedUser.email());
                     }
-                    if (updatedUser.password() != null) {
-                        user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    }
+                    
                     if (updatedUser.nombre() != null) {
                         user.setNombre(updatedUser.nombre());
                     }
@@ -169,13 +168,25 @@ public class UserService {
     }
 
     @Transactional
+    public User editPassword(User user, EditPasswordDto editPasswd){
+        return userRepository.findFirstByUsername(user.getUsername())
+                .map(u -> {
+                    if (editPasswd.oldPassword() != null && passwordEncoder.matches(editPasswd.oldPassword(), u.getPassword())) {
+                        u.setPassword(passwordEncoder.encode(editPasswd.password()));
+                    } else {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña antigua no coincide");
+                    }
+                    return userRepository.save(u);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+    }
+
+    @Transactional
     public User editUser(String username, EditUserDto updatedUser) {
 
         return userRepository.findFirstByUsername(username)
                 .map(user -> {
-                    if (updatedUser.password() != null) {
-                        user.setPassword(passwordEncoder.encode(updatedUser.password()));
-                    }
                     if (updatedUser.email() != null) {
                         user.setEmail(updatedUser.email());
                     }

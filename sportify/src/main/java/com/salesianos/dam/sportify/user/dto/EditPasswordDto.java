@@ -8,11 +8,15 @@ import jakarta.validation.constraints.NotBlank;
 
 
 public record EditPasswordDto(
+        @NotBlank(message = "{createUserRequest.password.notBlank}")
+        String oldPassword,
         @StrongPassword(message = "{createUserRequest.password.strongPassword}")
         @NotBlank(message = "{createUserRequest.password.notBlank}")
         String password,
 
         @NotBlank(message = "{createUserRequest.verifyPassword.notBlank}")
-        String verifyPassword,
+        String verifyPassword
+
+
 ) {
 }

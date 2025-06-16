@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -219,6 +220,21 @@ public class UserController {
 
         User updatedUser = userService.editMe(user, createUserRequest, profileImageFile);
         return GetUsuarioDto.of(updatedUser);
+    }
+
+    @PutMapping("/edit/password")
+    public ResponseEntity<?> upodatePassword(@AuthenticationPrincipal User user,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Cuerpo de la petición", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = EditPasswordDto.class), examples = @ExampleObject(value = """
+                        {
+                         "oldPassword": "Password12345.",
+                          "password": "Password12345,",
+                          "verifyPassword": "Password12345,"
+                         
+                        }
+                    """))) @RequestBody @Valid EditPasswordDto editPasswordDto) {
+
+        User updatedUser = userService.editPassword(user, editPasswordDto);
+    return ResponseEntity.ok(Map.of("message", "Contraseña actualizada correctamente"));
     }
 
     @Operation(summary = "Edita a un usuario buscado por username")
