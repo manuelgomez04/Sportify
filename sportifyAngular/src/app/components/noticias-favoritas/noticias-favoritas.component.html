@@ -76,8 +76,8 @@
           <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small></p>
         </div>
         <img *ngIf="noticia.multimedia && noticia.multimedia.length > 0"
-          [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
-          style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
+                    [src]="getMultimediaUrl(noticia.multimedia[0])" class="d-none d-md-block rounded-end"
+                    style="width:320px; height:100%; object-fit:cover; min-width:220px; max-width:320px;" alt="Noticia">
       </div>
       <nav *ngIf="totalPages > 1" class="mt-4">
         <ul class="pagination justify-content-center">

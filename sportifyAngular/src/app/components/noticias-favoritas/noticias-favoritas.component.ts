@@ -87,12 +87,19 @@ export class NoticiasFavoritasComponent implements OnInit {
     }
   }
 
-  getMultimediaUrl(url: string): string {
+   getMultimediaUrl(url: string): string {
     if (!url) return '';
+
     const cleanUrl = url.trim();
+
+    if (cleanUrl.startsWith('http://app:8080')) {
+      return cleanUrl.replace('http://app:8080', window.location.origin);
+    }
+
     if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/download')) {
       return cleanUrl;
     }
+
     return '/download/' + cleanUrl;
   }
 
