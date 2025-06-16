@@ -1,150 +1,150 @@
 {
   "/auth": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
 
   "/me": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/noticias": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
 
   "/download/": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/deporte": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/liga": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/equipo": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/user":{
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/writer":{
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/admin": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   
   "/user/auth": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true
   },
   "/writer/auth": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true
   },
   "/activate/account/": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true
   },
   "/edit/me": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/delete/me": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/comentario": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/like": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/seguirDeporte": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/unfollowDeporte": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/seguirLiga": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/unfollowLiga": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/seguirEquipo": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/unfollowEquipo": {
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/users":{
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/edit":{
-    "target": "http://localhost:8080",
+    "target": "http://app:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
