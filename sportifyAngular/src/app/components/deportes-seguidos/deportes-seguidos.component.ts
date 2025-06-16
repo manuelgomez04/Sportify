@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { DeportesService } from '../../services/deportes.service';
 
 @Component({
   selector: 'app-deportes-seguidos',
@@ -11,14 +11,15 @@ export class DeportesSeguidosComponent implements OnInit {
   page = 0;
   size = 4;
   totalPages = 0;
-  constructor(private http: HttpClient) { }
+
+  constructor(private deportesService: DeportesService) { }
 
   ngOnInit() {
     this.cargarDeportes(0);
   }
 
   cargarDeportes(page: number) {
-    this.http.get<any>(`/deportesFavoritos?page=${page}&size=${this.size}`).subscribe({
+    this.deportesService.getDeportesFavoritos(page, this.size).subscribe({
       next: resp => {
         this.deportes = resp.deportesFavoritos?.content || [];
         this.page = resp.deportesFavoritos?.number || 0;

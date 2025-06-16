@@ -1,4 +1,4 @@
-export interface EditUser {
+export interface EditUserRequest {
   password: string;
   verifyPassword: string;
   email: string;

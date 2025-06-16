@@ -47,15 +47,14 @@ export class RegisterComponent {
     this.fieldErrors = {};
     if (this.registerForm.valid) {
       const formData = new FormData();
-      // Construye el objeto de usuario (sin el archivo)
+      
       const userObj: any = { ...this.registerForm.value };
       delete userObj.profileImage;
-      // Añade el objeto como JSON en el campo que espera el backend, usando Blob para el tipo correcto
+      
       formData.append(
         'createUserRequest',
         new Blob([JSON.stringify(userObj)], { type: 'application/json' })
       );
-      // Añade el archivo si existe, usando el nombre original del archivo
       if (this.registerForm.value.profileImage instanceof File) {
         const file: File = this.registerForm.value.profileImage;
         formData.append('profileImage', file, file.name || 'profileImage.jpg');
@@ -65,13 +64,11 @@ export class RegisterComponent {
         error: err => {
           this.fieldErrors = {};
           if (err.error) {
-            // Passay: errores de contraseña en inglés, suelen contener "Password must"
             const isPassayError = (msg: string) =>
               msg.includes('Password must') ||
               msg.includes('Password must be') ||
               msg.includes('Password must contain');
 
-            // invalid-params (RFC 7807)
             if (err.error['invalid-params'] && Array.isArray(err.error['invalid-params'])) {
               err.error['invalid-params'].forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.message)) {
@@ -85,7 +82,6 @@ export class RegisterComponent {
                 }
               });
             }
-            // Spring Validation: errors: [{field: "...", defaultMessage: "..."}]
             else if (err.error.errors && Array.isArray(err.error.errors)) {
               err.error.errors.forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.defaultMessage || e.message || '')) {
@@ -99,7 +95,6 @@ export class RegisterComponent {
                 }
               });
             }
-            // Array de errores
             else if (Array.isArray(err.error)) {
               err.error.forEach((e: any) => {
                 if (e.field === 'password' && isPassayError(e.defaultMessage || e.message || '')) {
@@ -113,11 +108,11 @@ export class RegisterComponent {
                 }
               });
             }
-            // Mensaje simple (string)
+      
             else if (typeof err.error === 'string' && isPassayError(err.error)) {
               this.error = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
             }
-            // Mensaje en 'message'
+         
             else if (err.error.message && isPassayError(err.error.message)) {
               this.error = 'La contraseña debe tener mínimo 8 caracteres, una mayúscula y un caracter especial';
             }

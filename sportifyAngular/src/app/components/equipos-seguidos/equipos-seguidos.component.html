@@ -1,7 +1,7 @@
 <h4 class="mt-4 mb-3">Equipos</h4>
-<div class="d-flex align-items-center justify-content-center" style="min-height: 220px;">
+<div class="d-flex align-items-center justify-content-between" style="min-height: 220px;">
     <li class="icon black" (click)="scrollLeft()" [class.disabled]="atStart"
-        [ngStyle]="{'list-style':'none', 'margin-right':'16px', 'align-self':'stretch', 'display':'flex', 'align-items':'center', 'pointer-events': atStart ? 'none' : 'auto'}">
+        [ngStyle]="{'list-style':'none', 'margin-right':'0', 'align-self':'center', 'display':'flex', 'align-items':'center', 'pointer-events': atStart ? 'none' : 'auto'}">
         <span class="tooltip">Left</span>
         <span>
             <svg viewBox="0 0 16 16" class="bi bi-chevron-double-left" fill="currentColor" height="24" width="24"
@@ -15,18 +15,17 @@
             </svg>
         </span>
     </li>
-    <div class="flex-grow-1 d-flex justify-content-center" style="overflow: hidden;">
-        <div class="d-flex flex-row justify-content-center" style="gap: 1rem; width: 100%;">
-            <div class="card text-center shadow-sm border-0 p-3 flex-fill" style="min-width:0; max-width:220px;"
-                *ngFor="let equipo of visibleEquipos">
+    <div class="d-flex flex-row justify-content-center align-items-center" style="gap: 1rem; width: auto; flex:1;">
+        <ng-container *ngFor="let equipo of visibleEquipos">
+            <div class="card text-center shadow-sm border-0 p-3 flex-fill equipo-card-fixed">
                 <img [src]="equipo.escudo" alt="{{ equipo.nombreEquipo }}"
-                    style="width:80px; height:80px; object-fit:contain; margin:auto;">
+                    style="width:100px; height:100px; object-fit:contain; margin:auto;">
                 <div class="mt-2 fw-bold">{{ equipo.nombreEquipo }}</div>
             </div>
-        </div>
+        </ng-container>
     </div>
     <li class="icon black" (click)="scrollRight()" [class.disabled]="atEnd"
-        [ngStyle]="{'list-style':'none', 'margin-left':'16px', 'align-self':'stretch', 'display':'flex', 'align-items':'center', 'pointer-events': atEnd ? 'none' : 'auto'}">
+        [ngStyle]="{'list-style':'none', 'margin-left':'0', 'align-self':'center', 'display':'flex', 'align-items':'center', 'pointer-events': atEnd ? 'none' : 'auto'}">
         <span class="tooltip">Right</span>
         <span>
             <svg viewBox="0 0 16 16" class="bi bi-chevron-double-right" fill="currentColor" height="24" width="24"

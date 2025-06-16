@@ -1,8 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold d-flex align-items-center" routerLink="/home">
-      <img src="/assets/logo.png" alt="Sportify Logo"
-           style="height:32px; margin-right:10px;">
+      <img src="/assets/logo.png" alt="Sportify Logo" style="height:32px; margin-right:10px;">
       Sportify
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -15,34 +14,30 @@
           <a class="nav-link" routerLink="/home" routerLinkActive="active">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/noticias" routerLinkActive="active">Noticias</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/equipos" routerLinkActive="active">Equipos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/ligas" routerLinkActive="active">Ligas</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/deportes" routerLinkActive="active">Deportes</a>
         </li>
+        <li class="nav-item" *ngIf="isLoggedIn && authService.isWriterOrAdmin()">
+          <a class="btn btn-primary me-2" routerLink="/nueva-noticia" style="margin-left: 1rem;">Nueva noticia</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn && authService.getRoles().includes('ADMIN')">
+          <a class="btn btn-dark me-2" routerLink="/admin">Admin</a>
+        </li>
       </ul>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center ms-auto">
         <button *ngIf="isLoggedIn" class="btn btn-outline-primary me-2" routerLink="/me">Mi perfil</button>
-        <button *ngIf="isLoggedIn" class="btn btn-outline-danger d-flex align-items-center" (click)="logout()" title="Cerrar sesión" style="padding: 0.375rem 0.75rem;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+        <button *ngIf="isLoggedIn" class="btn btn-outline-danger d-flex align-items-center" (click)="logout()"
+          title="Cerrar sesión" style="padding: 0.375rem 0.75rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+            class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+            <path fill-rule="evenodd"
+              d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
           </svg>
         </button>
         <button *ngIf="!isLoggedIn" class="btn btn-success" routerLink="/login">Iniciar sesión</button>
-        <button *ngIf="!isLoggedIn" class="btn btn-primary" routerLink="/register" style="margin-left: 0.5rem;">Registrarse</button>
-        <button
-          *ngIf="isLoggedIn && authService.isWriterOrAdmin()"
-          routerLink="/nueva-noticia"
-          class="btn btn-primary me-2">
-          Nueva noticia
-        </button>
+        <button *ngIf="!isLoggedIn" class="btn btn-primary" routerLink="/register"
+          style="margin-left: 0.5rem;">Registrarse</button>
       </div>
     </div>
   </div>

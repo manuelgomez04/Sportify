@@ -354,7 +354,7 @@ public class NoticiaController {
 
     }
 
-    @Operation(summary = "Obtiene todas las noticias escritas por un usuario (solo admin)")
+        @Operation(summary = "Obtiene todas las noticias escritas por un usuario (solo admin)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Se han encontrado las noticias", content = {
             @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GetNoticiaNoAuthDto.class)),
@@ -406,5 +406,4 @@ public class NoticiaController {
         return noticiaService.findNoticiasByUsername(user.getUsername(), pageable)
                 .map(GetNoticiaNoAuthDto::of);
     }
-
 }

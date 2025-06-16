@@ -35,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -194,9 +195,21 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(GetUserNoAsociacionesDto user) {
-        Optional<User> u = userRepository.findFirstByUsername(user.username());
+    public void deleteUser(String user) {
+        Optional<User> u = userRepository.findFirstByUsername(user);
 
+        if (u.isPresent()) {
+            u.get().setDeleted(true);
+            u.get().setEmail(null);
+            userRepository.save(u.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
+    }
+
+    @Transactional
+    public void deleteMe(GetUserNoAsociacionesDto user) {
+        Optional<User> u = userRepository.findFirstByUsername(user.username());
         if (u.isPresent()) {
             u.get().setDeleted(true);
             u.get().setEmail(null);
@@ -346,6 +359,22 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         return user;
+    }
+
+    @Transactional
+    public List<User> findAllWithEquiposAndDeportesSeguidos() {
+        return userRepository.findAllWithEquiposAndDeportesSeguidos();
+    }
+
+    @Transactional
+    public List<User> findAllUsers() {
+        List<User> users = userRepository.findAllWithEquiposSeguidos();
+        return users;
+    }
+
+    @Transactional
+    public List<User> findAllWithAllSeguidos() {
+        return userRepository.findAllWithAllSeguidos();
     }
 
 }

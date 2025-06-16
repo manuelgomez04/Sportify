@@ -87,3 +87,58 @@
   color: white;
   fill: white;
 }
+.liga-card-fixed {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  min-height: 180px;
+  height: 240px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 48px; 
+  background: #fff;
+}
+
+.liga-card-fixed .mt-2.fw-bold,
+.liga-card-fixed .fw-bold {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liga-card-fixed .heart-container {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.liga-card-fixed .liga-desc,
+.liga-card-fixed .card-text {
+  max-height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  margin-bottom: 0.5rem;
+}
+.liga-img-fixed {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  margin: auto;
+  display: block;
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Noticia } from '../../models/noticia/noticia.model';
+import { Router } from '@angular/router';
+import { MisNoticiasService } from '../../services/mis-noticias.service';
 
 @Component({
   selector: 'app-mis-noticias',
@@ -13,7 +14,7 @@ export class MisNoticiasComponent implements OnInit {
   size = 6;
   totalPages = 0;
 
-  // Edición
+
   editandoNoticia: Noticia | null = null;
   editTitular = '';
   editCuerpo = '';
@@ -22,19 +23,22 @@ export class MisNoticiasComponent implements OnInit {
   editError: string | null = null;
   editSuccess = false;
 
-  // Eliminación
+ 
   noticiaAEliminar: Noticia | null = null;
   deleteLoading = false;
   deleteError: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private misNoticiasService: MisNoticiasService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.cargarNoticias(0);
   }
 
   cargarNoticias(page: number) {
-    this.http.get<{ content: Noticia[], number: number, totalPages: number }>(`/noticias/me?page=${page}&size=${this.size}`).subscribe({
+    this.misNoticiasService.getMisNoticias(page, this.size).subscribe({
       next: resp => {
         this.noticias = resp.content || [];
         this.page = resp.number || 0;
@@ -85,7 +89,7 @@ export class MisNoticiasComponent implements OnInit {
     formData.append('editNoticiaDto', new Blob([JSON.stringify(editDto)], { type: 'application/json' }));
     this.editArchivos.forEach(file => formData.append('files', file));
 
-    this.http.put(`/noticias/edit/${this.editandoNoticia.slug}`, formData).subscribe({
+    this.misNoticiasService.editarNoticia(this.editandoNoticia.slug, formData).subscribe({
       next: () => {
         this.editSuccess = true;
         this.cargarNoticias(this.page);
@@ -114,7 +118,7 @@ export class MisNoticiasComponent implements OnInit {
     if (!this.noticiaAEliminar) return;
     this.deleteLoading = true;
     this.deleteError = null;
-    this.http.delete(`/noticias/delete/${this.noticiaAEliminar.slug}`).subscribe({
+    this.misNoticiasService.eliminarNoticia(this.noticiaAEliminar.slug).subscribe({
       next: () => {
         this.cerrarEliminar();
         this.cargarNoticias(this.page);
@@ -126,5 +130,9 @@ export class MisNoticiasComponent implements OnInit {
         this.deleteLoading = false;
       }
     });
+  }
+
+  verDetalle(slug: string) {
+    this.router.navigate(['/noticias', slug]);
   }
 }

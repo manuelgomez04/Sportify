@@ -18,7 +18,9 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
 
     Optional<Liga> findByNombreNoEspacio(String nombre);
 
-    List<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio);
+    Page<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio, Pageable pageable);
+
+    Page<Liga> findAll(Pageable pageable);
 
     @Query(value = "SELECT l.* FROM liga l " +
             "JOIN usuario_liga ul ON l.id = ul.liga_id " +
@@ -30,4 +32,7 @@ public interface LigaRepository extends JpaRepository<Liga, UUID> {
                     "WHERE u.username = :username",
             nativeQuery = true)
     Page<Liga> findLigasFavoritasByUsername(@Param("username") String username, Pageable pageable);
+
+    List<Liga> findByDeporte_NombreNoEspacio(String nombreNoEspacio);
+
 }

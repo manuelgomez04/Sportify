@@ -1,0 +1,26 @@
+
+:host ::ng-deep .mat-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  display: table;
+}
+
+:host ::ng-deep .mat-paginator {
+  position: static !important;
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .table-responsive,
+:host ::ng-deep .table-container-fixed {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+:host ::ng-deep .mat-elevation-z8 {
+  margin-bottom: 0 !important;
+}
