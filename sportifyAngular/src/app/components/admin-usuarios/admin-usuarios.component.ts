@@ -23,6 +23,8 @@ export class AdminUsuariosComponent implements OnInit {
   addAdminError: string | null = null;
   addAdminSuccess: boolean = false;
   addAdminImage: File | null = null;
+  showAddAdminPassword = false;
+  showAddAdminVerifyPassword = false;
   page = 0;
   pageSize = 10;
   totalPages = 0;
@@ -84,8 +86,6 @@ export class AdminUsuariosComponent implements OnInit {
   abrirEditar(usuario: UsuarioAdmin) {
     this.editando = usuario.username;
     this.editForm = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      verifyPassword: ['', [Validators.required]],
       email: [usuario.nombre, [Validators.required, Validators.email]], // email real
       verifyEmail: [usuario.nombre, [Validators.required, Validators.email]], // email real
       nombre: [usuario.email, [Validators.required]] // nombre real

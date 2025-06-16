@@ -12,6 +12,19 @@ export class MeComponent {
   userData: any = null;
   error: boolean = false;
 
+  showPasswordModal = false;
+  passwordForm = {
+    oldPassword: '',
+    password: '',
+    verifyPassword: ''
+  };
+  passwordError: string = '';
+  passwordSuccess: string = '';
+
+  showOldPassword = false;
+  showNewPassword = false;
+  showVerifyPassword = false;
+
   constructor(
     protected authService: AuthService,
     private router: Router,
@@ -36,6 +49,46 @@ export class MeComponent {
         }
       });
     }
+  }
+
+  openPasswordModal() {
+    this.passwordForm = { oldPassword: '', password: '', verifyPassword: '' };
+    this.passwordError = '';
+    this.passwordSuccess = '';
+    this.showPasswordModal = true;
+  }
+
+  closePasswordModal() {
+    this.showPasswordModal = false;
+  }
+
+  submitPasswordChange() {
+    this.passwordError = '';
+    this.passwordSuccess = '';
+    const { oldPassword, password, verifyPassword } = this.passwordForm;
+    if (!oldPassword || !password || !verifyPassword) {
+      this.passwordError = 'Todos los campos son obligatorios.';
+      return;
+    }
+    if (password !== verifyPassword) {
+      this.passwordError = 'Las contraseñas no coinciden.';
+      return;
+    }
+    this.http.put('/edit/password', {
+      oldPassword,
+      password,
+      verifyPassword
+    }).subscribe({
+      next: () => {
+        this.passwordSuccess = 'Contraseña cambiada correctamente';
+        setTimeout(() => this.closePasswordModal(), 1200);
+      },
+      error: (err) => {
+        let msg = 'Error al cambiar la contraseña';
+        if (err?.error?.message) msg = err.error.message;
+        this.passwordError = msg;
+      }
+    });
   }
 }
 

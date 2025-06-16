@@ -251,4 +251,14 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  formatFecha(fecha: string | Date | null): string {
+    if (!fecha) return '';
+    const d = typeof fecha === 'string' ? new Date(fecha) : fecha;
+    if (isNaN(d.getTime())) return '';
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
 }
