@@ -15,6 +15,8 @@ export class RegisterComponent {
   userType: 'user' | 'writer' = 'user';
   fieldErrors: { [key: string]: string } = {};
   selectedProfileImage: File | null = null;
+  showPassword = false;
+  showVerifyPassword = false;
 
 
   constructor(
@@ -40,6 +42,13 @@ export class RegisterComponent {
       this.selectedProfileImage = file;
       this.registerForm.patchValue({ profileImage: file });
     }
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+  toggleVerifyPassword() {
+    this.showVerifyPassword = !this.showVerifyPassword;
   }
 
   onSubmit() {

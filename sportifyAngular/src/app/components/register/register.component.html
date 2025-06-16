@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="container mt-4" style="max-width: 500px;">
+<div class="container mt-4" style="max-width: 700px;">
   <h2 class="mb-4 text-center">Registro</h2>
   <div class="mb-3">
     <label class="form-label">Tipo de usuario</label>
@@ -10,44 +10,66 @@
     </select>
   </div>
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label class="form-label">Nombre</label>
-      <input formControlName="nombre" type="text" class="form-control" />
-      <div *ngIf="fieldErrors['nombre']" class="text-danger small mt-1">{{ fieldErrors['nombre'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Nombre de usuario</label>
-      <input formControlName="username" type="text" class="form-control" />
-      <div *ngIf="fieldErrors['username']" class="text-danger small mt-1">{{ fieldErrors['username'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Email</label>
-      <input formControlName="email" type="email" class="form-control" />
-      <div *ngIf="fieldErrors['email']" class="text-danger small mt-1">{{ fieldErrors['email'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Verifica Email</label>
-      <input formControlName="verifyEmail" type="email" class="form-control" />
-      <div *ngIf="fieldErrors['verifyEmail']" class="text-danger small mt-1">{{ fieldErrors['verifyEmail'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Contraseña</label>
-      <input formControlName="password" type="password" class="form-control" autocomplete="new-password" />
-      <div *ngIf="fieldErrors['password']" class="text-danger small mt-1">{{ fieldErrors['password'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Verifica Contraseña</label>
-      <input formControlName="verifyPassword" type="password" class="form-control" autocomplete="new-password" />
-      <div *ngIf="fieldErrors['verifyPassword']" class="text-danger small mt-1">{{ fieldErrors['verifyPassword'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Fecha de nacimiento</label>
-      <input formControlName="fechaNacimiento" type="date" class="form-control" />
-      <div *ngIf="fieldErrors['fechaNacimiento']" class="text-danger small mt-1">{{ fieldErrors['fechaNacimiento'] }}</div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Foto de perfil</label>
-      <input type="file" (change)="onProfileImageChange($event)" accept="image/*" class="form-control" />
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input formControlName="nombre" type="text" class="form-control" />
+          <div *ngIf="fieldErrors['nombre']" class="text-danger small mt-1">{{ fieldErrors['nombre'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input formControlName="email" type="email" class="form-control" />
+          <div *ngIf="fieldErrors['email']" class="text-danger small mt-1">{{ fieldErrors['email'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Contraseña</label>
+          <div class="input-group">
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control" autocomplete="new-password" />
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()" tabindex="-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="fieldErrors['password']" class="text-danger small mt-1">{{ fieldErrors['password'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Fecha de nacimiento</label>
+          <input formControlName="fechaNacimiento" type="date" class="form-control" />
+          <div *ngIf="fieldErrors['fechaNacimiento']" class="text-danger small mt-1">{{ fieldErrors['fechaNacimiento'] }}</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Nombre de usuario</label>
+          <input formControlName="username" type="text" class="form-control" />
+          <div *ngIf="fieldErrors['username']" class="text-danger small mt-1">{{ fieldErrors['username'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Verifica Email</label>
+          <input formControlName="verifyEmail" type="email" class="form-control" />
+          <div *ngIf="fieldErrors['verifyEmail']" class="text-danger small mt-1">{{ fieldErrors['verifyEmail'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Verifica Contraseña</label>
+          <div class="input-group">
+            <input [type]="showVerifyPassword ? 'text' : 'password'" formControlName="verifyPassword" class="form-control" autocomplete="new-password" />
+            <button type="button" class="btn btn-outline-secondary" (click)="toggleVerifyPassword()" tabindex="-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="fieldErrors['verifyPassword']" class="text-danger small mt-1">{{ fieldErrors['verifyPassword'] }}</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Foto de perfil</label>
+          <input type="file" (change)="onProfileImageChange($event)" accept="image/*" class="form-control" />
+        </div>
+      </div>
     </div>
     <button type="submit" class="btn btn-primary w-100">Registrarse</button>
     <div *ngIf="error" class="alert alert-danger mt-3" [innerHTML]="error"></div>

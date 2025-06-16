@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="card-text mt-auto"><small class="text-muted">{{ noticia.fechaCreacion | date }}</small>
+                    <p class="card-text mt-auto"><small class="text-muted">{{ formatFecha(noticia.fechaCreacion) }}</small>
                     </p>
                     <div class="d-flex align-items-center gap-3 mt-2">
                         <div *ngIf="isLoggedIn" (click)="$event.stopPropagation()">

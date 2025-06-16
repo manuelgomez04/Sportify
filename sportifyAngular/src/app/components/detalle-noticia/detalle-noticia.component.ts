@@ -152,4 +152,16 @@ export class DetalleNoticiaComponent implements OnInit {
       });
     }
   }
+
+  formatFecha(fecha: string | Date | null): string {
+    if (!fecha) return '';
+    const d = typeof fecha === 'string' ? new Date(fecha) : fecha;
+    if (isNaN(d.getTime())) return '';
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  }
 }
