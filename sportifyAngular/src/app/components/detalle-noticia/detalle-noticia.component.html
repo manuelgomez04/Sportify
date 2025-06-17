@@ -20,21 +20,32 @@
       noticia.equipo.nombreEquipo : '' }}</span>
   </div>
   <div class="mb-4 text-center">
-    <ng-container *ngIf="noticia?.multimedia && noticia.multimedia.length > 1; else unaImagen">
-      <div id="noticiaCarrusel" class="carousel slide" style="max-width: 750px; margin: 0 auto;">
-        <div class="carousel-inner">
-          <div *ngFor="let img of noticia.multimedia; let i = index" class="carousel-item" [class.active]="i === 0">
-            <img [src]="img" class="d-block w-100 rounded" style="max-height:420px; object-fit:cover;">
+    <div class="mb-4 text-center">
+      <ng-container *ngIf="noticia?.multimedia && noticia.multimedia.length > 1; else unaImagen">
+        <div id="noticiaCarrusel" class="carousel slide" data-bs-ride="carousel"
+          style="max-width: 750px; margin: 0 auto;">
+          <div class="carousel-inner">
+            <div *ngFor="let img of noticia.multimedia; let i = index" class="carousel-item" [class.active]="i === 0">
+              <img [src]="getMultimediaUrl(img)" class="d-block w-100 rounded"
+                style="max-height:420px; object-fit:cover;">
+            </div>
           </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#noticiaCarrusel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#noticiaCarrusel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#noticiaCarrusel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#noticiaCarrusel" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
-      </div>
-    </ng-container>
+      </ng-container>
+      <ng-template #unaImagen>
+        <img *ngIf="noticia?.multimedia && noticia.multimedia.length === 1"
+          [src]="getMultimediaUrl(noticia.multimedia[0])" class="img-fluid rounded"
+          style="max-height:420px; object-fit:cover;">
+      </ng-template>
+    </div>
     <ng-template #unaImagen>
       <img *ngIf="noticia?.multimedia && noticia.multimedia.length === 1" [src]="noticia.multimedia[0]"
         class="img-fluid rounded" style="max-height:420px; object-fit:cover;">

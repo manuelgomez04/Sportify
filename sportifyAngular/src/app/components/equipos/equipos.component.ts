@@ -11,7 +11,7 @@ import { EquiposService } from '../../services/equipos.service';
 export class EquiposComponent implements OnInit {
   equipos: Equipo[] = [];
   page = 0;
-  size = 10;
+  size = 5;
   totalPages = 0;
   ligaFiltro: string | null = null;
   equipoLikedIds: Set<string> = new Set();

@@ -1,5 +1,8 @@
 <app-navbar></app-navbar>
 <div class="container py-4">
+  <a routerLink="/me" class="btn btn-link px-0 mb-3" style="text-decoration:none;">
+    &larr; Volver a mi perfil
+  </a>
   <h2 class="fw-bold mb-4">Mis Comentarios</h2>
   <h5 class="mb-3">Comentarios Recientes</h5>
   <div *ngIf="comentarios.length > 0">

@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
     if (this.isLoggedIn) {
       this.http.get<any>('/noticiasLiked').subscribe({
         next: resp => {
-            
+
 
           const likedNoticias = resp.noticiasLiked?.content || [];
           this.likedTitulares = new Set(likedNoticias.map((n: any) => n.slug));
@@ -109,6 +109,10 @@ export class HomeComponent implements OnInit {
     if (!url) return '';
 
     const cleanUrl = url.trim();
+
+    if (cleanUrl.startsWith('http://app:8080')) {
+      return cleanUrl.replace('http://app:8080', window.location.origin);
+    }
 
     if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/download')) {
       return cleanUrl;
