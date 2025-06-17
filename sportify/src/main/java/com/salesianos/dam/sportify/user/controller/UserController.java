@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -114,7 +115,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "No se ha podido registrar el usuario", content = @Content),
     })
     @PostMapping("/admin/auth/register")
-    public ResponseEntity<UserResponse> registerAdmin(
+    public ResponseEntity<AdminResponse> registerAdmin(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Cuerpo del usuario", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateUserRequest.class), examples = @ExampleObject(value = """
                         {
                            "username": "manuelgmez",
@@ -130,7 +131,7 @@ public class UserController {
         User user = userService.createAdmin(createUserRequest, profileImageFile);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(UserResponse.of(user));
+                .body(AdminResponse.of(user));
     }
 
     @Operation(summary = "Inicia sesión con un usuario ya registrado")

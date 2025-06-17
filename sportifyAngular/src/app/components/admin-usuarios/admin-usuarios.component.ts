@@ -163,7 +163,6 @@ export class AdminUsuariosComponent implements OnInit {
       this.addAdminForm.patchValue({ profileImage: null });
     }
   }
-
   crearAdmin() {
     if (this.addAdminForm.invalid) {
       this.addAdminError = 'Completa todos los campos obligatorios.';
@@ -189,13 +188,28 @@ export class AdminUsuariosComponent implements OnInit {
     }
 
     this.userService.registerAdmin(formData).subscribe({
-      next: () => {
-        this.addAdminSuccess = true;
-        this.addAdminLoading = false;
-        setTimeout(() => {
-          this.cerrarAddAdmin();
-          window.location.reload();
-        }, 1200);
+      next: (response) => {
+        // Activar la cuenta usando el activationToken recibido
+        const token = response.activationToken;
+        if (token) {
+          this.userService.activateAccount({ token }).subscribe({
+            next: () => {
+              this.addAdminSuccess = true;
+              this.addAdminLoading = false;
+              setTimeout(() => {
+                this.cerrarAddAdmin();
+                window.location.reload();
+              }, 1200);
+            },
+            error: () => {
+              this.addAdminError = 'Admin creado, pero error al activar la cuenta.';
+              this.addAdminLoading = false;
+            }
+          });
+        } else {
+          this.addAdminError = 'Admin creado, pero no se recibió activationToken.';
+          this.addAdminLoading = false;
+        }
       },
       error: (err) => {
         this.addAdminError = 'Error al crear el admin';
