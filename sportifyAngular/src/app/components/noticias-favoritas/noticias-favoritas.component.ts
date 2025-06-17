@@ -61,8 +61,8 @@ export class NoticiasFavoritasComponent implements OnInit {
     if (wasLiked) {
       this.noticiasService.unlikeNoticia(noticia.slug).subscribe({
         next: () => {
-          this.likedTitulares.delete(noticia.slug);
-          noticia.likesCount = noticia.likesCount ? noticia.likesCount - 1 : 0;
+          this.cargarLikesFavoritas();
+          this.cargarNoticias(this.page);
         },
         error: () => {
           (event.target as HTMLInputElement).checked = true;
@@ -71,8 +71,8 @@ export class NoticiasFavoritasComponent implements OnInit {
     } else {
       this.noticiasService.likeNoticia(noticia.slug).subscribe({
         next: () => {
-          this.likedTitulares.add(noticia.slug);
-          noticia.likesCount = noticia.likesCount ? noticia.likesCount + 1 : 1;
+          this.cargarLikesFavoritas();
+          this.cargarNoticias(this.page);
         },
         error: () => {
           (event.target as HTMLInputElement).checked = false;
@@ -107,5 +107,7 @@ export class NoticiasFavoritasComponent implements OnInit {
     this.router.navigate(['/noticias', slug]);
   }
 }
-   
+
+
+
 
