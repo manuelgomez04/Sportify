@@ -95,6 +95,7 @@ public class UserService {
                 .roles(Set.of(Role.WRITER, Role.USER))
                 .activationToken(generateRandomActivationCode())
                 .nombre(createUserRequest.nombre())
+                .deleted(false)
                 .fechaNacimiento(createUserRequest.fechaNacimiento())
                 .profileImage(imageUrl)
                 .build();
@@ -120,6 +121,7 @@ public class UserService {
                 .roles(Set.of(Role.ADMIN, Role.USER, Role.WRITER))
                 .activationToken(generateRandomActivationCode())
                 .nombre(createUserRequest.nombre()).fechaNacimiento(createUserRequest.fechaNacimiento())
+                .deleted(false)
                 .profileImage(imageUrl)
                 .build();
 
