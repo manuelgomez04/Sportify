@@ -7,6 +7,7 @@ Sportify es una aplicación de diario deportivo que permite a los usuarios mante
 
 ## A la hora de ejecutar el programa habrá que escribir en la terminal el comando docker-compose up --build 
 ## Para poder arrancar el programa necesitas poner en el application-mail.properties tu correo y tu contraseña para que pueda compilar el programa
+vgmv lahs dzaf xden
 
 ## Funcionalidades
 > En función del tipo de Login que hagas pordrás hacer un tipo de peticiones u otras
