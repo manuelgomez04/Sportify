@@ -1,6 +1,7 @@
 package com.salesianos.dam.sportify.deporte.controller;
 
 import com.salesianos.dam.sportify.deporte.dto.CreateDeporteRequest;
+import com.salesianos.dam.sportify.deporte.dto.GetDeporteDto;
 import com.salesianos.dam.sportify.deporte.model.Deporte;
 import com.salesianos.dam.sportify.deporte.service.DeporteService;
 import com.salesianos.dam.sportify.noticia.dto.CreateNoticiaRequest;
@@ -16,11 +17,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/deporte")
@@ -44,7 +51,7 @@ public class DeporteController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Deporte> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public ResponseEntity<GetDeporteDto> createDeporte(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Cuerpo del deporte", required = true,
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CreateDeporteRequest.class),
@@ -55,8 +62,8 @@ public class DeporteController {
                                         "descripcion": "Deporte de 11 contra 11"
                                         }
                                     }
-                            """))) @RequestBody @Valid CreateDeporteRequest deporte) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(deporteService.createDeporte(deporte));
+                            """))) @RequestPart ("createDeporteRequest") @Valid CreateDeporteRequest deporte, @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(GetDeporteDto.of(deporteService.createDeporte(deporte, imagen)));
     }
 
 
@@ -73,5 +80,10 @@ public class DeporteController {
     public ResponseEntity<?> deleteDeporte(@PathVariable String name) {
         deporteService.deleteDeporte(name);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public Page<GetDeporteDto> getAllDeportes(Pageable pageable) {
+        return deporteService.getAllDeportes(pageable).map(GetDeporteDto::of);
     }
 }

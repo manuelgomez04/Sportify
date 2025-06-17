@@ -9,6 +9,7 @@ import com.salesianos.dam.sportify.user.dto.GetUsuarioDto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record GetNoticiaNoAuthDto(
         String titular,
@@ -19,8 +20,7 @@ public record GetNoticiaNoAuthDto(
         GetUserNoAsociacionesDto usuario,
         GetNombreEquipoDto equipo,
         GetNombreLiga liga,
-        GetNombreDeporteDto deporte
-) {
+        GetNombreDeporteDto deporte) {
 
     public static GetNoticiaNoAuthDto of(Noticia n) {
         return new GetNoticiaNoAuthDto(

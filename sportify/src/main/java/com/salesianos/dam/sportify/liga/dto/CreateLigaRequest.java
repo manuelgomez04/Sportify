@@ -17,6 +17,8 @@ public record CreateLigaRequest(
         String nombreDeporte,
 
 
-        String descripcion
+        String descripcion,
+
+        String imagen
 ) {
 }

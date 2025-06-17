@@ -71,8 +71,10 @@ public class NoticiaController {
                                                 ],
                                                 "fechaPublicacion": "2025-02-23"
                                             }
-                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(GetNoticiaDto.of(noticiaService.saveNoticia(createNoticiaRequest, username, files)));
+                            """))) @RequestPart("createNoticiaRequest") @Valid CreateNoticiaRequest createNoticiaRequest,
+                             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+        .body(GetNoticiaDto.of(noticiaService.saveNoticia(createNoticiaRequest, username, files)));
     }
 
 
@@ -352,4 +354,56 @@ public class NoticiaController {
 
     }
 
+        @Operation(summary = "Obtiene todas las noticias escritas por un usuario (solo admin)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Se han encontrado las noticias", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GetNoticiaNoAuthDto.class)),
+                examples = @ExampleObject(value = """
+                    [
+                        {
+                            "titular": "Ejemplo de noticia",
+                            "cuerpo": "Contenido de la noticia...",
+                            "multimedia": [],
+                            "fechaCreacion": "2025-06-13",
+                            "slug": "ejemplo-de-noticia"
+                        }
+                    ]
+                """))
+            }),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el usuario", content = @Content)
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{username}")
+    public Page<GetNoticiaNoAuthDto> getNoticiasByUsername(
+            @PathVariable String username,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return noticiaService.findNoticiasByUsername(username, pageable)
+                .map(GetNoticiaNoAuthDto::of);
+    }
+
+    @Operation(summary = "Obtiene todas las noticias escritas por el usuario autenticado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Se han encontrado las noticias", content = {
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GetNoticiaNoAuthDto.class)),
+                examples = @ExampleObject(value = """
+                    [
+                        {
+                            "titular": "Ejemplo de noticia propia",
+                            "cuerpo": "Contenido de la noticia...",
+                            "multimedia": [],
+                            "fechaCreacion": "2025-06-13",
+                            "slug": "ejemplo-de-noticia-propia"
+                        }
+                    ]
+                """))
+            }),
+        @ApiResponse(responseCode = "404", description = "No se ha encontrado el usuario autenticado", content = @Content)
+    })
+    @GetMapping("/me")
+    public Page<GetNoticiaNoAuthDto> getMisNoticias(
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return noticiaService.findNoticiasByUsername(user.getUsername(), pageable)
+                .map(GetNoticiaNoAuthDto::of);
+    }
 }

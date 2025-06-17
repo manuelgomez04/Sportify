@@ -118,6 +118,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "liga_id"))
     private Set<Liga> ligasSeguidas = new HashSet<>();
 
+    private String profileImage; 
 
 
     public void addEquipo(Equipo e) {

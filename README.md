@@ -67,4 +67,4 @@ Dar like: Los usuarios pueden dar like a las noticias.
 Eliminar like: Los usuarios pueden quitar su like de una noticia.
 
 # FIGMA
-https://www.figma.com/design/TRX8PXakgZfeypgalOE8rf/Sportify?node-id=0-1&t=gq5vhpOqOb9mmJaS-1
+https://www.figma.com/design/HknyihjQ9WE5PwS4aCbiAc/SportifyWeb?node-id=38-1452&t=WgpIuGqkLTSESCfn-1

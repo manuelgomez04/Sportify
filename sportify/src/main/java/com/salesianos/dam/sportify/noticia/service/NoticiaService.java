@@ -87,7 +87,7 @@ public class NoticiaService {
                 .map(this::getImageUrl)
                 .toList();
 
-        Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(createNoticiaRequest.nombreDeporte())
+        Deporte d = deporteRepository.findByNombreNoEspacio(createNoticiaRequest.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("No se ha encontrado el deporte", HttpStatus.NOT_FOUND));
 
         Equipo e = equipoRepository.findByNombreNoEspacio(createNoticiaRequest.nombreEquipo())
@@ -98,7 +98,7 @@ public class NoticiaService {
         Noticia n = noticiaRepository.save(Noticia.builder()
                 .titular(createNoticiaRequest.titular())
                 .cuerpo(createNoticiaRequest.cuerpo())
-                .fechaPublicacion(createNoticiaRequest.fechaPublicacion())
+                .fechaPublicacion(LocalDate.now()) // <-- fecha automática
                 .multimedia(imageUrls)
                 .deporteNoticia(d)
                 .equipoNoticia(e)
@@ -179,7 +179,7 @@ public class NoticiaService {
         Noticia n = findBySlug(slug);
 
 
-        Deporte d = deporteRepository.findByNombreEqualsIgnoreCase(followDeporteRequest.nombreDeporte())
+        Deporte d = deporteRepository.findByNombreNoEspacio(followDeporteRequest.nombreDeporte())
                 .orElseThrow(() -> new DeporteNotFoundException("No se ha encontrado el deporte", HttpStatus.NOT_FOUND));
 
 
@@ -223,9 +223,14 @@ public class NoticiaService {
 
     }
 
+
+    @Transactional
     public NoticiaWithComentarios findNoticiaWithComentariosBySlug(String slug, Pageable pageable) {
         Noticia noticia = noticiaRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoticiaNotFoundException("Noticia no encontrada", HttpStatus.NOT_FOUND));
+
+        Hibernate.initialize(noticia.getLikes());
+        Hibernate.initialize(noticia.getComentarios());
 
         Page<Comentario> comentarios = comentarioRepository.findByNoticiaSlug(slug, pageable);
         return new NoticiaWithComentarios(noticia, comentarios);
@@ -259,4 +264,12 @@ public class NoticiaService {
         return noticiaRepository.findAll(spec, pageable);
     }
 
+    public Page<Noticia> findNoticiasByUsername(String username, Pageable pageable) {
+        return noticiaRepository.findByAutor_Username(username, pageable);
+    }
+
+    public boolean esAutorDeNoticiaSlug(String username, String slug) {
+        Noticia noticia = noticiaRepository.findBySlug(slug).orElse(null);
+        return noticia != null && noticia.getAutor() != null && noticia.getAutor().getUsername().equals(username);
+    }
 }

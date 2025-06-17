@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+<div class="container py-5">
+  <div class="w-100 mb-4" style="display: flex; align-items: flex-start;">
+    <a routerLink="/home" class="btn btn-link px-0" style="text-decoration:none;">
+      &larr; Volver a inicio
+    </a>
+  </div>
+  <h2 class="fw-bold mb-4">Panel de administración</h2>
+  <div class="d-flex flex-wrap gap-3">
+    <button class="btn btn-outline-primary" (click)="goToUsuarios()">Usuarios</button>
+    <button class="btn btn-outline-primary" (click)="goToLigas()">Ligas</button>
+    <button class="btn btn-outline-primary" (click)="goToDeportes()">Deportes</button>
+    <button class="btn btn-outline-primary" (click)="goToEquipos()">Equipos</button>
+  </div>
+</div>

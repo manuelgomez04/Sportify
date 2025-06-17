@@ -13,10 +13,11 @@ public record GetEquipoDto(
         String ciudad,
         String pais,
         String escudo,
-        LocalDate fechaCreacion
+        LocalDate fechaCreacion,
+        String nombreLigaNoEspacio
 
 ) {
     public static GetEquipoDto of(Equipo e) {
-        return new GetEquipoDto(e.getId(), e.getNombre(), e.getNombreNoEspacio(), e.getLiga().getNombre(), e.getCiudad(), e.getPais(), e.getEscudo(), e.getFechaCreacion());
+        return new GetEquipoDto(e.getId(), e.getNombre(), e.getNombreNoEspacio(), e.getLiga().getNombre(), e.getCiudad(), e.getPais(), e.getEscudo(), e.getFechaCreacion(), e.getLiga().getNombreNoEspacio());
     }
 }
